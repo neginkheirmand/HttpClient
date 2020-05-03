@@ -8,10 +8,12 @@ import java.awt.event.KeyEvent;
 public class Main {
     public static void main(String[] args) {
         JFrame mainFrame = new JFrame("Insomnia");
+        mainFrame.setSize(200,200);
+        mainFrame.setLocationRelativeTo(null);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
 
-        JMenuBar menuBarOfInsomnia = new JMenuBar();
+        JMenuBar menuBarOfApplication= new JMenuBar();
         //---------------
         JMenu application = new JMenu("Application");
         application.setMnemonic(KeyEvent.VK_A);
@@ -98,7 +100,7 @@ public class Main {
         });
         edit.add(undo);
 
-        JMenuItem redo = new JMenuItem("Cut", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\redo-icon.png"));
+        JMenuItem redo = new JMenuItem("redo", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\redo-icon.png"));
         redo.setMnemonic(KeyEvent.VK_R);
         redo.addActionListener(new ActionListener() {
             @Override
@@ -168,6 +170,17 @@ public class Main {
         JMenuItem about = new JMenuItem("About");
         about.setMnemonic(KeyEvent.VK_O);
         help.add(about);
+
+        //adding the menus created to the menu bar
+        menuBarOfApplication.add(application);
+        menuBarOfApplication.add(edit);
+        menuBarOfApplication.add(view);
+        menuBarOfApplication.add(window);
+        menuBarOfApplication.add(tools);
+        menuBarOfApplication.add(help);
+
+        //adding the menu bar created to the frame of the application
+        mainFrame.setJMenuBar(menuBarOfApplication);
 
 
 
