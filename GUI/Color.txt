@@ -1,0 +1,24 @@
+purple up-left:              R: 123   G:104   B:238
+grey background left:        R: 55    G:55    B:55
+grey filter-label left:      R: 74    G:74    B:74
+white HEAD-label up-right:   R:255    G:255   B:255
+dark-grey background right:  R: 38    G:38    B:38
+red error button right up:   R:205    G:71    B:78
+
+
+TEXT:
+
+whity-grey text left:        R:218    G:218   B:218
+dark-grey text left:         R:166    G:166   B:166
+
+comands:
+blue HEAD:                   R: 82    G:218   B:233
+purple GET:                  R: 123   G:104   B:238
+green POST:                  R: 47    G:198   B:102
+orange PUT:                  R: 255   G:161   B:20
+yellow PATCH:                R: 239   G:255   B:20
+red DELETE:                  R: 255   G:20    B:20
+blue OPTION:                 R: 69    G:162   B:255
+
+setting up costume color:
+new java.awt.Color(204, 166, 166)
