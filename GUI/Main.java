@@ -474,7 +474,50 @@ public class Main {
         JPanel auth = new JPanel();
         auth.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
         auth.setBackground(new java.awt.Color(38, 38, 38));
-        setRequestTabedPane.add("Auth", auth);
+        setRequestTabedPane.add("", auth);
+
+        //the type of body chosen in the popup menu down the Body word of the tab reference
+        JButton authButton = new JButton("Auth");
+        authButton.setForeground(new java.awt.Color(128, 128, 128));
+        authButton.setFont(new Font("SansSerif", Font.BOLD, 15));
+        authButton.setBackground(new java.awt.Color(38, 38, 38));
+        authButton.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
+        //creating the popup menu and adding each JMenuItem to the popUpMenu
+        JPopupMenu authMenu =new JPopupMenu();
+        //Basic Auth
+        JMenuItem basicAuth= new JMenuItem("Basic Auth");
+        basicAuth.setFont(new Font("Serif", Font.PLAIN, 15));
+        authMenu.add(basicAuth);
+        //Digest Auth
+        JMenuItem digestAuth= new JMenuItem("Digest Auth");
+        digestAuth.setFont(new Font("Serif", Font.PLAIN, 15));
+        authMenu.add(digestAuth);
+        //OAuth 1.0
+        JMenuItem OAuth1= new JMenuItem("OAuth 1.0");
+        formURLEncoded.setFont(new Font("Serif", Font.PLAIN, 15));
+        authMenu.add(OAuth1);
+        //OAuth 2.0
+        JMenuItem OAuth2= new JMenuItem("OAuth 2.0");
+        OAuth2.setFont(new Font("Serif", Font.PLAIN, 15));
+        authMenu.add(OAuth2);
+        //Microsoft NTLM
+        JMenuItem microsoftNTLM= new JMenuItem("Microsoft NTLM");
+        microsoftNTLM.setFont(new Font("Serif", Font.PLAIN, 15));
+        authMenu.add(microsoftNTLM);
+        //and the OTHER separator is used here too
+        authMenu.add(Other);
+        //No Authentication
+        JMenuItem noAuth= new JMenuItem("No Authentication");
+        noAuth.setFont(new Font("Serif", Font.PLAIN, 15));
+        authMenu.add(noAuth);
+        //ading the pop up menu to the button
+        authButton.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                authMenu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        });
+        //ading the button to the tab
+        setRequestTabedPane.setTabComponentAt(1, authButton);
 
         JPanel query = new JPanel();
         query.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
