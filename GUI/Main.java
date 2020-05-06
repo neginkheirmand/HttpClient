@@ -2,10 +2,7 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -405,18 +402,73 @@ public class Main {
         bodyType.setFont(new Font("SansSerif", Font.BOLD, 15));
         bodyType.setBackground(new java.awt.Color(38, 38, 38));
         bodyType.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
-        bodyType.addActionListener();
-
-
-
-
-
-
-
-
-
-
-        setRequestTabedPane.setTabComponentAt(0, new JButton("HELLO"));
+        //creating the popup menu and adding each JMenuItem to the popUpMenu
+        JPopupMenu bodyTypeMenu =new JPopupMenu();
+        //-------STRUCTURED
+        JMenuItem structured= new JMenuItem("STRUCTURED----------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\STRUCTURED-icon.png"));
+        structured.setFont(new Font("Serif", Font.PLAIN, 10));
+        structured.setForeground(new java.awt.Color(128, 128, 128));
+        structured.setEnabled(false);
+        bodyTypeMenu.add(structured);
+        //Multipart Form
+        JMenuItem multipartForm= new JMenuItem("Multipart Form");
+        multipartForm.setFont(new Font("Serif", Font.PLAIN, 15));
+        bodyTypeMenu.add(multipartForm);
+        //Form URL Encoded
+        JMenuItem formURLEncoded= new JMenuItem("Form URL Encoded");
+        formURLEncoded.setFont(new Font("Serif", Font.PLAIN, 15));
+        bodyTypeMenu.add(formURLEncoded);
+        //GraphQL Query
+        JMenuItem graphQLQuery= new JMenuItem("GraphQL Query");
+        graphQLQuery.setFont(new Font("Serif", Font.PLAIN, 15));
+        bodyTypeMenu.add(graphQLQuery);
+        //-------TEXT
+        JMenuItem text= new JMenuItem("TEXT----------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\text-icon.png"));
+        text.setFont(new Font("Serif", Font.PLAIN, 10));
+        text.setForeground(new java.awt.Color(128, 128, 128));
+        text.setEnabled(false);
+        bodyTypeMenu.add(text);
+        //JSON
+        JMenuItem JSON= new JMenuItem("JSON");
+        JSON.setFont(new Font("Serif", Font.PLAIN, 15));
+        bodyTypeMenu.add(JSON);
+        //XML
+        JMenuItem XML= new JMenuItem("XML");
+        XML.setFont(new Font("Serif", Font.PLAIN, 15));
+        //YAML
+        JMenuItem YAML= new JMenuItem("GraphQL Query");
+        YAML.setFont(new Font("Serif", Font.PLAIN, 15));
+        bodyTypeMenu.add(YAML);
+        //EDN
+        JMenuItem EDN= new JMenuItem("EDN");
+        EDN.setFont(new Font("Serif", Font.PLAIN, 15));
+        bodyTypeMenu.add(EDN);
+        //Other
+        JMenuItem other= new JMenuItem("Other");
+        other.setFont(new Font("Serif", Font.PLAIN, 15));
+        bodyTypeMenu.add(other);
+        //-------OTHER
+        JMenuItem Other= new JMenuItem("OTHER------------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\3dots-icon.png"));
+        Other.setFont(new Font("Serif", Font.PLAIN, 10));
+        Other.setForeground(new java.awt.Color(128, 128, 128));
+        Other.setEnabled(false);
+        bodyTypeMenu.add(Other);
+        //Binary File
+        JMenuItem binaryFile= new JMenuItem("Binary File");
+        binaryFile.setFont(new Font("Serif", Font.PLAIN, 15));
+        bodyTypeMenu.add(binaryFile);
+        //No Body
+        JMenuItem noBody= new JMenuItem("No Body");
+        noBody.setFont(new Font("Serif", Font.PLAIN, 15));
+        bodyTypeMenu.add(noBody);
+        //ading the pop up menu to the button
+        bodyType.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                bodyTypeMenu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        });
+        //ading the button to the tab
+        setRequestTabedPane.setTabComponentAt(0, bodyType);
 
 
         JPanel auth = new JPanel();
