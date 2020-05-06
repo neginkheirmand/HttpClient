@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 public class Main {
@@ -190,15 +191,15 @@ public class Main {
 
         GridBagConstraints constraintsInsomniaLabel = new GridBagConstraints();
         //preparing the Insomnia label to be add
-//        constraintsInsomniaLabel.fill = GridBagConstraints.BOTH;
+        constraintsInsomniaLabel.fill = GridBagConstraints.BOTH;
         //(0,0)
         constraintsInsomniaLabel.gridx = 0;
         constraintsInsomniaLabel.gridy = 0;
         constraintsInsomniaLabel.gridwidth = 1;
         constraintsInsomniaLabel.gridheight = 1;
         //growing constant
-        constraintsInsomniaLabel.weightx = 0;
-        constraintsInsomniaLabel.weighty = 1;
+        constraintsInsomniaLabel.weightx = 1;
+        constraintsInsomniaLabel.weighty = -1;
         //padding sides
         constraintsInsomniaLabel.ipady = 0;
         constraintsInsomniaLabel.ipadx = 0;
@@ -215,17 +216,19 @@ public class Main {
 
         //preparing the second head part as a panel
         JPanel secondUpPart = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        secondUpPart.setMaximumSize(new Dimension(200,60));
         secondUpPart.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218,218,218)));
-        secondUpPart.setBounds(new Rectangle(200,60));
+//        secondUpPart.setBounds(new Rectangle(200,60));
+        secondUpPart.setSize(new Dimension(200,60));
         GridBagConstraints constraintsCommand = new GridBagConstraints();
         constraintsCommand.gridx = 1;
         constraintsCommand.gridy = 0;
         //growing constant
         constraintsCommand.weightx = 1;
-        constraintsCommand.weighty = 0;
+        constraintsCommand.weighty = -1;
+        constraintsCommand.gridheight=1;
+        constraintsCommand.gridwidth=1;
         constraintsCommand.anchor = GridBagConstraints.FIRST_LINE_START;
-//        constraintsInsomniaLabel.fill = GridBagConstraints.BOTH;
+        constraintsInsomniaLabel.fill = GridBagConstraints.BOTH;
 
         //badan bayad commandesh chi bashe ro malum koni
         //creating components of the JPanel
@@ -236,6 +239,51 @@ public class Main {
         command.setFont(new Font("SansSerif", Font.BOLD, 23));
         command.setBackground(new java.awt.Color(166, 166, 166));
         command.setOpaque(true);
+
+        //creating command type in the popUpMenu by JMenuItems
+        JPopupMenu commandPopUpMenu = new JPopupMenu();
+        //GET
+        JMenuItem methodGET = new JMenuItem("GET");
+        methodGET.setFont(new Font("Serif", Font.PLAIN, 15));
+        methodGET.setForeground(new java.awt.Color(123, 104, 238));
+        commandPopUpMenu.add(methodGET);
+        //HEAD
+        JMenuItem methodHEAD = new JMenuItem("HEAD");
+        methodHEAD.setFont(new Font("Serif", Font.PLAIN, 15));
+        methodHEAD.setForeground(new java.awt.Color(82, 218, 233));
+        commandPopUpMenu.add(methodHEAD);
+        //POST
+        JMenuItem methodPOST = new JMenuItem("POST");
+        methodPOST.setFont(new Font("Serif", Font.PLAIN, 15));
+        methodPOST.setForeground(new java.awt.Color(47, 198, 102));
+        commandPopUpMenu.add(methodPOST);
+        //PUT
+        JMenuItem methodPUT = new JMenuItem("PUT");
+        methodPUT.setFont(new Font("Serif", Font.PLAIN, 15));
+        methodPUT.setForeground(new java.awt.Color(255, 161, 20));
+        commandPopUpMenu.add(methodPUT);
+        //PATCH
+        JMenuItem methodPATCH = new JMenuItem("PATCH");
+        methodPATCH.setFont(new Font("Serif", Font.PLAIN, 15));
+        methodPATCH.setForeground(new java.awt.Color(239, 255, 20));
+        commandPopUpMenu.add(methodPATCH);
+        //DELETE
+        JMenuItem methodDELETE = new JMenuItem("DELETE");
+        methodDELETE.setFont(new Font("Serif", Font.PLAIN, 15));
+        methodDELETE.setForeground(new java.awt.Color(255, 20, 20));
+        commandPopUpMenu.add(methodDELETE);
+        //OPTION
+        JMenuItem methodOPTION = new JMenuItem("OPTION");
+        methodOPTION.setFont(new Font("Serif", Font.PLAIN, 15));
+        methodOPTION.setForeground(new java.awt.Color(69, 162, 255));
+        commandPopUpMenu.add(methodOPTION);
+        commandPopUpMenu.addSeparator();
+        //costume method
+        JMenuItem customMethod = new JMenuItem("costume method");
+        customMethod.setFont(new Font("Serif", Font.PLAIN, 15));
+        commandPopUpMenu.add(customMethod);
+
+        command.setComponentPopupMenu(commandPopUpMenu);
         secondUpPart.add(command);
 
 
@@ -264,7 +312,7 @@ public class Main {
         infoCommand.gridy = 0;
         //growing constant
         infoCommand.weightx = 1;
-        infoCommand.weighty = 0;
+        infoCommand.weighty = -1;
         infoCommand.anchor = GridBagConstraints.FIRST_LINE_START;
         infoCommand.fill = GridBagConstraints.BOTH;
 
@@ -298,16 +346,36 @@ public class Main {
         netTaken.setBackground(new java.awt.Color(166, 166, 166));
         netTaken.setOpaque(true);
         thirdUpPart.add(netTaken);
+
+        //badan bayad barash pup up menu ham bezani ke bere historial ghabli haro ham bebine
+        //and the historial of this request
+        JButton historialThisRequest = new JButton("Last Time");
+        historialThisRequest.setBackground(Color.white);
+        historialThisRequest.setPreferredSize(new Dimension(100 , 48));
+        historialThisRequest.setForeground(new java.awt.Color(166, 166, 166));
+        thirdUpPart.add(historialThisRequest);
+
         mainFrame.add(thirdUpPart, infoCommand);
+
 
 
         //the first panel down the "Insomnia" label containig the history of requests
         JPanel historialOfRequest = new JPanel();
         historialOfRequest.setPreferredSize(new Dimension(112, 500));
-        historialOfRequest.setMaximumSize(new Dimension(112, 500));
         historialOfRequest.setSize(new Dimension(112, 500));
         historialOfRequest.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
         historialOfRequest.setBackground(new java.awt.Color(38, 38, 38));
+        //creating pop up menu for the left panel containing:
+        // JMenuItems "New Request" and "New Folder"
+        JPopupMenu leftPanelPopUpMenu = new JPopupMenu();
+        //badan bayad barash ye action tarif koni
+        JMenuItem newRequestItem = new JMenuItem("New Request", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\newRequest-icon.png"));
+        newRequestItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+        JMenuItem newFolderItem = new JMenuItem("New Folder", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\newFolder-icon.png"));
+        newFolderItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,  ActionEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
+        leftPanelPopUpMenu.add(newRequestItem);
+        leftPanelPopUpMenu.add(newFolderItem);
+        historialOfRequest.setComponentPopupMenu(leftPanelPopUpMenu);
         GridBagConstraints historialConstraints = new GridBagConstraints();
         historialConstraints.gridx = 0;
         historialConstraints.gridy = 1;
@@ -315,15 +383,63 @@ public class Main {
         historialConstraints.weightx = 1;
         historialConstraints.weighty = 1;
         historialConstraints.anchor = GridBagConstraints.LINE_START;
-        constraintsInsomniaLabel.fill = GridBagConstraints.BOTH;
+        historialConstraints.fill = GridBagConstraints.BOTH;
         mainFrame.add(historialOfRequest, historialConstraints);
 
 
-        //the second panel down the "Insomnia" label containig the history of requests
-        JTabbedPane setRequest = new JTabbedPane();
-        setRequest.setPreferredSize(new Dimension(600, 500));
-        setRequest.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
-        setRequest.setBackground(new java.awt.Color(38, 38, 38));
+        //the second panel down the "Insomnia" label containig the command info of requests
+        JTabbedPane setRequestTabedPane = new JTabbedPane();
+        setRequestTabedPane.setPreferredSize(new Dimension(600, 500));
+        setRequestTabedPane.setFont(new Font("SansSerif", Font.BOLD, 15));
+        setRequestTabedPane.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
+        setRequestTabedPane.setBackground(new java.awt.Color(38, 38, 38));
+        setRequestTabedPane.setForeground(new java.awt.Color(128, 128, 128));
+        //now the panels
+        JPanel body = new JPanel();
+        body.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
+        body.setBackground(new java.awt.Color(38, 38, 38));
+        setRequestTabedPane.add("", body);
+        //the type of body chosen in the popup menu down the Body word of the tab reference
+        JButton bodyType = new JButton("Body");
+        bodyType.setForeground(new java.awt.Color(128, 128, 128));
+        bodyType.setFont(new Font("SansSerif", Font.BOLD, 15));
+        bodyType.setBackground(new java.awt.Color(38, 38, 38));
+        bodyType.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
+        bodyType.addActionListener();
+
+
+
+
+
+
+
+
+
+
+        setRequestTabedPane.setTabComponentAt(0, new JButton("HELLO"));
+
+
+        JPanel auth = new JPanel();
+        auth.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
+        auth.setBackground(new java.awt.Color(38, 38, 38));
+        setRequestTabedPane.add("Auth", auth);
+
+        JPanel query = new JPanel();
+        query.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
+        query.setBackground(new java.awt.Color(38, 38, 38));
+        setRequestTabedPane.add("Query", query);
+
+        JPanel header = new JPanel();
+        header.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
+        header.setBackground(new java.awt.Color(38, 38, 38));
+        setRequestTabedPane.add("Header", header);
+
+
+        JPanel docs = new JPanel();
+        docs.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
+        docs.setBackground(new java.awt.Color(38, 38, 38));
+        setRequestTabedPane.add("Docs", docs);
+
         GridBagConstraints settingRequestConstraints = new GridBagConstraints();
         settingRequestConstraints.gridx = 1;
         settingRequestConstraints.gridy = 1;
@@ -332,7 +448,8 @@ public class Main {
         settingRequestConstraints.weighty = 1;
         settingRequestConstraints.anchor = GridBagConstraints.LINE_START;
         settingRequestConstraints.fill = GridBagConstraints.BOTH;
-        mainFrame.add(setRequest, settingRequestConstraints);
+        mainFrame.add(setRequestTabedPane, settingRequestConstraints);
+
 
         mainFrame.pack();
 
