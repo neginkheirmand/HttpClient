@@ -8,7 +8,7 @@ public class CreateGUI{
     private JFrame mainFrame;
     public CreateGUI(){
         mainFrame = new JFrame("Insomnia");
-        mainFrame.setMinimumSize(new Dimension(1050, 450));
+        mainFrame.setMinimumSize(new Dimension(1200, 450));
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
@@ -23,7 +23,7 @@ public class CreateGUI{
         createHistorialRequest();
         createRequestClasifier();
         createRequestInfo();
-
+        createRequestHistoryPanel();
 
         mainFrame.pack();
 
@@ -525,7 +525,7 @@ public class CreateGUI{
         authMenu.add(digestAuth);
         //OAuth 1.0
         JMenuItem OAuth1= new JMenuItem("OAuth 1.0");
-        formURLEncoded.setFont(new Font("Serif", Font.PLAIN, 15));
+        OAuth1.setFont(new Font("Serif", Font.PLAIN, 15));
         authMenu.add(OAuth1);
         //OAuth 2.0
         JMenuItem OAuth2= new JMenuItem("OAuth 2.0");
@@ -598,151 +598,74 @@ public class CreateGUI{
         preview.setBackground(new java.awt.Color(38, 38, 38));
         queryHistoryPanel.add("preview", preview);
         //the type of body chosen in the popup menu down the Body word of the tab reference
-        JButton bodyType = new JButton("Body");
-        bodyType.setForeground(new java.awt.Color(128, 128, 128));
-        bodyType.setFont(new Font("SansSerif", Font.BOLD, 15));
-        bodyType.setBackground(new java.awt.Color(38, 38, 38));
-        bodyType.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
+        JButton previewButton = new JButton("Preview");
+        previewButton.setForeground(new java.awt.Color(128, 128, 128));
+        previewButton.setFont(new Font("SansSerif", Font.BOLD, 15));
+        previewButton.setBackground(new java.awt.Color(38, 38, 38));
+        previewButton.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
         //creating the popup menu and adding each JMenuItem to the popUpMenu
-        JPopupMenu bodyTypeMenu =new JPopupMenu();
-        //-------STRUCTURED
-        JMenuItem structured= new JMenuItem("STRUCTURED----------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\STRUCTURED-icon.png"));
-        structured.setFont(new Font("Serif", Font.PLAIN, 10));
-        structured.setForeground(new java.awt.Color(128, 128, 128));
-        structured.setEnabled(false);
-        bodyTypeMenu.add(structured);
-        //Multipart Form
-        JMenuItem multipartForm= new JMenuItem("Multipart Form");
-        multipartForm.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(multipartForm);
-        //Form URL Encoded
-        JMenuItem formURLEncoded= new JMenuItem("Form URL Encoded");
-        formURLEncoded.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(formURLEncoded);
-        //GraphQL Query
-        JMenuItem graphQLQuery= new JMenuItem("GraphQL Query");
-        graphQLQuery.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(graphQLQuery);
-        //-------TEXT
-        JMenuItem text= new JMenuItem("TEXT----------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\text-icon.png"));
-        text.setFont(new Font("Serif", Font.PLAIN, 10));
-        text.setForeground(new java.awt.Color(128, 128, 128));
-        text.setEnabled(false);
-        bodyTypeMenu.add(text);
-        //JSON
-        JMenuItem JSON= new JMenuItem("JSON");
-        JSON.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(JSON);
-        //XML
-        JMenuItem XML= new JMenuItem("XML");
-        XML.setFont(new Font("Serif", Font.PLAIN, 15));
-        //YAML
-        JMenuItem YAML= new JMenuItem("GraphQL Query");
-        YAML.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(YAML);
-        //EDN
-        JMenuItem EDN= new JMenuItem("EDN");
-        EDN.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(EDN);
-        //Other
-        JMenuItem other= new JMenuItem("Other");
-        other.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(other);
-        //-------OTHER
-        JMenuItem Other= new JMenuItem("OTHER------------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\Other-icon.png"));
-        Other.setFont(new Font("Serif", Font.PLAIN, 10));
-        Other.setForeground(new java.awt.Color(128, 128, 128));
-        Other.setEnabled(false);
-        bodyTypeMenu.add(Other);
-        //Binary File
-        JMenuItem binaryFile= new JMenuItem("Binary File");
-        binaryFile.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(binaryFile);
-        //No Body
-        JMenuItem noBody= new JMenuItem("No Body");
-        noBody.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(noBody);
+        JPopupMenu previewModeMenu =new JPopupMenu();
+        //-------Preview Mode
+        JMenuItem previewModeMenuItem= new JMenuItem("Preview Mode----------------------");
+        previewModeMenuItem.setFont(new Font("Serif", Font.PLAIN, 10));
+        previewModeMenuItem.setForeground(new java.awt.Color(128, 128, 128));
+        previewModeMenuItem.setEnabled(false);
+        previewModeMenu.add(previewModeMenuItem);
+        //Visual Preview
+        JMenuItem visualPreview= new JMenuItem("Visual Preview");
+        visualPreview.setFont(new Font("Serif", Font.PLAIN, 15));
+        previewModeMenu.add(visualPreview);
+        //Source Code
+        JMenuItem sourceCodeMenuItem= new JMenuItem("Source Code");
+        sourceCodeMenuItem.setFont(new Font("Serif", Font.PLAIN, 15));
+        previewModeMenu.add(sourceCodeMenuItem);
+        //Raw Data
+        JMenuItem rawData= new JMenuItem("Raw Data");
+        rawData.setFont(new Font("Serif", Font.PLAIN, 15));
+        previewModeMenu.add(rawData);
+        //-------ACTIONS
+        JMenuItem actionsSeparator= new JMenuItem("ACTIONS-------------------------------");
+        actionsSeparator.setFont(new Font("Serif", Font.PLAIN, 10));
+        actionsSeparator.setForeground(new java.awt.Color(128, 128, 128));
+        actionsSeparator.setEnabled(false);
+        previewModeMenu.add(actionsSeparator);
+        //Save Raw Response
+        JMenuItem saveRawResponseMenuItem= new JMenuItem("Save Raw Response", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\save-icon.png"));
+        saveRawResponseMenuItem.setFont(new Font("Serif", Font.PLAIN, 15));
+        previewModeMenu.add(saveRawResponseMenuItem);
+        //save HTTP Debug
+        JMenuItem saveHTTPDebug= new JMenuItem("Save HTTP Debug", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\bug-icon.png"));
+        saveHTTPDebug.setFont(new Font("Serif", Font.PLAIN, 15));
         //ading the pop up menu to the button
-        bodyType.addMouseListener(new MouseAdapter() {
+        previewButton.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                bodyTypeMenu.show(e.getComponent(), e.getX(), e.getY());
+                previewModeMenu.show(e.getComponent(), e.getX(), e.getY());
             }
         });
         //ading the button to the tab
-        queryHistoryPanel.setTabComponentAt(0, bodyType);
+        queryHistoryPanel.setTabComponentAt(0, previewButton);
 
-
-        JPanel auth = new JPanel();
-        auth.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
-        auth.setBackground(new java.awt.Color(38, 38, 38));
-        queryHistoryPanel.add("", auth);
-
-        //the type of body chosen in the popup menu down the Body word of the tab reference
-        JButton authButton = new JButton("Auth");
-        authButton.setForeground(new java.awt.Color(128, 128, 128));
-        authButton.setFont(new Font("SansSerif", Font.BOLD, 15));
-        authButton.setBackground(new java.awt.Color(38, 38, 38));
-        authButton.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
-        //creating the popup menu and adding each JMenuItem to the popUpMenu
-        JPopupMenu authMenu =new JPopupMenu();
-        //Basic Auth
-        JMenuItem basicAuth= new JMenuItem("Basic Auth");
-        basicAuth.setFont(new Font("Serif", Font.PLAIN, 15));
-        authMenu.add(basicAuth);
-        //Digest Auth
-        JMenuItem digestAuth= new JMenuItem("Digest Auth");
-        digestAuth.setFont(new Font("Serif", Font.PLAIN, 15));
-        authMenu.add(digestAuth);
-        //OAuth 1.0
-        JMenuItem OAuth1= new JMenuItem("OAuth 1.0");
-        formURLEncoded.setFont(new Font("Serif", Font.PLAIN, 15));
-        authMenu.add(OAuth1);
-        //OAuth 2.0
-        JMenuItem OAuth2= new JMenuItem("OAuth 2.0");
-        OAuth2.setFont(new Font("Serif", Font.PLAIN, 15));
-        authMenu.add(OAuth2);
-        //Microsoft NTLM
-        JMenuItem microsoftNTLM= new JMenuItem("Microsoft NTLM");
-        microsoftNTLM.setFont(new Font("Serif", Font.PLAIN, 15));
-        authMenu.add(microsoftNTLM);
-        //and the OTHER separator is used here too
-        //-------OTHER
-        JMenuItem newOther= new JMenuItem("OTHER------------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\Other-icon.png"));
-        newOther.setFont(new Font("Serif", Font.PLAIN, 10));
-        newOther.setForeground(new java.awt.Color(128, 128, 128));
-        newOther.setEnabled(false);
-        authMenu.add(newOther);
-        //No Authentication
-        JMenuItem noAuth= new JMenuItem("No Authentication");
-        noAuth.setFont(new Font("Serif", Font.PLAIN, 15));
-        authMenu.add(noAuth);
-        //ading the pop up menu to the button
-        authButton.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                authMenu.show(e.getComponent(), e.getX(), e.getY());
-            }
-        });
-        //ading the button to the tab
-        queryHistoryPanel.setTabComponentAt(1, authButton);
-
-        JPanel query = new JPanel();
-        query.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
-        query.setBackground(new java.awt.Color(38, 38, 38));
-        queryHistoryPanel.add("Query", query);
-
+        //next Panel is the HEADER Panel
         JPanel header = new JPanel();
         header.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
         header.setBackground(new java.awt.Color(38, 38, 38));
         queryHistoryPanel.add("Header", header);
 
+        //next Panel is the Cookie Panel
+        JPanel cookie = new JPanel();
+        cookie.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
+        cookie.setBackground(new java.awt.Color(38, 38, 38));
+        queryHistoryPanel.add("Cookie", cookie);
 
-        JPanel docs = new JPanel();
-        docs.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
-        docs.setBackground(new java.awt.Color(38, 38, 38));
-        queryHistoryPanel.add("Docs", docs);
+        //next Panel is the Timeline Panel
+
+        JPanel timeline = new JPanel();
+        timeline.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
+        timeline.setBackground(new java.awt.Color(38, 38, 38));
+        queryHistoryPanel.add("Timeline", timeline);
 
         GridBagConstraints settingRequestConstraints = new GridBagConstraints();
-        settingRequestConstraints.gridx = 1;
+        settingRequestConstraints.gridx = 2;
         settingRequestConstraints.gridy = 1;
         //growing constant
         settingRequestConstraints.weightx = 1;
@@ -750,11 +673,5 @@ public class CreateGUI{
         settingRequestConstraints.anchor = GridBagConstraints.LINE_START;
         settingRequestConstraints.fill = GridBagConstraints.BOTH;
         mainFrame.add(queryHistoryPanel, settingRequestConstraints);
-
-
-
-
-
-
     }
 }
