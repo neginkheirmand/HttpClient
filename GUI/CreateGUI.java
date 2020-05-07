@@ -421,7 +421,7 @@ public class CreateGUI{
         //growing constant
         historialConstraints.weightx = 1;
         historialConstraints.weighty = 1;
-        historialConstraints.anchor = GridBagConstraints.LINE_START;
+        historialConstraints.anchor = GridBagConstraints.PAGE_START;
         historialConstraints.fill = GridBagConstraints.BOTH;
 
         JScrollPane js = new JScrollPane(historialOfRequest,
@@ -433,19 +433,22 @@ public class CreateGUI{
 //        js.setSize(new Dimension(112, 500));
         mainFrame.add(js, historialConstraints);
 
-        //first the search bar
+
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = 0;
         //growing constant
         constraints.weightx = 0;
         constraints.weighty = 0;
+        constraints.ipadx=0;
+        constraints.ipady=0;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.anchor=GridBagConstraints.PAGE_START;
-
+        constraints.insets = new Insets(1,1,1,1);
 
         //search bar : we have a small upper panel with a text area for search and then aside it a plus button opening th popup menu already created
         JPanel upperPart = new JPanel();
+        upperPart.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
         upperPart.setBackground(new java.awt.Color(38, 38, 38));
         upperPart.setLayout(new FlowLayout(FlowLayout.CENTER));
         //the textField part for search
@@ -456,7 +459,7 @@ public class CreateGUI{
                 searchField.setText("");
             }
         });
-        searchField.setPreferredSize(new Dimension(80, 25));
+        searchField.setPreferredSize(new Dimension(100, 30));
         searchField.setFont(new Font("SansSerif", Font.BOLD, 13));
         searchField.setBackground(new java.awt.Color(38, 38, 38));
         searchField.setForeground(new java.awt.Color(128, 128, 128));
@@ -483,7 +486,7 @@ public class CreateGUI{
         constraints.weightx=0;
         constraints.weighty=0;
         constraints.insets = new Insets(1, 1, 1, 1);
-        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+        constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         //then the requests and the folders containing them
 
@@ -496,27 +499,32 @@ public class CreateGUI{
         //here is the part we get the information of the already done requests
         //and we make a JButton list of them and then we show them
         //button proto-type
-        for (int i = 0; i < 35; i++) {
-            historialOfRequest.setPreferredSize(new Dimension(112, 100+numberOfButtons*25));
-            JButton protoTypeButton = new JButton("prototype-request"+i, new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\GET2-icon.png"));
-            protoTypeButton.setMaximumSize(new Dimension(protoTypeButton.getPreferredSize().width,plusButton.getPreferredSize().height));
-            protoTypeButton.setMinimumSize(new Dimension(protoTypeButton.getPreferredSize().width,plusButton.getPreferredSize().height));
-            protoTypeButton.setPreferredSize(new Dimension(protoTypeButton.getPreferredSize().width,plusButton.getPreferredSize().height));
-            protoTypeButton.setSize(new Dimension(protoTypeButton.getPreferredSize().width,plusButton.getPreferredSize().height));
-            protoTypeButton.setFont(new Font("SansSerif", Font.BOLD, 15));
+        for (int i = 0; i < 5; i++) {
+            if (i == 4) {
+                constraints.weightx = 1;
+                constraints.weighty = 1;
+            }
+            historialOfRequest.setPreferredSize(new Dimension(112, 100 + numberOfButtons * 25));
+            JButton protoTypeButton = new JButton("prototype-request" + i, new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\GET2-icon.png"));
+            protoTypeButton.setMaximumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
+            protoTypeButton.setMinimumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
+            protoTypeButton.setPreferredSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
+            protoTypeButton.setSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
+//            protoTypeButton.setFont(new Font("SansSerif", Font.BOLD, 15));
             protoTypeButton.setBackground(new java.awt.Color(38, 38, 38));
             protoTypeButton.setOpaque(true);
             protoTypeButton.setForeground(new java.awt.Color(128, 128, 128));
             protoTypeButton.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
-            historialOfRequest.add(protoTypeButton,constraints);
-            constraints.gridy+=1.0;
-            numberOfButtons++;
+            historialOfRequest.add(protoTypeButton, constraints);
+            constraints.gridy += 1.0;
+                numberOfButtons++;
+
         }
 //        historialOfRequest.add(downSidePart, gridBagConstraints2);
 
     }
 
-    private void createRequestInfo(){
+    private void createRequestInfo() {
 
         //the second panel down the "Insomnia" label containig the command info of requests
         JTabbedPane setRequestTabedPane = new JTabbedPane();
@@ -537,71 +545,72 @@ public class CreateGUI{
         bodyType.setBackground(new java.awt.Color(38, 38, 38));
         bodyType.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
         //creating the popup menu and adding each JMenuItem to the popUpMenu
-        JPopupMenu bodyTypeMenu =new JPopupMenu();
+        JPopupMenu bodyTypeMenu = new JPopupMenu();
         //-------STRUCTURED
-        JMenuItem structured= new JMenuItem("STRUCTURED----------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\STRUCTURED-icon.png"));
+        JMenuItem structured = new JMenuItem("STRUCTURED----------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\STRUCTURED-icon.png"));
         structured.setFont(new Font("Serif", Font.PLAIN, 10));
         structured.setForeground(new java.awt.Color(128, 128, 128));
         structured.setEnabled(false);
         bodyTypeMenu.add(structured);
         //Multipart Form
-        JMenuItem multipartForm= new JMenuItem("Multipart Form");
+        JMenuItem multipartForm = new JMenuItem("Multipart Form");
         multipartForm.setFont(new Font("Serif", Font.PLAIN, 15));
         bodyTypeMenu.add(multipartForm);
         //Form URL Encoded
-        JMenuItem formURLEncoded= new JMenuItem("Form URL Encoded");
+        JMenuItem formURLEncoded = new JMenuItem("Form URL Encoded");
         formURLEncoded.setFont(new Font("Serif", Font.PLAIN, 15));
         bodyTypeMenu.add(formURLEncoded);
         //GraphQL Query
-        JMenuItem graphQLQuery= new JMenuItem("GraphQL Query");
+        JMenuItem graphQLQuery = new JMenuItem("GraphQL Query");
         graphQLQuery.setFont(new Font("Serif", Font.PLAIN, 15));
         bodyTypeMenu.add(graphQLQuery);
         //-------TEXT
-        JMenuItem text= new JMenuItem("TEXT----------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\text-icon.png"));
+        JMenuItem text = new JMenuItem("TEXT----------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\text-icon.png"));
         text.setFont(new Font("Serif", Font.PLAIN, 10));
         text.setForeground(new java.awt.Color(128, 128, 128));
         text.setEnabled(false);
         bodyTypeMenu.add(text);
         //JSON
-        JMenuItem JSON= new JMenuItem("JSON");
+        JMenuItem JSON = new JMenuItem("JSON");
         JSON.setFont(new Font("Serif", Font.PLAIN, 15));
         bodyTypeMenu.add(JSON);
         //XML
-        JMenuItem XML= new JMenuItem("XML");
+        JMenuItem XML = new JMenuItem("XML");
         XML.setFont(new Font("Serif", Font.PLAIN, 15));
         //YAML
-        JMenuItem YAML= new JMenuItem("GraphQL Query");
+        JMenuItem YAML = new JMenuItem("GraphQL Query");
         YAML.setFont(new Font("Serif", Font.PLAIN, 15));
         bodyTypeMenu.add(YAML);
         //EDN
-        JMenuItem EDN= new JMenuItem("EDN");
+        JMenuItem EDN = new JMenuItem("EDN");
         EDN.setFont(new Font("Serif", Font.PLAIN, 15));
         bodyTypeMenu.add(EDN);
         //Other
-        JMenuItem other= new JMenuItem("Other");
+        JMenuItem other = new JMenuItem("Other");
         other.setFont(new Font("Serif", Font.PLAIN, 15));
         bodyTypeMenu.add(other);
         //-------OTHER
-        JMenuItem Other= new JMenuItem("OTHER------------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\Other-icon.png"));
+        JMenuItem Other = new JMenuItem("OTHER------------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\Other-icon.png"));
         Other.setFont(new Font("Serif", Font.PLAIN, 10));
         Other.setForeground(new java.awt.Color(128, 128, 128));
         Other.setEnabled(false);
         bodyTypeMenu.add(Other);
         //Binary File
-        JMenuItem binaryFile= new JMenuItem("Binary File");
+        JMenuItem binaryFile = new JMenuItem("Binary File");
         binaryFile.setFont(new Font("Serif", Font.PLAIN, 15));
         bodyTypeMenu.add(binaryFile);
         //No Body
-        JMenuItem noBody= new JMenuItem("No Body");
+        JMenuItem noBody = new JMenuItem("No Body");
         noBody.setFont(new Font("Serif", Font.PLAIN, 15));
         bodyTypeMenu.add(noBody);
         //ading the pop up menu to the button
         bodyType.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                    setRequestTabedPane.setSelectedIndex(0);
+                setRequestTabedPane.setSelectedIndex(0);
             }
+
             public void mouseReleased(MouseEvent e) {
-                if(e.isPopupTrigger()) {
+                if (e.isPopupTrigger()) {
                     bodyTypeMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
@@ -622,36 +631,36 @@ public class CreateGUI{
         authButton.setBackground(new java.awt.Color(38, 38, 38));
         authButton.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
         //creating the popup menu and adding each JMenuItem to the popUpMenu
-        JPopupMenu authMenu =new JPopupMenu();
+        JPopupMenu authMenu = new JPopupMenu();
         //Basic Auth
-        JMenuItem basicAuth= new JMenuItem("Basic Auth");
+        JMenuItem basicAuth = new JMenuItem("Basic Auth");
         basicAuth.setFont(new Font("Serif", Font.PLAIN, 15));
         authMenu.add(basicAuth);
         //Digest Auth
-        JMenuItem digestAuth= new JMenuItem("Digest Auth");
+        JMenuItem digestAuth = new JMenuItem("Digest Auth");
         digestAuth.setFont(new Font("Serif", Font.PLAIN, 15));
         authMenu.add(digestAuth);
         //OAuth 1.0
-        JMenuItem OAuth1= new JMenuItem("OAuth 1.0");
+        JMenuItem OAuth1 = new JMenuItem("OAuth 1.0");
         OAuth1.setFont(new Font("Serif", Font.PLAIN, 15));
         authMenu.add(OAuth1);
         //OAuth 2.0
-        JMenuItem OAuth2= new JMenuItem("OAuth 2.0");
+        JMenuItem OAuth2 = new JMenuItem("OAuth 2.0");
         OAuth2.setFont(new Font("Serif", Font.PLAIN, 15));
         authMenu.add(OAuth2);
         //Microsoft NTLM
-        JMenuItem microsoftNTLM= new JMenuItem("Microsoft NTLM");
+        JMenuItem microsoftNTLM = new JMenuItem("Microsoft NTLM");
         microsoftNTLM.setFont(new Font("Serif", Font.PLAIN, 15));
         authMenu.add(microsoftNTLM);
         //and the OTHER separator is used here too
         //-------OTHER
-        JMenuItem newOther= new JMenuItem("OTHER------------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\Other-icon.png"));
+        JMenuItem newOther = new JMenuItem("OTHER------------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\Other-icon.png"));
         newOther.setFont(new Font("Serif", Font.PLAIN, 10));
         newOther.setForeground(new java.awt.Color(128, 128, 128));
         newOther.setEnabled(false);
         authMenu.add(newOther);
         //No Authentication
-        JMenuItem noAuth= new JMenuItem("No Authentication");
+        JMenuItem noAuth = new JMenuItem("No Authentication");
         noAuth.setFont(new Font("Serif", Font.PLAIN, 15));
         authMenu.add(noAuth);
         //ading the pop up menu to the button
@@ -659,8 +668,9 @@ public class CreateGUI{
             public void mousePressed(MouseEvent e) {
                 setRequestTabedPane.setSelectedIndex(1);
             }
+
             public void mouseReleased(MouseEvent e) {
-                if(e.isPopupTrigger()) {
+                if (e.isPopupTrigger()) {
                     authMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
@@ -678,13 +688,16 @@ public class CreateGUI{
         header.setBackground(new java.awt.Color(38, 38, 38));
         header.setLayout(new GridBagLayout());
         setRequestTabedPane.add("Header", header);
-        GridBagConstraints headerConstraints =  new GridBagConstraints();
-        headerConstraints.gridx=0;
-        headerConstraints.gridy=0;
-        headerConstraints.weightx=0;
-        headerConstraints.weighty=0;
-        headerConstraints.fill =  GridBagConstraints.HORIZONTAL;
-        headerConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
+        GridBagConstraints headerConstraints = new GridBagConstraints();
+        headerConstraints.gridx = 0;
+        headerConstraints.gridy = 0;
+        headerConstraints.weightx = 0;
+        headerConstraints.weighty = 0;
+        headerConstraints.ipadx = 0;
+        headerConstraints.ipady = 0;
+        headerConstraints.insets = new Insets(0, 0, 0, 0);
+        headerConstraints.fill = GridBagConstraints.HORIZONTAL;
+        headerConstraints.anchor = GridBagConstraints.NORTHWEST;
         createHeaderTab(header, headerConstraints);
 
         JPanel docs = new JPanel();
@@ -728,11 +741,13 @@ public class CreateGUI{
             @Override
             public void mouseClicked(MouseEvent e) {
                 headerTextField.setText(" ");
-                System.out.println("clocked on the header");
+                System.out.println("clicked on the header");
 //                //and add a new Pair of Header and values
-//                GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
-//                newGridConstraints.gridx = constraints.gridx + 1;
-//                createHeaderTab(header, newGridConstraints);
+                GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
+                newGridConstraints.gridy = constraints.gridy + 1;
+                createHeaderTab(header, newGridConstraints);
+                mainFrame.revalidate();
+                mainFrame.repaint();
             }
         });
         newKeyValuePair.add(headerTextField);
@@ -747,11 +762,17 @@ public class CreateGUI{
             @Override
             public void mouseClicked(MouseEvent e) {
                 valueTextField.setText(" ");
-                System.out.println("clocked on the value");
+                System.out.println("clicked on the value");
                 //and add a new Pair of Header and values
                 GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
-                newGridConstraints.gridx = constraints.gridx + 1;
+                newGridConstraints.gridy = constraints.gridy + 1;
+                newGridConstraints.weightx=1;
+                newGridConstraints.weighty=1;
+                constraints.weightx=0;
+                constraints.weighty=0;
                 createHeaderTab(header, newGridConstraints);
+                mainFrame.revalidate();
+                mainFrame.repaint();
             }
         });
         newKeyValuePair.add(valueTextField);
@@ -768,7 +789,12 @@ public class CreateGUI{
         trash.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("user clicked on the trash JButton");
-//                header.remove(newKeyValuePair);
+                header.remove(newKeyValuePair);
+                if(constraints.gridy==0){
+                    createHeaderTab(header, constraints);
+                }
+                mainFrame.revalidate();
+                mainFrame.repaint();
             }
         });
         newKeyValuePair.add(trash);
