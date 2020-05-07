@@ -676,9 +676,16 @@ public class CreateGUI{
         JPanel header = new JPanel();
         header.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
         header.setBackground(new java.awt.Color(38, 38, 38));
+        header.setLayout(new GridBagLayout());
         setRequestTabedPane.add("Header", header);
-
-        createHeaderTab(header);
+        GridBagConstraints headerConstraints =  new GridBagConstraints();
+        headerConstraints.gridx=0;
+        headerConstraints.gridy=0;
+        headerConstraints.weightx=0;
+        headerConstraints.weighty=0;
+        headerConstraints.fill =  GridBagConstraints.HORIZONTAL;
+        headerConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
+        createHeaderTab(header, headerConstraints);
 
         JPanel docs = new JPanel();
         docs.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
@@ -697,8 +704,76 @@ public class CreateGUI{
 
     }
 
-    private void createHeaderTab(JPanel header){
-        
+    private void createHeaderTab(JPanel header, GridBagConstraints constraints){
+
+        //we create the first Jpanel containing the pair of key and value
+        //if the user clicks on it this method should be called again with the same constaints but the gridx+1
+//
+        JPanel newKeyValuePair = new JPanel();
+//        newKeyValuePair.setPreferredSize(new Dimension());
+        newKeyValuePair.setLayout(new FlowLayout());
+        newKeyValuePair.setBackground(new java.awt.Color(38, 38, 38));
+//        //first component the 3 lines
+        JLabel _3_lines = new JLabel(new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\3-grey-lines1-icon.png"));
+        newKeyValuePair.add(_3_lines);
+        //then the JTextField for the Header
+        JTextField headerTextField = new JTextField("header");
+        headerTextField.setPreferredSize(new Dimension(150, 35));
+        headerTextField.setFont(new Font("Serif", Font.PLAIN, 15));
+        headerTextField.setForeground(new java.awt.Color(128, 128, 128));
+        headerTextField.setBackground(new java.awt.Color(38, 38, 38));
+        headerTextField.setBorder(BorderFactory. createMatteBorder(0, 0, 1, 0, new java.awt.Color(128, 128, 128)));
+//        boolean alreadyCreated = false;
+        headerTextField.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                headerTextField.setText(" ");
+                System.out.println("clocked on the header");
+//                //and add a new Pair of Header and values
+//                GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
+//                newGridConstraints.gridx = constraints.gridx + 1;
+//                createHeaderTab(header, newGridConstraints);
+            }
+        });
+        newKeyValuePair.add(headerTextField);
+        //then the JTextField for the value
+        JTextField valueTextField = new JTextField("value");
+        valueTextField.setPreferredSize(new Dimension(150, 35));
+        valueTextField.setFont(new Font("Serif", Font.PLAIN, 15));
+        valueTextField.setForeground(new java.awt.Color(128, 128, 128));
+        valueTextField.setBackground(new java.awt.Color(38, 38, 38));
+        valueTextField.setBorder(BorderFactory. createMatteBorder(0, 0, 1, 0, new java.awt.Color(128, 128, 128)));
+        valueTextField.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                valueTextField.setText(" ");
+                System.out.println("clocked on the value");
+                //and add a new Pair of Header and values
+                GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
+                newGridConstraints.gridx = constraints.gridx + 1;
+                createHeaderTab(header, newGridConstraints);
+            }
+        });
+        newKeyValuePair.add(valueTextField);
+        //now the JCheckBox
+        JCheckBox checkBox = new JCheckBox(" ", true);
+        checkBox.setBackground(new java.awt.Color(38, 38, 38));
+        checkBox.setOpaque(false);
+        newKeyValuePair.add(checkBox);
+        //now the trash icon Button
+        JButton trash = new JButton(new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\delete-icon1.png"));
+        trash.setBackground(new java.awt.Color(38, 38, 38));
+        trash.setOpaque(false);
+        trash.setPreferredSize(new Dimension(18, 18));
+        trash.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("user clicked on the trash JButton");
+//                header.remove(newKeyValuePair);
+            }
+        });
+        newKeyValuePair.add(trash);
+        header.add(newKeyValuePair, constraints);
+
     }
 
     private void createRequestHistoryPanel(){
