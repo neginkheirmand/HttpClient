@@ -394,10 +394,13 @@ public class CreateGUI{
     private void createRequestClasifier() {
         //the first panel down the "Insomnia" label containig the history of requests
         JPanel historialOfRequest = new JPanel();
-        historialOfRequest.setPreferredSize(new Dimension(112, 500));
-        historialOfRequest.setSize(new Dimension(112, 500));
+        int numberOfButtons = 1;
+        historialOfRequest.setPreferredSize(new Dimension(112, 100+numberOfButtons*25));
+//        historialOfRequest.setSize(new Dimension(112, 500));
         historialOfRequest.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
         historialOfRequest.setBackground(new java.awt.Color(38, 38, 38));
+        GridBagLayout gBL = new GridBagLayout();
+        historialOfRequest.setLayout(gBL);
         //creating pop up menu for the left panel containing:
         // JMenuItems "New Request" and "New Folder"
         JPopupMenu leftPanelPopUpMenu = new JPopupMenu();
@@ -408,8 +411,11 @@ public class CreateGUI{
         newFolderItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
         leftPanelPopUpMenu.add(newRequestItem);
         leftPanelPopUpMenu.add(newFolderItem);
+        //with right click in this component you will see the JPopUpMenu poping up
         historialOfRequest.setComponentPopupMenu(leftPanelPopUpMenu);
-        GridBagConstraints historialConstraints = new GridBagConstraints();
+
+        //ading the panel created
+        GridBagConstraints historialConstraints = gBL.getConstraints(historialOfRequest);
         historialConstraints.gridx = 0;
         historialConstraints.gridy = 1;
         //growing constant
@@ -417,12 +423,31 @@ public class CreateGUI{
         historialConstraints.weighty = 1;
         historialConstraints.anchor = GridBagConstraints.LINE_START;
         historialConstraints.fill = GridBagConstraints.BOTH;
-        mainFrame.add(historialOfRequest, historialConstraints);
 
-        //first we have a small upper panel with a text area for search and then aside it a plus button opening th popup menu already created
+        JScrollPane js = new JScrollPane(historialOfRequest,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        js.setPreferredSize(new Dimension(112, 500));
+//        js.setMaximumSize(new Dimension(112, 500));
+//        js.setMinimumSize(new Dimension(112, 500));
+//        js.setSize(new Dimension(112, 500));
+        mainFrame.add(js, historialConstraints);
+
+        //first the search bar
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        //growing constant
+        constraints.weightx = 0;
+        constraints.weighty = 0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor=GridBagConstraints.PAGE_START;
+
+
+        //search bar : we have a small upper panel with a text area for search and then aside it a plus button opening th popup menu already created
         JPanel upperPart = new JPanel();
         upperPart.setBackground(new java.awt.Color(38, 38, 38));
-        upperPart.setLayout(new FlowLayout());
+        upperPart.setLayout(new FlowLayout(FlowLayout.CENTER));
         //the textField part for search
         JTextField searchField = new JTextField("Filter");
         searchField.addMouseListener(new MouseAdapter() {
@@ -437,6 +462,7 @@ public class CreateGUI{
         searchField.setForeground(new java.awt.Color(128, 128, 128));
         searchField.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
         upperPart.add(searchField);
+
         //creating the "Create New Request Button"
         JButton plusButton = new JButton(new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\plus-icon.png"));
         plusButton.setPreferredSize(new Dimension(25, 25));
@@ -447,30 +473,47 @@ public class CreateGUI{
             }
         });
         upperPart.add(plusButton);
-        historialOfRequest.add(upperPart, BorderLayout.NORTH);
+
+        historialOfRequest.add(upperPart, constraints);
+
+        constraints.gridx=0;
+        constraints.gridy=1;
+        constraints.ipadx=0;
+        constraints.ipady=0;
+        constraints.weightx=0;
+        constraints.weighty=0;
+        constraints.insets = new Insets(1, 1, 1, 1);
+        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        //then the requests and the folders containing them
 
         //now we have to add the new scrollable Jpanel down the search bar and the "new request" button
-        JPanel downSidePart = new JPanel();
-        JScrollPane scrollPanelContainer = new JScrollPane(downSidePart);
-        scrollPanelContainer.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPanelContainer.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        historialOfRequest.add(scrollPanelContainer, BorderLayout.CENTER);
-        downSidePart.setLayout(new BoxLayout(downSidePart, BoxLayout.Y_AXIS));
+//        JPanel downSidePart = new JPanel();
+//        historialOfRequest.add(downSidePart, gridConstraints);
+//        downSidePart.setLayout(new BoxLayout(downSidePart, BoxLayout.Y_AXIS));
 
 
         //here is the part we get the information of the already done requests
         //and we make a JButton list of them and then we show them
         //button proto-type
-        for (int i = 0; i < 10; i++) {
-            JButton protoTypeButton = new JButton("prototype-request", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\GET2-icon.png"));
-            protoTypeButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, protoTypeButton.getMinimumSize().height));
-            protoTypeButton.setFont(new Font("SansSerif", Font.BOLD, 12));
+        for (int i = 0; i < 35; i++) {
+            historialOfRequest.setPreferredSize(new Dimension(112, 100+numberOfButtons*25));
+            JButton protoTypeButton = new JButton("prototype-request"+i, new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\GET2-icon.png"));
+            protoTypeButton.setMaximumSize(new Dimension(protoTypeButton.getPreferredSize().width,plusButton.getPreferredSize().height));
+            protoTypeButton.setMinimumSize(new Dimension(protoTypeButton.getPreferredSize().width,plusButton.getPreferredSize().height));
+            protoTypeButton.setPreferredSize(new Dimension(protoTypeButton.getPreferredSize().width,plusButton.getPreferredSize().height));
+            protoTypeButton.setSize(new Dimension(protoTypeButton.getPreferredSize().width,plusButton.getPreferredSize().height));
+            protoTypeButton.setFont(new Font("SansSerif", Font.BOLD, 15));
             protoTypeButton.setBackground(new java.awt.Color(38, 38, 38));
             protoTypeButton.setOpaque(true);
             protoTypeButton.setForeground(new java.awt.Color(128, 128, 128));
-            protoTypeButton.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
-            downSidePart.add(protoTypeButton);
+            protoTypeButton.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
+            historialOfRequest.add(protoTypeButton,constraints);
+            constraints.gridy+=1.0;
+            numberOfButtons++;
         }
+//        historialOfRequest.add(downSidePart, gridBagConstraints2);
+
     }
 
     private void createRequestInfo(){
@@ -635,6 +678,7 @@ public class CreateGUI{
         header.setBackground(new java.awt.Color(38, 38, 38));
         setRequestTabedPane.add("Header", header);
 
+        createHeaderTab(header);
 
         JPanel docs = new JPanel();
         docs.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
@@ -651,6 +695,10 @@ public class CreateGUI{
         settingRequestConstraints.fill = GridBagConstraints.BOTH;
         mainFrame.add(setRequestTabedPane, settingRequestConstraints);
 
+    }
+
+    private void createHeaderTab(JPanel header){
+        
     }
 
     private void createRequestHistoryPanel(){
