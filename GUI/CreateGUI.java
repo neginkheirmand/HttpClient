@@ -1,5 +1,7 @@
 package GUI;
 
+import com.sun.xml.internal.ws.resources.DispatchMessages;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -307,6 +309,12 @@ public class CreateGUI{
 
 
         JTextField addressField = new JTextField("https://api.myproduct.com/v1/users");
+        addressField.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                addressField.setText("");
+            }
+        });
         addressField.setForeground(new java.awt.Color(166, 166, 166));
         addressField.setFont(new Font("Serif", Font.PLAIN, 17));
         addressField.setPreferredSize( new Dimension(350, 48));
@@ -383,7 +391,7 @@ public class CreateGUI{
 
     }
 
-    private void createRequestClasifier(){
+    private void createRequestClasifier() {
         //the first panel down the "Insomnia" label containig the history of requests
         JPanel historialOfRequest = new JPanel();
         historialOfRequest.setPreferredSize(new Dimension(112, 500));
@@ -397,7 +405,7 @@ public class CreateGUI{
         JMenuItem newRequestItem = new JMenuItem("New Request", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\newRequest-icon.png"));
         newRequestItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
         JMenuItem newFolderItem = new JMenuItem("New Folder", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\newFolder-icon.png"));
-        newFolderItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,  ActionEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
+        newFolderItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
         leftPanelPopUpMenu.add(newRequestItem);
         leftPanelPopUpMenu.add(newFolderItem);
         historialOfRequest.setComponentPopupMenu(leftPanelPopUpMenu);
@@ -411,6 +419,58 @@ public class CreateGUI{
         historialConstraints.fill = GridBagConstraints.BOTH;
         mainFrame.add(historialOfRequest, historialConstraints);
 
+        //first we have a small upper panel with a text area for search and then aside it a plus button opening th popup menu already created
+        JPanel upperPart = new JPanel();
+        upperPart.setBackground(new java.awt.Color(38, 38, 38));
+        upperPart.setLayout(new FlowLayout());
+        //the textField part for search
+        JTextField searchField = new JTextField("Filter");
+        searchField.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                searchField.setText("");
+            }
+        });
+        searchField.setPreferredSize(new Dimension(80, 25));
+        searchField.setFont(new Font("SansSerif", Font.BOLD, 13));
+        searchField.setBackground(new java.awt.Color(38, 38, 38));
+        searchField.setForeground(new java.awt.Color(128, 128, 128));
+        searchField.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
+        upperPart.add(searchField);
+        //creating the "Create New Request Button"
+        JButton plusButton = new JButton(new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\plus-icon.png"));
+        plusButton.setPreferredSize(new Dimension(25, 25));
+        plusButton.setBackground(new java.awt.Color(38, 38, 38));
+        plusButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                leftPanelPopUpMenu.show(plusButton, plusButton.getX() - 63, plusButton.getY() + 17);
+            }
+        });
+        upperPart.add(plusButton);
+        historialOfRequest.add(upperPart, BorderLayout.NORTH);
+
+        //now we have to add the new scrollable Jpanel down the search bar and the "new request" button
+        JPanel downSidePart = new JPanel();
+        JScrollPane scrollPanelContainer = new JScrollPane(downSidePart);
+        scrollPanelContainer.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPanelContainer.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        historialOfRequest.add(scrollPanelContainer, BorderLayout.CENTER);
+        downSidePart.setLayout(new BoxLayout(downSidePart, BoxLayout.Y_AXIS));
+
+
+        //here is the part we get the information of the already done requests
+        //and we make a JButton list of them and then we show them
+        //button proto-type
+        for (int i = 0; i < 10; i++) {
+            JButton protoTypeButton = new JButton("prototype-request", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\GET2-icon.png"));
+            protoTypeButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, protoTypeButton.getMinimumSize().height));
+            protoTypeButton.setFont(new Font("SansSerif", Font.BOLD, 12));
+            protoTypeButton.setBackground(new java.awt.Color(38, 38, 38));
+            protoTypeButton.setOpaque(true);
+            protoTypeButton.setForeground(new java.awt.Color(128, 128, 128));
+            protoTypeButton.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
+            downSidePart.add(protoTypeButton);
+        }
     }
 
     private void createRequestInfo(){
@@ -495,7 +555,12 @@ public class CreateGUI{
         //ading the pop up menu to the button
         bodyType.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                bodyTypeMenu.show(e.getComponent(), e.getX(), e.getY());
+                    setRequestTabedPane.setSelectedIndex(0);
+            }
+            public void mouseReleased(MouseEvent e) {
+                if(e.isPopupTrigger()) {
+                    bodyTypeMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
             }
         });
         //ading the button to the tab
@@ -549,7 +614,12 @@ public class CreateGUI{
         //ading the pop up menu to the button
         authButton.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                authMenu.show(e.getComponent(), e.getX(), e.getY());
+                setRequestTabedPane.setSelectedIndex(1);
+            }
+            public void mouseReleased(MouseEvent e) {
+                if(e.isPopupTrigger()) {
+                    authMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
             }
         });
         //ading the button to the tab
@@ -638,8 +708,13 @@ public class CreateGUI{
         saveHTTPDebug.setFont(new Font("Serif", Font.PLAIN, 15));
         //ading the pop up menu to the button
         previewButton.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                previewModeMenu.show(e.getComponent(), e.getX(), e.getY());
+            public void mousePressed(MouseEvent e){
+                queryHistoryPanel.setSelectedIndex(0);
+            }
+            public void mouseReleased(MouseEvent e) {
+                if(e.isPopupTrigger()) {
+                    previewModeMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
             }
         });
         //ading the button to the tab
