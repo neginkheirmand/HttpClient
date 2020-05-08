@@ -1,5 +1,6 @@
 package GUI;
 
+import GUI.CellRendererForBodyComboBox;
 import com.sun.xml.internal.ws.resources.DispatchMessages;
 
 import javax.swing.*;
@@ -8,6 +9,8 @@ import java.awt.event.*;
 
 public class CreateGUI{
     private JFrame mainFrame;
+    private static int timesBodyTypeComboBoxChanged =0;
+
     public CreateGUI(){
         mainFrame = new JFrame("Insomnia");
         mainFrame.setMinimumSize(new Dimension(1200, 450));
@@ -253,59 +256,26 @@ public class CreateGUI{
 
         //badan bayad commandesh chi bashe ro malum koni
         //creating components of the JPanel
-        String commandTitle = "HEAD";
-        JLabel command = new JLabel(commandTitle, SwingConstants.CENTER);
-        command.setPreferredSize(new Dimension(200, 48));
-        command.setForeground(Color.white);
-        command.setFont(new Font("SansSerif", Font.BOLD, 23));
-        command.setBackground(new java.awt.Color(166, 166, 166));
-        command.setOpaque(true);
+        Object methods[][] = {
+                { new Font("Serif", Font.BOLD , 15), new java.awt.Color(47 , 198, 102), "POST" },
+                { new Font("Serif", Font.BOLD , 15), new java.awt.Color(239, 255, 20), "PATCH" },
+                { new Font("Serif", Font.BOLD , 15), new java.awt.Color(255 , 161, 20), "PUT" },
+                { new Font("Serif", Font.BOLD , 15), new java.awt.Color(255,20,20), "DELETE" },
+                { new Font("Serif", Font.BOLD , 15), new java.awt.Color( 123, 104, 238), "GET" },
+                { new Font("Serif", Font.BOLD , 15), new java.awt.Color(82, 218, 233), "HEAD" },
+                { new Font("Serif", Font.BOLD , 15), new java.awt.Color( 69, 162, 255), "OPTION" },
+                { new Font("Serif", Font.BOLD , 15), Color.BLACK, "SEPARATOR" },
+                { new Font("Serif", Font.BOLD , 15), Color.BLACK, "costume method" }
 
-        //creating command type in the popUpMenu by JMenuItems
-        JPopupMenu commandPopUpMenu = new JPopupMenu();
-        //GET
-        JMenuItem methodGET = new JMenuItem("GET");
-        methodGET.setFont(new Font("Serif", Font.PLAIN, 15));
-        methodGET.setForeground(new java.awt.Color(123, 104, 238));
-        commandPopUpMenu.add(methodGET);
-        //HEAD
-        JMenuItem methodHEAD = new JMenuItem("HEAD");
-        methodHEAD.setFont(new Font("Serif", Font.PLAIN, 15));
-        methodHEAD.setForeground(new java.awt.Color(82, 218, 233));
-        commandPopUpMenu.add(methodHEAD);
-        //POST
-        JMenuItem methodPOST = new JMenuItem("POST");
-        methodPOST.setFont(new Font("Serif", Font.PLAIN, 15));
-        methodPOST.setForeground(new java.awt.Color(47, 198, 102));
-        commandPopUpMenu.add(methodPOST);
-        //PUT
-        JMenuItem methodPUT = new JMenuItem("PUT");
-        methodPUT.setFont(new Font("Serif", Font.PLAIN, 15));
-        methodPUT.setForeground(new java.awt.Color(255, 161, 20));
-        commandPopUpMenu.add(methodPUT);
-        //PATCH
-        JMenuItem methodPATCH = new JMenuItem("PATCH");
-        methodPATCH.setFont(new Font("Serif", Font.PLAIN, 15));
-        methodPATCH.setForeground(new java.awt.Color(239, 255, 20));
-        commandPopUpMenu.add(methodPATCH);
-        //DELETE
-        JMenuItem methodDELETE = new JMenuItem("DELETE");
-        methodDELETE.setFont(new Font("Serif", Font.PLAIN, 15));
-        methodDELETE.setForeground(new java.awt.Color(255, 20, 20));
-        commandPopUpMenu.add(methodDELETE);
-        //OPTION
-        JMenuItem methodOPTION = new JMenuItem("OPTION");
-        methodOPTION.setFont(new Font("Serif", Font.PLAIN, 15));
-        methodOPTION.setForeground(new java.awt.Color(69, 162, 255));
-        commandPopUpMenu.add(methodOPTION);
-        commandPopUpMenu.addSeparator();
-        //costume method
-        JMenuItem customMethod = new JMenuItem("costume method");
-        customMethod.setFont(new Font("Serif", Font.PLAIN, 15));
-        commandPopUpMenu.add(customMethod);
-
-        command.setComponentPopupMenu(commandPopUpMenu);
-        secondUpPart.add(command);
+        };
+        //the costume renderer for the JcomboBox containing the methods for sending the data
+        ListCellRenderer renderer = new CellRendererForComboBox();
+        JComboBox method = new JComboBox(methods);
+        method.setPreferredSize(new Dimension(200, 48));
+        method.setBackground(new java.awt.Color(166, 166, 166));
+        method.setRenderer(renderer);
+//        method.add(new JToolBar.Separator(),7);
+        secondUpPart.add(method);
 
 
         JTextField addressField = new JTextField("https://api.myproduct.com/v1/users");
@@ -526,6 +496,7 @@ public class CreateGUI{
 
     private void createRequestInfo() {
 
+
         //the second panel down the "Insomnia" label containig the command info of requests
         JTabbedPane setRequestTabedPane = new JTabbedPane();
         setRequestTabedPane.setPreferredSize(new Dimension(600, 500));
@@ -537,87 +508,39 @@ public class CreateGUI{
         JPanel body = new JPanel();
         body.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
         body.setBackground(new java.awt.Color(38, 38, 38));
-        setRequestTabedPane.add("Body  Body", body);
-        //the type of body chosen in the popup menu down the Body word of the tab reference
-        JButton bodyType = new JButton("Body");
-        bodyType.setForeground(new java.awt.Color(128, 128, 128));
-        bodyType.setFont(new Font("SansSerif", Font.BOLD, 15));
-        bodyType.setBackground(new java.awt.Color(38, 38, 38));
-        bodyType.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
-        //creating the popup menu and adding each JMenuItem to the popUpMenu
-        JPopupMenu bodyTypeMenu = new JPopupMenu();
-        //-------STRUCTURED
-        JMenuItem structured = new JMenuItem("STRUCTURED----------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\STRUCTURED-icon.png"));
-        structured.setFont(new Font("Serif", Font.PLAIN, 10));
-        structured.setForeground(new java.awt.Color(128, 128, 128));
-        structured.setEnabled(false);
-        bodyTypeMenu.add(structured);
-        //Multipart Form
-        JMenuItem multipartForm = new JMenuItem("Multipart Form");
-        multipartForm.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(multipartForm);
-        //Form URL Encoded
-        JMenuItem formURLEncoded = new JMenuItem("Form URL Encoded");
-        formURLEncoded.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(formURLEncoded);
-        //GraphQL Query
-        JMenuItem graphQLQuery = new JMenuItem("GraphQL Query");
-        graphQLQuery.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(graphQLQuery);
-        //-------TEXT
-        JMenuItem text = new JMenuItem("TEXT----------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\text-icon.png"));
-        text.setFont(new Font("Serif", Font.PLAIN, 10));
-        text.setForeground(new java.awt.Color(128, 128, 128));
-        text.setEnabled(false);
-        bodyTypeMenu.add(text);
-        //JSON
-        JMenuItem JSON = new JMenuItem("JSON");
-        JSON.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(JSON);
-        //XML
-        JMenuItem XML = new JMenuItem("XML");
-        XML.setFont(new Font("Serif", Font.PLAIN, 15));
-        //YAML
-        JMenuItem YAML = new JMenuItem("GraphQL Query");
-        YAML.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(YAML);
-        //EDN
-        JMenuItem EDN = new JMenuItem("EDN");
-        EDN.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(EDN);
-        //Other
-        JMenuItem other = new JMenuItem("Other");
-        other.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(other);
-        //-------OTHER
-        JMenuItem Other = new JMenuItem("OTHER------------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\Other-icon.png"));
-        Other.setFont(new Font("Serif", Font.PLAIN, 10));
-        Other.setForeground(new java.awt.Color(128, 128, 128));
-        Other.setEnabled(false);
-        bodyTypeMenu.add(Other);
-        //Binary File
-        JMenuItem binaryFile = new JMenuItem("Binary File");
-        binaryFile.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(binaryFile);
-        //No Body
-        JMenuItem noBody = new JMenuItem("No Body");
-        noBody.setFont(new Font("Serif", Font.PLAIN, 15));
-        bodyTypeMenu.add(noBody);
-        //ading the pop up menu to the button
-        bodyType.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                setRequestTabedPane.setSelectedIndex(0);
-            }
+        setRequestTabedPane.add("", body);
 
-            public void mouseReleased(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    bodyTypeMenu.show(e.getComponent(), e.getX(), e.getY());
-                }
+
+
+         Object dataTypes[][] = {
+                 { new Font("Serif", Font.PLAIN, 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\url-icon.png"), "Form Url Encoded"},
+                 { new Font("Serif", Font.PLAIN, 15), new java.awt.Color(255, 161, 20), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\json-icon.png"), "JSON"},
+                 { new Font("Serif", Font.BOLD , 15), Color.BLACK, null ,"SEPARATOR" },
+                 { new Font("Serif", Font.BOLD , 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\binary-file-icon.png") ,  "Binary File" }
+
+        };
+        //the costume renderer for the JcomboBox containing the methods for sending the data
+        ListCellRenderer renderer = new CellRendererForBodyComboBox();
+        JComboBox dataType = new JComboBox(dataTypes);
+        dataType.setPreferredSize(new Dimension(200, 48));
+        dataType.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
+        dataType.setBackground(new java.awt.Color(38,38,38));
+        dataType.setForeground(new java.awt.Color(128, 128, 128));
+        dataType.setEditable(true);
+        dataType.setForeground(Color.WHITE);
+        dataType.setRenderer(renderer);
+        setRequestTabedPane.setTabComponentAt(0, dataType);
+        dataType.setEditable(false);
+        dataType.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createBodyTab(body, dataType.getSelectedIndex(), timesBodyTypeComboBoxChanged);
+                timesBodyTypeComboBoxChanged++;
+                mainFrame.revalidate();
+                mainFrame.repaint();
+                mainFrame.pack();
             }
         });
-        //ading the button to the tab
-        setRequestTabedPane.setTabComponentAt(0, bodyType);
-
 
         JPanel auth = new JPanel();
         auth.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
@@ -715,6 +638,58 @@ public class CreateGUI{
         settingRequestConstraints.fill = GridBagConstraints.BOTH;
         mainFrame.add(setRequestTabedPane, settingRequestConstraints);
 
+    }
+
+    private void createBodyTab(JPanel body, int bodyType, int timesChanged){
+        if(timesChanged>0) {
+            try {
+                Component toRemove = body.getComponent(timesChanged-1);
+                toRemove.setVisible(false);
+//                toRemove.setMaximumSize(new Dimension(0,0));
+//                toRemove.setPreferredSize(new Dimension(0,0));
+//                toRemove.setMinimumSize(new Dimension(0,0));
+//            GridBagLayout layout = (GridBagLayout) body.getLayout();
+//            GridBagConstraints gbc = layout.getConstraints(toRemove);
+//                body.remove(0);
+//                body.remove(timesChanged-1);
+//            body.setLayout(new GridBagLayout());
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println(e.getStackTrace());
+            }
+        }
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        constraints.anchor = GridBagConstraints.PAGE_START;
+        constraints.fill = GridBagConstraints.BOTH;
+        if( bodyType == 0) {
+            //its "From URL Encoded
+            JLabel hello = new JLabel(bodyType+"");
+            hello.setBackground(Color.BLUE);
+            body.add(hello, constraints);
+
+        }else if(bodyType == 1) {
+            //its "JSON"
+            JTextArea bodyReqJSON = new JTextArea();
+            bodyReqJSON.setSize(new Dimension(600, 900));
+            bodyReqJSON.setPreferredSize(new Dimension(600, 900));
+            bodyReqJSON.setFont(new Font("DialogInput", Font.PLAIN, 15));
+            bodyReqJSON.setForeground(new java.awt.Color(128, 128, 128));
+            bodyReqJSON.setBackground(new java.awt.Color(38, 38, 38));
+            bodyReqJSON.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
+            body.add(bodyReqJSON, constraints);
+        }else if(bodyType == 3){
+            //its "Binary File"
+            JLabel hello = new JLabel(bodyType+"");
+            hello.setBackground(Color.BLUE);
+            body.add(hello, constraints);
+        }
+        mainFrame.revalidate();
+        mainFrame.repaint();
+        mainFrame.pack();
     }
 
     private void createHeaderTab(JPanel header, GridBagConstraints constraints){
