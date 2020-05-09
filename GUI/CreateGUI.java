@@ -613,8 +613,16 @@ public class CreateGUI{
         query.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
         query.setBackground(new java.awt.Color(38, 38, 38));
         setRequestTabedPane.add("Query", query);
-        //its basically the same as the header tab
-        createQueryTab(query);
+        //query tab its basically the same as the header tab
+
+        GridBagConstraints queryTabConstraints = new GridBagConstraints();
+        queryTabConstraints.gridx=0;
+        queryTabConstraints.gridy=0;
+        queryTabConstraints.weightx=0;
+        queryTabConstraints.weighty=0;
+        queryTabConstraints.fill=GridBagConstraints.HORIZONTAL;
+        queryTabConstraints.anchor=GridBagConstraints.FIRST_LINE_START;
+        createQueryTab(query, queryTabConstraints);
 
         JPanel header = new JPanel();
         header.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
@@ -626,11 +634,11 @@ public class CreateGUI{
         headerConstraints.gridy = 0;
         headerConstraints.weightx = 0;
         headerConstraints.weighty = 0;
-        headerConstraints.ipadx = 0;
-        headerConstraints.ipady = 0;
-        headerConstraints.insets = new Insets(0, 0, 0, 0);
+//        headerConstraints.ipadx = 0;
+//        headerConstraints.ipady = 0;
+//        headerConstraints.insets = new Insets(0, 0, 0, 0);
         headerConstraints.fill = GridBagConstraints.HORIZONTAL;
-        headerConstraints.anchor = GridBagConstraints.NORTHWEST;
+        headerConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
         createHeaderTab(header, headerConstraints);
 
         JPanel docs = new JPanel();
@@ -906,13 +914,89 @@ public class CreateGUI{
         mainFrame.setLocation(locationOfNow);
     }
 
-    private void createQueryTab(JPanel query){
+    private void createQueryTab(JPanel query, GridBagConstraints constraints){
+
+        JPanel newNameValuePair = new JPanel();
+        newNameValuePair.setLayout(new FlowLayout());
+        newNameValuePair.setBackground(new java.awt.Color(38, 38, 38));
+//        //first component the 3 lines
+        JLabel _3_lines = new JLabel(new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\3-purple-lines-icon.png"));
+        newNameValuePair.add(_3_lines);
+        //then the JTextField for the name
+        JTextField nameTextField = new JTextField("name");
+        nameTextField.setPreferredSize(new Dimension(150, 35));
+        nameTextField.setFont(new Font("Serif", Font.PLAIN, 15));
+        nameTextField.setForeground(new java.awt.Color(128, 128, 128));
+        nameTextField.setBackground(new java.awt.Color(38, 38, 38));
+        nameTextField.setBorder(BorderFactory. createMatteBorder(1, 1, 3, 1, new java.awt.Color(128, 128, 128)));
+        nameTextField.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                nameTextField.setText(" ");
+                System.out.println("clicked on the name");
+//                //and add a new Pair of name and values
+                GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
+                newGridConstraints.gridy = constraints.gridy + 1;
+                createQueryTab(query, newGridConstraints);
+                mainFrame.revalidate();
+                mainFrame.repaint();
+            }
+        });
+        newNameValuePair.add(nameTextField);
+        //then the JTextField for the value
+        JTextField valueTextField = new JTextField("value");
+        valueTextField.setPreferredSize(new Dimension(150, 35));
+        valueTextField.setFont(new Font("Serif", Font.PLAIN, 15));
+        valueTextField.setForeground(new java.awt.Color(128, 128, 128));
+        valueTextField.setBackground(new java.awt.Color(38, 38, 38));
+        valueTextField.setBorder(BorderFactory. createMatteBorder(1, 1, 3, 1, new java.awt.Color(128, 128, 128)));
+        valueTextField.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                valueTextField.setText(" ");
+                System.out.println("clicked on the value");
+                //and add a new Pair of name and values
+                GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
+                newGridConstraints.gridy = constraints.gridy + 1;
+//                newGridConstraints.weightx=1;
+//                newGridConstraints.weighty=1;
+//                constraints.weightx=0;
+//                constraints.weighty=0;
+                createQueryTab(query, newGridConstraints);
+                mainFrame.revalidate();
+                mainFrame.repaint();
+            }
+        });
+        newNameValuePair.add(valueTextField);
+        //now the JCheckBox
+        JCheckBox checkBox = new JCheckBox(" ", true);
+        checkBox.setBackground(new java.awt.Color(38, 38, 38));
+        checkBox.setOpaque(false);
+        newNameValuePair.add(checkBox);
+        //now the trash icon Button
+        JButton trash = new JButton(new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\delete-icon1.png"));
+        trash.setBackground(new java.awt.Color(38, 38, 38));
+        trash.setOpaque(false);
+        trash.setPreferredSize(new Dimension(18, 18));
+        trash.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("user clicked on the trash JButton");
+                query.remove(newNameValuePair);
+                if(constraints.gridy==0){
+                    createQueryTab(query, constraints);
+                }
+                mainFrame.revalidate();
+                mainFrame.repaint();
+            }
+        });
+        newNameValuePair.add(trash);
+        query.add(newNameValuePair, constraints);
+
+
 
     }
 
     private void createHeaderTab(JPanel header, GridBagConstraints constraints){
-
-        
 
 
         //we create the first Jpanel containing the pair of key and value
@@ -962,10 +1046,10 @@ public class CreateGUI{
                 //and add a new Pair of Header and values
                 GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
                 newGridConstraints.gridy = constraints.gridy + 1;
-                newGridConstraints.weightx=1;
-                newGridConstraints.weighty=1;
-                constraints.weightx=0;
-                constraints.weighty=0;
+//                newGridConstraints.weightx=1;
+//                newGridConstraints.weighty=1;
+//                constraints.weightx=0;
+//                constraints.weighty=0;
                 createHeaderTab(header, newGridConstraints);
                 mainFrame.revalidate();
                 mainFrame.repaint();
@@ -995,7 +1079,6 @@ public class CreateGUI{
         });
         newKeyValuePair.add(trash);
         header.add(newKeyValuePair, constraints);
-*/
     }
 
     private void createRequestHistoryPanel(){

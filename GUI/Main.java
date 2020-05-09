@@ -1,20 +1,49 @@
 package GUI;
 
+import javax.imageio.ImageIO;
+import javax.print.DocFlavor;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-
-
+import java.awt.image.BufferedImage;
+import java.net.URL;
 
 
 public class Main {
     public static void main(String[] args) {
         new CreateGUI();
+//        if(SystemTray.isSupported()) {
+//            System.out.println("system tray supported");
+//        }
+
+
+
+//        JEditorPane jep = new JEditorPane();
+//        jep.setEditable(false);
+//
+//        try {
+//            jep.setPage("http://www.google.com");
+//        }catch (IOException e) {
+//            jep.setContentType("text/html");
+//            jep.setText("<html>Could not load</html>");
+//        }
+//
+//        JScrollPane scrollPane = new JScrollPane(jep);
+//        JFrame f = new JFrame("Test HTML");
+//        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        f.getContentPane().add(scrollPane);
+//        f.setPreferredSize(new Dimension(800,600));
+//        f.setVisible(true);
+
+
+
 
 //        JFrame testFrame = new JFrame("NAME");
 //        testFrame.setPreferredSize(new Dimension(200,300));
 //        testFrame.setVisible(true);
 //        testFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        URL url = new URL("https://i.stack.imgur.com/NoFA0.jpg");
+//        BufferedImage img = ImageIO.read(url);
+//        ImageIcon icon = new ImageIcon(img);
 //        JPanel testPanel1 = new JPanel();
 //        testPanel1.setBackground(Color.BLACK);
 //        testPanel1.setOpaque(true);
