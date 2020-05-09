@@ -11,12 +11,12 @@ import javax.xml.stream.Location;
 import java.awt.*;
 import java.awt.event.*;
 
-public class CreateGUI{
+public class CreateGUI {
     private JFrame mainFrame;
-    private static int timesBodyTypeComboBoxChanged =0;
-    private static int timesAuthTypeComboBoxChanged =0;
+    private static int timesBodyTypeComboBoxChanged = 0;
+    private static int timesAuthTypeComboBoxChanged = 0;
 
-    public CreateGUI(){
+    public CreateGUI() {
         mainFrame = new JFrame("Insomnia");
         mainFrame.setMinimumSize(new Dimension(1500, 450));
         mainFrame.setMaximumSize(new Dimension(1520, 1080));
@@ -40,7 +40,7 @@ public class CreateGUI{
 
     }
 
-    private void createMenuBar(){
+    private void createMenuBar() {
 
         JMenuBar menuBarOfApplication = new JMenuBar();
         //---------------
@@ -213,7 +213,7 @@ public class CreateGUI{
 
     }
 
-    private void createInsomniaDisplayArea(){
+    private void createInsomniaDisplayArea() {
 
         GridBagConstraints constraintsInsomniaLabel = new GridBagConstraints();
         //preparing the Insomnia label to be add
@@ -230,9 +230,9 @@ public class CreateGUI{
         constraintsInsomniaLabel.ipady = 0;
         constraintsInsomniaLabel.ipadx = 0;
         constraintsInsomniaLabel.anchor = GridBagConstraints.FIRST_LINE_START;
-        JLabel title = new JLabel("Insomnia",SwingConstants.CENTER);
-        title.setBounds(new Rectangle(100,100));
-        title.setMaximumSize(new Dimension(100,100));
+        JLabel title = new JLabel("Insomnia", SwingConstants.CENTER);
+        title.setBounds(new Rectangle(100, 100));
+        title.setMaximumSize(new Dimension(100, 100));
         title.setForeground(Color.white);
         title.setFont(new Font("SansSerif", Font.BOLD, 23));
         title.setBackground(new java.awt.Color(123, 104, 238));
@@ -242,36 +242,36 @@ public class CreateGUI{
 
     }
 
-    private void createRequestInfoPanel(){
+    private void createRequestInfoPanel() {
 
         //preparing the second head part as a panel
         JPanel secondUpPart = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        secondUpPart.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218,218,218)));
+        secondUpPart.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));
 //        secondUpPart.setBounds(new Rectangle(200,60));
-        secondUpPart.setSize(new Dimension(200,60));
+        secondUpPart.setSize(new Dimension(200, 60));
         GridBagConstraints constraintsCommand = new GridBagConstraints();
         constraintsCommand.gridx = 1;
         constraintsCommand.gridy = 0;
         //growing constant
         constraintsCommand.weightx = 1;
         constraintsCommand.weighty = -1;
-        constraintsCommand.gridheight=1;
-        constraintsCommand.gridwidth=1;
+        constraintsCommand.gridheight = 1;
+        constraintsCommand.gridwidth = 1;
         constraintsCommand.anchor = GridBagConstraints.FIRST_LINE_START;
         constraintsCommand.fill = GridBagConstraints.BOTH;
 
         //badan bayad commandesh chi bashe ro malum koni
         //creating components of the JPanel
         Object methods[][] = {
-                { new Font("Serif", Font.BOLD , 15), new java.awt.Color(47 , 198, 102), "POST" },
-                { new Font("Serif", Font.BOLD , 15), new java.awt.Color(239, 255, 20), "PATCH" },
-                { new Font("Serif", Font.BOLD , 15), new java.awt.Color(255 , 161, 20), "PUT" },
-                { new Font("Serif", Font.BOLD , 15), new java.awt.Color(255,20,20), "DELETE" },
-                { new Font("Serif", Font.BOLD , 15), new java.awt.Color( 123, 104, 238), "GET" },
-                { new Font("Serif", Font.BOLD , 15), new java.awt.Color(82, 218, 233), "HEAD" },
-                { new Font("Serif", Font.BOLD , 15), new java.awt.Color( 69, 162, 255), "OPTION" },
-                { new Font("Serif", Font.BOLD , 15), Color.BLACK, "SEPARATOR" },
-                { new Font("Serif", Font.BOLD , 15), Color.BLACK, "costume method" }
+                {new Font("Serif", Font.BOLD, 15), new java.awt.Color(47, 198, 102), "POST"},
+                {new Font("Serif", Font.BOLD, 15), new java.awt.Color(239, 255, 20), "PATCH"},
+                {new Font("Serif", Font.BOLD, 15), new java.awt.Color(255, 161, 20), "PUT"},
+                {new Font("Serif", Font.BOLD, 15), new java.awt.Color(255, 20, 20), "DELETE"},
+                {new Font("Serif", Font.BOLD, 15), new java.awt.Color(123, 104, 238), "GET"},
+                {new Font("Serif", Font.BOLD, 15), new java.awt.Color(82, 218, 233), "HEAD"},
+                {new Font("Serif", Font.BOLD, 15), new java.awt.Color(69, 162, 255), "OPTION"},
+                {new Font("Serif", Font.BOLD, 15), Color.BLACK, "SEPARATOR"},
+                {new Font("Serif", Font.BOLD, 15), Color.BLACK, "costume method"}
 
         };
         //the costume renderer for the JcomboBox containing the methods for sending the data
@@ -293,12 +293,12 @@ public class CreateGUI{
         });
         addressField.setForeground(new java.awt.Color(166, 166, 166));
         addressField.setFont(new Font("Serif", Font.PLAIN, 17));
-        addressField.setPreferredSize( new Dimension(350, 48));
+        addressField.setPreferredSize(new Dimension(350, 48));
         secondUpPart.add(addressField);
 
         JButton sendButton = new JButton("Send");
         sendButton.setBackground(Color.white);
-        sendButton.setPreferredSize(new Dimension(100 , 48));
+        sendButton.setPreferredSize(new Dimension(100, 48));
         sendButton.setForeground(new java.awt.Color(166, 166, 166));
         secondUpPart.add(sendButton);
 
@@ -306,14 +306,14 @@ public class CreateGUI{
 
     }
 
-    private void createHistorialRequest(){
+    private void createHistorialRequest() {
 
         //preparing the third head part as a panel
-        JPanel thirdUpPart = new JPanel(new FlowLayout(FlowLayout.LEFT, 10,10));
+        JPanel thirdUpPart = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
 //        thirdUpPart.setPreferredSize(new Dimension(200,60));
-        thirdUpPart.setMaximumSize(new Dimension(200,60));
-        thirdUpPart.setBounds(new Rectangle(200,60));
-        thirdUpPart.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218,218,218)));
+        thirdUpPart.setMaximumSize(new Dimension(200, 60));
+        thirdUpPart.setBounds(new Rectangle(200, 60));
+        thirdUpPart.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));
         GridBagConstraints infoCommand = new GridBagConstraints();
         infoCommand.gridx = 2;
         infoCommand.gridy = 0;
@@ -326,8 +326,8 @@ public class CreateGUI{
         //badan bayad time va hajmesh ro bedast biyari
         //creating components of the JPanel
         JLabel error = new JLabel("Error", SwingConstants.CENTER);
-        error.setPreferredSize(new Dimension(50,35));
-        error.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218,218,218)));
+        error.setPreferredSize(new Dimension(50, 35));
+        error.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));
         error.setForeground(Color.white);
         error.setFont(new Font("Serif", Font.BOLD, 15));
         error.setBackground(new java.awt.Color(205, 71, 78));
@@ -336,9 +336,9 @@ public class CreateGUI{
 
         String time = "0ms";
         JLabel timeTaken = new JLabel(time, SwingConstants.CENTER);
-        timeTaken.setPreferredSize(new Dimension(40,30));
-        timeTaken.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218,218,218)));
-        timeTaken.setForeground(new java.awt.Color(128, 128,128));
+        timeTaken.setPreferredSize(new Dimension(40, 30));
+        timeTaken.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));
+        timeTaken.setForeground(new java.awt.Color(128, 128, 128));
         timeTaken.setFont(new Font("Serif", Font.BOLD, 15));
         timeTaken.setBackground(new java.awt.Color(166, 166, 166));
         timeTaken.setOpaque(true);
@@ -346,9 +346,9 @@ public class CreateGUI{
 
         String dataUsed = "0B";
         JLabel netTaken = new JLabel(dataUsed, SwingConstants.CENTER);
-        netTaken.setPreferredSize(new Dimension(40,30));
-        netTaken.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218,218,218)));
-        netTaken.setForeground(new java.awt.Color(128,128,128));
+        netTaken.setPreferredSize(new Dimension(40, 30));
+        netTaken.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));
+        netTaken.setForeground(new java.awt.Color(128, 128, 128));
         netTaken.setFont(new Font("Serif", Font.BOLD, 15));
         netTaken.setBackground(new java.awt.Color(166, 166, 166));
         netTaken.setOpaque(true);
@@ -358,7 +358,7 @@ public class CreateGUI{
         //and the historial of this request
         JButton historialThisRequest = new JButton("Last Time");
         historialThisRequest.setBackground(Color.white);
-        historialThisRequest.setPreferredSize(new Dimension(100 , 48));
+        historialThisRequest.setPreferredSize(new Dimension(100, 48));
         historialThisRequest.setForeground(new java.awt.Color(166, 166, 166));
         thirdUpPart.add(historialThisRequest);
 
@@ -371,7 +371,7 @@ public class CreateGUI{
         //the first panel down the "Insomnia" label containig the history of requests
         JPanel historialOfRequest = new JPanel();
         int numberOfButtons = 1;
-        historialOfRequest.setPreferredSize(new Dimension(112, 100+numberOfButtons*25));
+        historialOfRequest.setPreferredSize(new Dimension(112, 100 + numberOfButtons * 25));
 //        historialOfRequest.setSize(new Dimension(112, 500));
         historialOfRequest.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
         historialOfRequest.setBackground(new java.awt.Color(65, 65, 104));
@@ -416,11 +416,11 @@ public class CreateGUI{
         //growing constant
         constraints.weightx = 0;
         constraints.weighty = 0;
-        constraints.ipadx=0;
-        constraints.ipady=0;
+        constraints.ipadx = 0;
+        constraints.ipady = 0;
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.anchor=GridBagConstraints.PAGE_START;
-        constraints.insets = new Insets(1,1,1,1);
+        constraints.anchor = GridBagConstraints.PAGE_START;
+        constraints.insets = new Insets(1, 1, 1, 1);
 
         //search bar : we have a small upper panel with a text area for search and then aside it a plus button opening th popup menu already created
         JPanel upperPart = new JPanel();
@@ -455,12 +455,12 @@ public class CreateGUI{
 
         historialOfRequest.add(upperPart, constraints);
 
-        constraints.gridx=0;
-        constraints.gridy=1;
-        constraints.ipadx=0;
-        constraints.ipady=0;
-        constraints.weightx=0;
-        constraints.weighty=0;
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.ipadx = 0;
+        constraints.ipady = 0;
+        constraints.weightx = 0;
+        constraints.weighty = 0;
         constraints.insets = new Insets(1, 1, 1, 1);
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -493,7 +493,7 @@ public class CreateGUI{
             protoTypeButton.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
             historialOfRequest.add(protoTypeButton, constraints);
             constraints.gridy += 1.0;
-                numberOfButtons++;
+            numberOfButtons++;
 
         }
 //        historialOfRequest.add(downSidePart, gridBagConstraints2);
@@ -517,12 +517,11 @@ public class CreateGUI{
         setRequestTabedPane.add("", body);
 
 
-
-         Object dataTypes[][] = {
-                 { new Font("Serif", Font.BOLD, 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\url-icon.png"), "Form Url Encoded"},
-                 { new Font("Serif", Font.BOLD, 15), new java.awt.Color(255, 161, 20), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\json-icon-1.png"), "JSON"},
-                 { new Font("Serif", Font.BOLD , 15), Color.BLACK, null ,"SEPARATOR" },
-                 { new Font("Serif", Font.BOLD , 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\binary-file-icon1.png") ,  "Binary File" }
+        Object dataTypes[][] = {
+                {new Font("Serif", Font.BOLD, 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\url-icon.png"), "Form Url Encoded"},
+                {new Font("Serif", Font.BOLD, 15), new java.awt.Color(255, 161, 20), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\json-icon-1.png"), "JSON"},
+                {new Font("Serif", Font.BOLD, 15), Color.BLACK, null, "SEPARATOR"},
+                {new Font("Serif", Font.BOLD, 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\binary-file-icon1.png"), "Binary File"}
 
         };
         //the costume renderer for the JcomboBox containing the methods for sending the data
@@ -544,7 +543,7 @@ public class CreateGUI{
 
         dataType.setPreferredSize(new Dimension(200, 48));
         dataType.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
-        dataType.setBackground(new java.awt.Color(38,38,38));
+        dataType.setBackground(new java.awt.Color(38, 38, 38));
         dataType.setForeground(new java.awt.Color(128, 128, 128));
         dataType.setForeground(Color.WHITE);
         dataType.setRenderer(renderer);
@@ -567,9 +566,9 @@ public class CreateGUI{
 
         //the type of body chosen in the popup menu down the Body word of the tab reference
         Object auths[][] = {
-                { new Font("Serif", Font.BOLD, 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\bearer-token-icon1.png"), "Bearer Token"},
-                { new Font("Serif", Font.BOLD , 15), Color.BLACK, null ,"SEPARATOR" },
-                { new Font("Serif", Font.BOLD , 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\no-authentication-icon.png") ,  "No Authentication" }
+                {new Font("Serif", Font.BOLD, 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\bearer-token-icon1.png"), "Bearer Token"},
+                {new Font("Serif", Font.BOLD, 15), Color.BLACK, null, "SEPARATOR"},
+                {new Font("Serif", Font.BOLD, 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\no-authentication-icon.png"), "No Authentication"}
 
         };
 
@@ -592,7 +591,7 @@ public class CreateGUI{
 
         authType.setPreferredSize(new Dimension(200, 48));
         authType.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
-        authType.setBackground(new java.awt.Color(38,38,38));
+        authType.setBackground(new java.awt.Color(38, 38, 38));
         authType.setForeground(new java.awt.Color(128, 128, 128));
         authType.setForeground(Color.WHITE);
         authType.setRenderer(authRenderer);
@@ -616,12 +615,12 @@ public class CreateGUI{
         //query tab its basically the same as the header tab
 
         GridBagConstraints queryTabConstraints = new GridBagConstraints();
-        queryTabConstraints.gridx=0;
-        queryTabConstraints.gridy=0;
-        queryTabConstraints.weightx=0;
-        queryTabConstraints.weighty=0;
-        queryTabConstraints.fill=GridBagConstraints.HORIZONTAL;
-        queryTabConstraints.anchor=GridBagConstraints.FIRST_LINE_START;
+        queryTabConstraints.gridx = 0;
+        queryTabConstraints.gridy = 0;
+        queryTabConstraints.weightx = 0;
+        queryTabConstraints.weighty = 0;
+        queryTabConstraints.fill = GridBagConstraints.HORIZONTAL;
+        queryTabConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
         createQueryTab(query, queryTabConstraints);
 
         JPanel header = new JPanel();
@@ -788,7 +787,7 @@ public class CreateGUI{
                         resetFile.setFont(new Font("Serif", Font.BOLD, 20));
                         resetFile.setBackground(new java.awt.Color(38, 38, 38));
                         resetFile.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
-                    }else{
+                    } else {
                         resetFile.setEnabled(true);
                         resetFile.setForeground(new java.awt.Color(138, 138, 138));
                         resetFile.setFont(new Font("DialogInput", Font.PLAIN, 18));
@@ -813,10 +812,10 @@ public class CreateGUI{
         mainFrame.setLocation(locationOfNow);
     }
 
-    private void createAuthTab(JPanel auth, int authType, int timesChanged){
+    private void createAuthTab(JPanel auth, int authType, int timesChanged) {
 
         auth.setLayout(new GridBagLayout());
-        if(timesChanged>0) {
+        if (timesChanged > 0) {
             try {
 //                Component toRemove = auth.getComponent(timesChanged-1);
 //                toRemove.setVisible(false);
@@ -836,62 +835,62 @@ public class CreateGUI{
         Dimension sizeOfNow = mainFrame.getSize();
         Point locationOfNow = mainFrame.getLocationOnScreen();
 
-        if( authType == 0) {
+        if (authType == 0) {
             //its "Bearer Token" form
             GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridx=0;
+            gbc.gridx = 0;
             gbc.gridy = 0;
-            gbc.weightx=1;
-            gbc.weighty =1;
-            gbc.insets= new Insets(5,30,5,15);
-            gbc.ipady=0;
-            gbc.ipadx=0;
-            gbc.anchor=GridBagConstraints.PAGE_START;
-            gbc.fill=GridBagConstraints.HORIZONTAL;
+            gbc.weightx = 1;
+            gbc.weighty = 1;
+            gbc.insets = new Insets(5, 30, 5, 15);
+            gbc.ipady = 0;
+            gbc.ipadx = 0;
+            gbc.anchor = GridBagConstraints.PAGE_START;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
 
             //token label
             JLabel tokenLabel = new JLabel("Token");
             tokenLabel.setOpaque(false);
             tokenLabel.setFont(new Font("TimesRoman", Font.BOLD, 15));
             tokenLabel.setForeground(new java.awt.Color(128, 128, 128));
-            tokenLabel.setPreferredSize(new Dimension(50,20));
+            tokenLabel.setPreferredSize(new Dimension(50, 20));
             auth.add(tokenLabel, gbc);
             //token text field
             JTextField tokenTextField = new JTextField();
             tokenTextField.setOpaque(false);
             tokenTextField.setForeground(new java.awt.Color(128, 128, 128));
             tokenTextField.setBackground(new java.awt.Color(38, 38, 38));
-            tokenTextField.setBorder(BorderFactory. createMatteBorder(0, 0, 1, 0, new java.awt.Color(128, 128, 128)));
-            tokenTextField.setPreferredSize(new Dimension(150,20));
-            gbc.gridx=1;
+            tokenTextField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(128, 128, 128)));
+            tokenTextField.setPreferredSize(new Dimension(150, 20));
+            gbc.gridx = 1;
             auth.add(tokenTextField, gbc);
             //next line we have the Prefix
-            JLabel prefix =new JLabel("Prefix", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\question-mark-icon.png"), JLabel.LEFT);
+            JLabel prefix = new JLabel("Prefix", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\question-mark-icon.png"), JLabel.LEFT);
             prefix.setToolTipText("Prefix to use when sending the Authorization eader. Deafaults to Bearer");
             prefix.setForeground(new java.awt.Color(128, 128, 128));
             prefix.setBackground(new java.awt.Color(38, 38, 38));
             prefix.setOpaque(false);
-            gbc.gridx=0;
-            gbc.gridy=1;
-            gbc.anchor=GridBagConstraints.FIRST_LINE_START;
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            gbc.anchor = GridBagConstraints.FIRST_LINE_START;
             auth.add(prefix, gbc);
             //prefix text field
             JTextField prefixTextField = new JTextField();
             prefixTextField.setOpaque(false);
             prefixTextField.setForeground(new java.awt.Color(128, 128, 128));
             prefixTextField.setBackground(new java.awt.Color(38, 38, 38));
-            prefixTextField.setBorder(BorderFactory. createMatteBorder(0, 0, 1, 0, new java.awt.Color(128, 128, 128)));
-            prefixTextField.setPreferredSize(new Dimension(150,20));
-            gbc.gridx=1;
+            prefixTextField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(128, 128, 128)));
+            prefixTextField.setPreferredSize(new Dimension(150, 20));
+            gbc.gridx = 1;
             auth.add(prefixTextField, gbc);
             //the Enabled Option
             JCheckBox enabledCheckBox = new JCheckBox("Enabled", true);
             enabledCheckBox.setOpaque(false);
-            gbc.gridx=1;
-            gbc.gridy=2;
+            gbc.gridx = 1;
+            gbc.gridy = 2;
             auth.add(enabledCheckBox, gbc);
 
-        }else if(authType == 2) {
+        } else if (authType == 2) {
             //no authentication
             auth.removeAll();
             auth.setLayout(new GridBagLayout());
@@ -914,7 +913,7 @@ public class CreateGUI{
         mainFrame.setLocation(locationOfNow);
     }
 
-    private void createQueryTab(JPanel query, GridBagConstraints constraints){
+    private void createQueryTab(JPanel query, GridBagConstraints constraints) {
 
         JPanel newNameValuePair = new JPanel();
         newNameValuePair.setLayout(new FlowLayout());
@@ -928,7 +927,7 @@ public class CreateGUI{
         nameTextField.setFont(new Font("Serif", Font.PLAIN, 15));
         nameTextField.setForeground(new java.awt.Color(128, 128, 128));
         nameTextField.setBackground(new java.awt.Color(38, 38, 38));
-        nameTextField.setBorder(BorderFactory. createMatteBorder(1, 1, 3, 1, new java.awt.Color(128, 128, 128)));
+        nameTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 3, 1, new java.awt.Color(128, 128, 128)));
         nameTextField.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -949,7 +948,7 @@ public class CreateGUI{
         valueTextField.setFont(new Font("Serif", Font.PLAIN, 15));
         valueTextField.setForeground(new java.awt.Color(128, 128, 128));
         valueTextField.setBackground(new java.awt.Color(38, 38, 38));
-        valueTextField.setBorder(BorderFactory. createMatteBorder(1, 1, 3, 1, new java.awt.Color(128, 128, 128)));
+        valueTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 3, 1, new java.awt.Color(128, 128, 128)));
         valueTextField.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -982,7 +981,7 @@ public class CreateGUI{
             public void actionPerformed(ActionEvent e) {
                 System.out.println("user clicked on the trash JButton");
                 query.remove(newNameValuePair);
-                if(constraints.gridy==0){
+                if (constraints.gridy == 0) {
                     createQueryTab(query, constraints);
                 }
                 mainFrame.revalidate();
@@ -993,10 +992,9 @@ public class CreateGUI{
         query.add(newNameValuePair, constraints);
 
 
-
     }
 
-    private void createHeaderTab(JPanel header, GridBagConstraints constraints){
+    private void createHeaderTab(JPanel header, GridBagConstraints constraints) {
 
 
         //we create the first Jpanel containing the pair of key and value
@@ -1015,7 +1013,7 @@ public class CreateGUI{
         headerTextField.setFont(new Font("Serif", Font.PLAIN, 15));
         headerTextField.setForeground(new java.awt.Color(128, 128, 128));
         headerTextField.setBackground(new java.awt.Color(38, 38, 38));
-        headerTextField.setBorder(BorderFactory. createMatteBorder(0, 0, 1, 0, new java.awt.Color(128, 128, 128)));
+        headerTextField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(128, 128, 128)));
 //        boolean alreadyCreated = false;
         headerTextField.addMouseListener(new MouseAdapter() {
             @Override
@@ -1037,7 +1035,7 @@ public class CreateGUI{
         valueTextField.setFont(new Font("Serif", Font.PLAIN, 15));
         valueTextField.setForeground(new java.awt.Color(128, 128, 128));
         valueTextField.setBackground(new java.awt.Color(38, 38, 38));
-        valueTextField.setBorder(BorderFactory. createMatteBorder(0, 0, 1, 0, new java.awt.Color(128, 128, 128)));
+        valueTextField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(128, 128, 128)));
         valueTextField.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -1070,7 +1068,7 @@ public class CreateGUI{
             public void actionPerformed(ActionEvent e) {
                 System.out.println("user clicked on the trash JButton");
                 header.remove(newKeyValuePair);
-                if(constraints.gridy==0){
+                if (constraints.gridy == 0) {
                     createHeaderTab(header, constraints);
                 }
                 mainFrame.revalidate();
@@ -1081,7 +1079,7 @@ public class CreateGUI{
         header.add(newKeyValuePair, constraints);
     }
 
-    private void createRequestHistoryPanel(){
+    private void createRequestHistoryPanel() {
 
         //the second panel down the "Insomnia" label containig the command info of requests
         JTabbedPane queryHistoryPanel = new JTabbedPane();
@@ -1107,12 +1105,11 @@ public class CreateGUI{
         //inja bayad bebini ke mituni enablesh bokoni ya na. enable mikoni agar ke un URL E ke dade shode b
 
         //creating the popup menu and adding each JMenuItem to the popUpMenu
-        JPopupMenu previewModeMenu =new JPopupMenu();
-
+        JPopupMenu previewModeMenu = new JPopupMenu();
 
 
         //-------Preview Mode
-        JMenuItem previewModeMenuItem= new JMenuItem("Preview Mode----------------------");
+        JMenuItem previewModeMenuItem = new JMenuItem("Preview Mode----------------------");
         previewModeMenuItem.setFont(new Font("Serif", Font.PLAIN, 10));
         previewModeMenuItem.setForeground(new java.awt.Color(128, 128, 128));
         previewModeMenuItem.setEnabled(false);
@@ -1121,7 +1118,7 @@ public class CreateGUI{
         // and add them to the same group of JButtons
         ButtonGroup group = new ButtonGroup();
         //Visual Preview
-        JRadioButtonMenuItem visualPreview= new JRadioButtonMenuItem("Visual Preview");
+        JRadioButtonMenuItem visualPreview = new JRadioButtonMenuItem("Visual Preview");
         visualPreview.setSelected(false);
         visualPreview.setFont(new Font("Serif", Font.PLAIN, 15));
         visualPreview.setForeground(new java.awt.Color(69, 162, 255));
@@ -1143,7 +1140,7 @@ public class CreateGUI{
 //sourceCodeMenuItem.setFont(new Font("Serif", Font.PLAIN, 15));
 //previewModeMenu.add(sourceCodeMenuItem);
         //Raw Data
-        JRadioButtonMenuItem rawData= new JRadioButtonMenuItem("Raw Data");
+        JRadioButtonMenuItem rawData = new JRadioButtonMenuItem("Raw Data");
         rawData.setSelected(false);
         rawData.setFont(new Font("Serif", Font.PLAIN, 15));
         rawData.setForeground(new java.awt.Color(47, 198, 102));
@@ -1162,13 +1159,13 @@ public class CreateGUI{
         group.add(rawData);
         previewModeMenu.add(rawData);
         //-------ACTIONS
-        JMenuItem actionsSeparator= new JMenuItem("ACTIONS-------------------------------");
+        JMenuItem actionsSeparator = new JMenuItem("ACTIONS-------------------------------");
         actionsSeparator.setFont(new Font("Serif", Font.PLAIN, 10));
         actionsSeparator.setForeground(new java.awt.Color(128, 128, 128));
         actionsSeparator.setEnabled(false);
         previewModeMenu.add(actionsSeparator);
         //Save Raw Response
-        JMenuItem saveRawResponseMenuItem= new JMenuItem("Save Raw Response", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\save-icon.png"));
+        JMenuItem saveRawResponseMenuItem = new JMenuItem("Save Raw Response", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\save-icon.png"));
         saveRawResponseMenuItem.setFont(new Font("Serif", Font.PLAIN, 15));
         saveRawResponseMenuItem.setForeground(new java.awt.Color(255, 161, 20));
         saveRawResponseMenuItem.addActionListener(new ActionListener() {
@@ -1189,11 +1186,12 @@ public class CreateGUI{
 //previewModeMenu.add(saveHTTPDebug);
         //ading the pop up menu to the button
         previewButton.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e){
+            public void mousePressed(MouseEvent e) {
                 queryHistoryPanel.setSelectedIndex(0);
             }
+
             public void mouseReleased(MouseEvent e) {
-                if(e.isPopupTrigger()) {
+                if (e.isPopupTrigger()) {
                     previewModeMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
@@ -1206,6 +1204,8 @@ public class CreateGUI{
         header.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
         header.setBackground(new java.awt.Color(38, 38, 38));
         queryHistoryPanel.add("Header", header);
+        createStaticHeaderTab(header);
+
 
         //next Panel is the Cookie Panel
         JPanel cookie = new JPanel();
@@ -1229,5 +1229,72 @@ public class CreateGUI{
         settingRequestConstraints.anchor = GridBagConstraints.LINE_START;
         settingRequestConstraints.fill = GridBagConstraints.BOTH;
         mainFrame.add(queryHistoryPanel, settingRequestConstraints);
+    }
+
+    private void createStaticHeaderTab(JPanel header) {
+        //first we take in the information to be shown
+        String[][] nameValueInfo = {
+                {"name 111111111111111111111111", "value 11111111111111111"},
+                {"name 2222222222222222222222222222222222222222222222222222222222222222222", "value 2222222222222222222222222222222222222222"},
+                {"name 3", "value 3"},
+                {"name 4444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444", "value 444444444444444444444444444444444444444444444444444444444444444444444444444"},
+                {"name 55555555555555555 55555555555555555 55555555555555555 55555555555555555", "value 55555555555555555"},
+                {"name 66666666666666666666666666 66666666666666666666666666 66666666666666666666666666 66666666666666666666666666", "value 66666666666666666666666666"},
+                {"name 77777777777777777777777777777777777777777 77777777777777777777777777777777777777777 77777777777777777777777777777777777777777", "value 77777777777777777777777777777777777777777"},
+                {"name 8888888888888888888888888888888888888", "value 8888888888888888888888888888888888888 8888888888888888888888888888888888888 8888888888888888888888888888888888888 8888888888888888888888888888888888888"},
+                {"name 9999999999999999999999999999999999 ", "value 9999999999999999999999999999999999 9999999999999999999999999999999999"}
+        };
+
+        //better if the Header panel has GridBagLayout as its Layout Manager
+        header.setLayout(new GridBagLayout());
+        //creating the GridBagConstraints
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 0;
+        constraints.weighty = 0;
+        constraints.fill = GridBagConstraints.FIRST_LINE_START;
+        constraints.anchor = GridBagConstraints.HORIZONTAL;
+        //just for the first line, after this the insets wil change
+        constraints.insets = new Insets(15, 5, 5, 5);
+
+        JLabel name = new JLabel("NAME");
+        name.setForeground(new java.awt.Color(166, 166, 166));
+        name.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
+        name.setBackground(new java.awt.Color(38, 38, 38));
+        name.setFont(new Font("Serif", Font.BOLD, 18));
+        header.add(name, constraints);
+
+        //constraints
+        constraints.gridx = 1;
+        JLabel value = new JLabel("VALUE");
+        value.setForeground(new java.awt.Color(166, 166, 166));
+        value.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
+        value.setBackground(new java.awt.Color(38, 38, 38));
+        value.setFont(new Font("Serif", Font.BOLD, 18));
+        header.add(value, constraints);
+
+
+        for (int i = 0; i < nameValueInfo.length; i++) {
+            int numRows = ( (nameValueInfo[i][0] . length())/35)+1;
+            //constraints JTextArea aval
+            constraints.insets = new Insets(5, 10, 5, 5);
+            constraints.gridx = 0;
+            constraints.gridy = i+1;
+            JTextArea nameTextArea = new JTextArea(nameValueInfo[i][0], numRows, 1);
+            nameTextArea.setBorder(BorderFactory.createLineBorder( new java.awt.Color(38, 38, 38) ));
+            if(i%2==0) {
+                nameTextArea.setBackground(new java.awt.Color(117, 117, 117));
+            }else{
+                nameTextArea.setBackground(new java.awt.Color(38, 38, 38));
+            }
+
+
+            //constraints JTextArea dovom
+            constraints.insets = new Insets(5, 10, 5, 5);
+            constraints.gridx = 1;
+        }
+
+
     }
 }

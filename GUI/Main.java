@@ -10,12 +10,13 @@ import java.net.URL;
 
 public class Main {
     public static void main(String[] args) {
-        new CreateGUI();
+//        new CreateGUI();
 //        if(SystemTray.isSupported()) {
 //            System.out.println("system tray supported");
 //        }
 
 
+//        System.out.println(("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb".length()));
 
 //        JEditorPane jep = new JEditorPane();
 //        jep.setEditable(false);
