@@ -18,8 +18,8 @@ public class CreateGUI{
 
     public CreateGUI(){
         mainFrame = new JFrame("Insomnia");
-        mainFrame.setMinimumSize(new Dimension(1200, 450));
-        mainFrame.setMaximumSize(new Dimension(1420, 1080));
+        mainFrame.setMinimumSize(new Dimension(1500, 450));
+        mainFrame.setMaximumSize(new Dimension(1520, 1080));
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
@@ -374,7 +374,7 @@ public class CreateGUI{
         historialOfRequest.setPreferredSize(new Dimension(112, 100+numberOfButtons*25));
 //        historialOfRequest.setSize(new Dimension(112, 500));
         historialOfRequest.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
-        historialOfRequest.setBackground(new java.awt.Color(38, 38, 38));
+        historialOfRequest.setBackground(new java.awt.Color(65, 65, 104));
         GridBagLayout gBL = new GridBagLayout();
         historialOfRequest.setLayout(gBL);
         //creating pop up menu for the left panel containing:
@@ -1097,29 +1097,69 @@ public class CreateGUI{
         queryHistoryPanel.add("preview", preview);
         //the type of body chosen in the popup menu down the Body word of the tab reference
         JButton previewButton = new JButton("Preview");
+        previewButton.setToolTipText("right click here to see the different preview modes available");
         previewButton.setForeground(new java.awt.Color(128, 128, 128));
         previewButton.setFont(new Font("SansSerif", Font.BOLD, 15));
         previewButton.setBackground(new java.awt.Color(38, 38, 38));
         previewButton.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
+
+
+        //inja bayad bebini ke mituni enablesh bokoni ya na. enable mikoni agar ke un URL E ke dade shode b
+
         //creating the popup menu and adding each JMenuItem to the popUpMenu
         JPopupMenu previewModeMenu =new JPopupMenu();
+
+
+
         //-------Preview Mode
         JMenuItem previewModeMenuItem= new JMenuItem("Preview Mode----------------------");
         previewModeMenuItem.setFont(new Font("Serif", Font.PLAIN, 10));
         previewModeMenuItem.setForeground(new java.awt.Color(128, 128, 128));
         previewModeMenuItem.setEnabled(false);
         previewModeMenu.add(previewModeMenuItem);
+        //the user can chose only one of the next 2 choices so we make them as JRadioButtonMenuItem
+        // and add them to the same group of JButtons
+        ButtonGroup group = new ButtonGroup();
         //Visual Preview
-        JMenuItem visualPreview= new JMenuItem("Visual Preview");
+        JRadioButtonMenuItem visualPreview= new JRadioButtonMenuItem("Visual Preview");
+        visualPreview.setSelected(false);
         visualPreview.setFont(new Font("Serif", Font.PLAIN, 15));
+        visualPreview.setForeground(new java.awt.Color(69, 162, 255));
+        visualPreview.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                previewButton.setText("Visual Preview");
+                mainFrame.revalidate();
+                mainFrame.repaint();
+                mainFrame.pack();
+                System.out.println("Visual Preview");
+            }
+        });
+
+        group.add(visualPreview);
         previewModeMenu.add(visualPreview);
-        //Source Code
-        JMenuItem sourceCodeMenuItem= new JMenuItem("Source Code");
-        sourceCodeMenuItem.setFont(new Font("Serif", Font.PLAIN, 15));
-        previewModeMenu.add(sourceCodeMenuItem);
+//Source Code
+//JMenuItem sourceCodeMenuItem= new JMenuItem("Source Code");
+//sourceCodeMenuItem.setFont(new Font("Serif", Font.PLAIN, 15));
+//previewModeMenu.add(sourceCodeMenuItem);
         //Raw Data
-        JMenuItem rawData= new JMenuItem("Raw Data");
+        JRadioButtonMenuItem rawData= new JRadioButtonMenuItem("Raw Data");
+        rawData.setSelected(false);
         rawData.setFont(new Font("Serif", Font.PLAIN, 15));
+        rawData.setForeground(new java.awt.Color(47, 198, 102));
+        rawData.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                previewButton.setText("Raw Data");
+                mainFrame.revalidate();
+                mainFrame.repaint();
+                mainFrame.pack();
+                System.out.println("Raw Data");
+
+            }
+        });
+
+        group.add(rawData);
         previewModeMenu.add(rawData);
         //-------ACTIONS
         JMenuItem actionsSeparator= new JMenuItem("ACTIONS-------------------------------");
@@ -1130,10 +1170,23 @@ public class CreateGUI{
         //Save Raw Response
         JMenuItem saveRawResponseMenuItem= new JMenuItem("Save Raw Response", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\save-icon.png"));
         saveRawResponseMenuItem.setFont(new Font("Serif", Font.PLAIN, 15));
+        saveRawResponseMenuItem.setForeground(new java.awt.Color(255, 161, 20));
+        saveRawResponseMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //here we are gona have to open a new JFrame in which the user is told to select an address to save the file,
+                //but bether not to do a JChooser and just save the file to the same repository of this code
+
+                System.out.println("Save Raw Response\\still in progress");
+            }
+        });
+
         previewModeMenu.add(saveRawResponseMenuItem);
-        //save HTTP Debug
-        JMenuItem saveHTTPDebug= new JMenuItem("Save HTTP Debug", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\bug-icon.png"));
-        saveHTTPDebug.setFont(new Font("Serif", Font.PLAIN, 15));
+//save HTTP Debug
+//JMenuItem saveHTTPDebug= new JMenuItem("Save HTTP Debug", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\bug-icon.png"));
+//saveHTTPDebug.setFont(new Font("Serif", Font.PLAIN, 15));
+//saveHTTPDebug.setForeground(new java.awt.Color(255, 0, 1));
+//previewModeMenu.add(saveHTTPDebug);
         //ading the pop up menu to the button
         previewButton.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e){
