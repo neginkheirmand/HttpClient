@@ -1,0 +1,46 @@
+//creating the popup menu and adding each JMenuItem to the popUpMenu
+        JPopupMenu authMenu = new JPopupMenu();
+        //Basic Auth
+        JMenuItem basicAuth = new JMenuItem("Basic Auth");
+        basicAuth.setFont(new Font("Serif", Font.PLAIN, 15));
+        authMenu.add(basicAuth);
+        //Digest Auth
+        JMenuItem digestAuth = new JMenuItem("Digest Auth");
+        digestAuth.setFont(new Font("Serif", Font.PLAIN, 15));
+        authMenu.add(digestAuth);
+        //OAuth 1.0
+        JMenuItem OAuth1 = new JMenuItem("OAuth 1.0");
+        OAuth1.setFont(new Font("Serif", Font.PLAIN, 15));
+        authMenu.add(OAuth1);
+        //OAuth 2.0
+        JMenuItem OAuth2 = new JMenuItem("OAuth 2.0");
+        OAuth2.setFont(new Font("Serif", Font.PLAIN, 15));
+        authMenu.add(OAuth2);
+        //Microsoft NTLM
+        JMenuItem microsoftNTLM = new JMenuItem("Microsoft NTLM");
+        microsoftNTLM.setFont(new Font("Serif", Font.PLAIN, 15));
+        authMenu.add(microsoftNTLM);
+        //and the OTHER separator is used here too
+        //-------OTHER
+        JMenuItem newOther = new JMenuItem("OTHER------------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\Other-icon.png"));
+        newOther.setFont(new Font("Serif", Font.PLAIN, 10));
+        newOther.setForeground(new java.awt.Color(128, 128, 128));
+        newOther.setEnabled(false);
+        authMenu.add(newOther);
+        //No Authentication
+        JMenuItem noAuth = new JMenuItem("No Authentication");
+        noAuth.setFont(new Font("Serif", Font.PLAIN, 15));
+        authMenu.add(noAuth);
+        //ading the pop up menu to the button
+        authButton.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                setRequestTabedPane.setSelectedIndex(1);
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    authMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+        

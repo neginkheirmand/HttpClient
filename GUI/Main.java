@@ -12,12 +12,13 @@ public class Main {
         new CreateGUI();
 
 //        JFrame testFrame = new JFrame("NAME");
-//        testFrame.setSize(new Dimension(200,300));
+//        testFrame.setPreferredSize(new Dimension(200,300));
 //        testFrame.setVisible(true);
 //        testFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//        JTabbedPane jTabbedPaneTest = new JTabbedPane();
 //        JPanel testPanel1 = new JPanel();
-//        testPanel1.setBackground(Color.BLUE);
+//        testPanel1.setBackground(Color.BLACK);
+//        testPanel1.setOpaque(true);
+
 //        JPanel testPanel2 = new JPanel();
 //        testPanel2.setBackground(Color.RED);
 //        jTabbedPaneTest.add("test Panel1", new JScrollPane(testPanel1));
@@ -28,13 +29,22 @@ public class Main {
 //            testPanel1.add(newButton);
 //        }
 //        jTabbedPaneTest.add("test Panel2", testPanel2);
-//        testFrame.add(jTabbedPaneTest);
-
-
+//        testFrame.add(testPanel1);
+//        testFrame.pack();
+//
+//        JFrame testFrame1 = new JFrame("NAME");
+//        testFrame1.setPreferredSize(new Dimension(200,300));
+//        testFrame1.setVisible(true);
+//        testFrame1.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        JPanel testPanel2 = new JPanel();
+//        testPanel2.setBackground(Color.BLACK);
+//        testPanel2.setOpaque(false);
+//        testFrame1.add(testPanel2);
 //        String [] languages = {"hello","there"};
 //        JComboBox comboBox = new JComboBox(elements);
 //        comboBox.setRenderer(renderer);
 //        testFrame.add(comboBox, BorderLayout.CENTER);
-//        testFrame.pack();
+//        testFrame1.pack();
+//        testFrame1.setLocationRelativeTo(null);
     }
 }

@@ -2,18 +2,24 @@ package GUI;
 
 import GUI.CellRendererForBodyComboBox;
 import com.sun.xml.internal.ws.resources.DispatchMessages;
+import javafx.scene.control.Tooltip;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.stream.Location;
 import java.awt.*;
 import java.awt.event.*;
 
 public class CreateGUI{
     private JFrame mainFrame;
     private static int timesBodyTypeComboBoxChanged =0;
+    private static int timesAuthTypeComboBoxChanged =0;
 
     public CreateGUI(){
         mainFrame = new JFrame("Insomnia");
         mainFrame.setMinimumSize(new Dimension(1200, 450));
+        mainFrame.setMaximumSize(new Dimension(1420, 1080));
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
@@ -513,24 +519,36 @@ public class CreateGUI{
 
 
          Object dataTypes[][] = {
-                 { new Font("Serif", Font.PLAIN, 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\url-icon.png"), "Form Url Encoded"},
-                 { new Font("Serif", Font.PLAIN, 15), new java.awt.Color(255, 161, 20), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\json-icon.png"), "JSON"},
+                 { new Font("Serif", Font.BOLD, 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\url-icon.png"), "Form Url Encoded"},
+                 { new Font("Serif", Font.BOLD, 15), new java.awt.Color(255, 161, 20), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\json-icon-1.png"), "JSON"},
                  { new Font("Serif", Font.BOLD , 15), Color.BLACK, null ,"SEPARATOR" },
-                 { new Font("Serif", Font.BOLD , 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\binary-file-icon.png") ,  "Binary File" }
+                 { new Font("Serif", Font.BOLD , 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\binary-file-icon1.png") ,  "Binary File" }
 
         };
         //the costume renderer for the JcomboBox containing the methods for sending the data
         ListCellRenderer renderer = new CellRendererForBodyComboBox();
         JComboBox dataType = new JComboBox(dataTypes);
+        dataType.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    if (setRequestTabedPane.getSelectedIndex() != 0) {
+                        setRequestTabedPane.setSelectedIndex(0);
+                    } else {
+                        dataType.showPopup();
+                    }
+                } else if (SwingUtilities.isRightMouseButton(e)) {
+                    dataType.showPopup();
+                }
+            }
+        });
+
         dataType.setPreferredSize(new Dimension(200, 48));
         dataType.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
         dataType.setBackground(new java.awt.Color(38,38,38));
         dataType.setForeground(new java.awt.Color(128, 128, 128));
-        dataType.setEditable(true);
         dataType.setForeground(Color.WHITE);
         dataType.setRenderer(renderer);
         setRequestTabedPane.setTabComponentAt(0, dataType);
-        dataType.setEditable(false);
         dataType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -548,63 +566,55 @@ public class CreateGUI{
         setRequestTabedPane.add("", auth);
 
         //the type of body chosen in the popup menu down the Body word of the tab reference
-        JButton authButton = new JButton("Auth");
-        authButton.setForeground(new java.awt.Color(128, 128, 128));
-        authButton.setFont(new Font("SansSerif", Font.BOLD, 15));
-        authButton.setBackground(new java.awt.Color(38, 38, 38));
-        authButton.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
-        //creating the popup menu and adding each JMenuItem to the popUpMenu
-        JPopupMenu authMenu = new JPopupMenu();
-        //Basic Auth
-        JMenuItem basicAuth = new JMenuItem("Basic Auth");
-        basicAuth.setFont(new Font("Serif", Font.PLAIN, 15));
-        authMenu.add(basicAuth);
-        //Digest Auth
-        JMenuItem digestAuth = new JMenuItem("Digest Auth");
-        digestAuth.setFont(new Font("Serif", Font.PLAIN, 15));
-        authMenu.add(digestAuth);
-        //OAuth 1.0
-        JMenuItem OAuth1 = new JMenuItem("OAuth 1.0");
-        OAuth1.setFont(new Font("Serif", Font.PLAIN, 15));
-        authMenu.add(OAuth1);
-        //OAuth 2.0
-        JMenuItem OAuth2 = new JMenuItem("OAuth 2.0");
-        OAuth2.setFont(new Font("Serif", Font.PLAIN, 15));
-        authMenu.add(OAuth2);
-        //Microsoft NTLM
-        JMenuItem microsoftNTLM = new JMenuItem("Microsoft NTLM");
-        microsoftNTLM.setFont(new Font("Serif", Font.PLAIN, 15));
-        authMenu.add(microsoftNTLM);
-        //and the OTHER separator is used here too
-        //-------OTHER
-        JMenuItem newOther = new JMenuItem("OTHER------------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\Other-icon.png"));
-        newOther.setFont(new Font("Serif", Font.PLAIN, 10));
-        newOther.setForeground(new java.awt.Color(128, 128, 128));
-        newOther.setEnabled(false);
-        authMenu.add(newOther);
-        //No Authentication
-        JMenuItem noAuth = new JMenuItem("No Authentication");
-        noAuth.setFont(new Font("Serif", Font.PLAIN, 15));
-        authMenu.add(noAuth);
-        //ading the pop up menu to the button
-        authButton.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                setRequestTabedPane.setSelectedIndex(1);
-            }
+        Object auths[][] = {
+                { new Font("Serif", Font.BOLD, 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\bearer-token-icon1.png"), "Bearer Token"},
+                { new Font("Serif", Font.BOLD , 15), Color.BLACK, null ,"SEPARATOR" },
+                { new Font("Serif", Font.BOLD , 15), new java.awt.Color(128, 128, 128), new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\no-authentication-icon.png") ,  "No Authentication" }
 
-            public void mouseReleased(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    authMenu.show(e.getComponent(), e.getX(), e.getY());
+        };
+
+        //the costume renderer for the JcomboBox containing the methods for sending the data
+        ListCellRenderer authRenderer = new CellRendererForBodyComboBox();
+        JComboBox authType = new JComboBox(auths);
+        authType.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    if (setRequestTabedPane.getSelectedIndex() != 1) {
+                        setRequestTabedPane.setSelectedIndex(1);
+                    } else {
+                        authType.showPopup();
+                    }
+                } else if (SwingUtilities.isRightMouseButton(e)) {
+                    authType.showPopup();
                 }
             }
         });
-        //ading the button to the tab
-        setRequestTabedPane.setTabComponentAt(1, authButton);
+
+        authType.setPreferredSize(new Dimension(200, 48));
+        authType.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
+        authType.setBackground(new java.awt.Color(38,38,38));
+        authType.setForeground(new java.awt.Color(128, 128, 128));
+        authType.setForeground(Color.WHITE);
+        authType.setRenderer(authRenderer);
+        authType.setSelectedIndex(2);
+        setRequestTabedPane.setTabComponentAt(1, authType);
+        authType.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createAuthTab(auth, authType.getSelectedIndex(), timesAuthTypeComboBoxChanged);
+                timesAuthTypeComboBoxChanged++;
+                mainFrame.revalidate();
+                mainFrame.repaint();
+                mainFrame.pack();
+            }
+        });
 
         JPanel query = new JPanel();
         query.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
         query.setBackground(new java.awt.Color(38, 38, 38));
         setRequestTabedPane.add("Query", query);
+        //its basically the same as the header tab
+        createQueryTab(query);
 
         JPanel header = new JPanel();
         header.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
@@ -640,19 +650,21 @@ public class CreateGUI{
 
     }
 
-    private void createBodyTab(JPanel body, int bodyType, int timesChanged){
-        if(timesChanged>0) {
+    private void createBodyTab(JPanel body, int bodyType, int timesChanged) {
+        body.setLayout(new GridBagLayout());
+        if (timesChanged > 0) {
             try {
-                Component toRemove = body.getComponent(timesChanged-1);
-                toRemove.setVisible(false);
+//                Component toRemove = body.getComponent(timesChanged-1);
+//                toRemove.setVisible(false);
 //                toRemove.setMaximumSize(new Dimension(0,0));
 //                toRemove.setPreferredSize(new Dimension(0,0));
 //                toRemove.setMinimumSize(new Dimension(0,0));
+                body.removeAll();
 //            GridBagLayout layout = (GridBagLayout) body.getLayout();
 //            GridBagConstraints gbc = layout.getConstraints(toRemove);
 //                body.remove(0);
 //                body.remove(timesChanged-1);
-//            body.setLayout(new GridBagLayout());
+                body.setLayout(new GridBagLayout());
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println(e.getStackTrace());
             }
@@ -665,13 +677,16 @@ public class CreateGUI{
         constraints.weighty = 1;
         constraints.anchor = GridBagConstraints.PAGE_START;
         constraints.fill = GridBagConstraints.BOTH;
-        if( bodyType == 0) {
+        Dimension sizeOfNow = mainFrame.getSize();
+        Point locationOfNow = mainFrame.getLocationOnScreen();
+
+        if (bodyType == 0) {
             //its "From URL Encoded
-            JLabel hello = new JLabel(bodyType+"");
+            JLabel hello = new JLabel(bodyType + "");
             hello.setBackground(Color.BLUE);
             body.add(hello, constraints);
 
-        }else if(bodyType == 1) {
+        } else if (bodyType == 1) {
             //its "JSON"
             JTextArea bodyReqJSON = new JTextArea();
             bodyReqJSON.setSize(new Dimension(600, 900));
@@ -681,18 +696,224 @@ public class CreateGUI{
             bodyReqJSON.setBackground(new java.awt.Color(38, 38, 38));
             bodyReqJSON.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
             body.add(bodyReqJSON, constraints);
-        }else if(bodyType == 3){
+        } else if (bodyType == 3) {
             //its "Binary File"
-            JLabel hello = new JLabel(bodyType+"");
-            hello.setBackground(Color.BLUE);
-            body.add(hello, constraints);
+            JLabel description = new JLabel("SELECTED FILE");
+            description.setForeground(new java.awt.Color(128, 128, 128));
+            description.setBackground(new java.awt.Color(38, 38, 38));
+            description.setOpaque(false);
+            description.setFont(new Font("Serif", Font.BOLD, 15));
+
+            constraints.ipady = 0;
+            constraints.ipadx = 0;
+            constraints.insets = new Insets(10, 10, 10, 10);
+            constraints.anchor = GridBagConstraints.LAST_LINE_START;
+            constraints.fill = GridBagConstraints.HORIZONTAL;
+            body.add(description, constraints);
+
+            JTextArea selectedFile = new JTextArea("No file selected");
+            selectedFile.setOpaque(true);
+            selectedFile.setForeground(new java.awt.Color(128, 128, 128));
+            selectedFile.setBackground(new java.awt.Color(73, 73, 73));
+            selectedFile.setBorder(BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
+            selectedFile.setPreferredSize(new Dimension(150, 30));
+            selectedFile.setFont(new Font("Serif", Font.BOLD, 20));
+            selectedFile.setEditable(false);
+            JScrollPane fileScrollPane = new JScrollPane(selectedFile);
+            constraints.gridy = 1;
+            constraints.gridwidth = 2;
+            constraints.anchor = GridBagConstraints.CENTER;
+            body.add(fileScrollPane, constraints);
+
+
+//            the reset file only enabled if a file is chosen
+            constraints.gridwidth = 1;
+            constraints.gridx = 0;
+            constraints.gridy = 2;
+            constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+            JButton resetFile = new JButton("Resest File", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\reset-icon.png"));
+            resetFile.setBackground(new java.awt.Color(38, 38, 38));
+            resetFile.setForeground(new java.awt.Color(128, 128, 128));
+            resetFile.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
+            resetFile.setEnabled(false);
+            resetFile.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("file reseeted");
+                    resetFile.setEnabled(false);
+                    resetFile.setForeground(new java.awt.Color(94, 94, 94));
+                    resetFile.setFont(new Font("Serif", Font.BOLD, 20));
+                    resetFile.setBackground(new java.awt.Color(38, 38, 38));
+                    selectedFile.setText("No file selected");
+                }
+            });
+            body.add(resetFile, constraints);
+
+
+            //first i will add the JFileChooser and then the Reset File JButton
+            constraints.gridx = 1;
+            constraints.gridwidth = 1;
+            constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+            //the JFileChooser and its JButton
+
+            JFileChooser fileChooser = new JFileChooser();
+            JButton fileChooserButton = new JButton("Choose File ", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\choose-file-icon1.png"));
+            fileChooserButton.setBackground(new java.awt.Color(38, 38, 38));
+            fileChooserButton.setForeground(new java.awt.Color(128, 128, 128));
+            fileChooserButton.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
+//            fileChooserButton
+            fileChooserButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    int returnVal = fileChooser.showOpenDialog(mainFrame);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        System.out.println("You chose to open this file: " + fileChooser.getSelectedFile().getName());
+                        selectedFile.setText(fileChooser.getSelectedFile().getName());
+                    } else {
+                        System.out.println("didnt want to open the file");
+                    }
+
+                    if (selectedFile.getText().equals("No file selected")) {
+                        resetFile.setEnabled(false);
+                        resetFile.setForeground(new java.awt.Color(94, 94, 94));
+                        resetFile.setFont(new Font("Serif", Font.BOLD, 20));
+                        resetFile.setBackground(new java.awt.Color(38, 38, 38));
+                        resetFile.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
+                    }else{
+                        resetFile.setEnabled(true);
+                        resetFile.setForeground(new java.awt.Color(138, 138, 138));
+                        resetFile.setFont(new Font("DialogInput", Font.PLAIN, 18));
+                        resetFile.setBackground(new java.awt.Color(94, 94, 94));
+                        resetFile.setBorder(BorderFactory.createLineBorder(new java.awt.Color(164, 164, 164)));
+                    }
+                    mainFrame.revalidate();
+                    mainFrame.repaint();
+                    mainFrame.pack();
+
+                }
+            });
+            body.add(fileChooserButton, constraints);
+
+
         }
         mainFrame.revalidate();
         mainFrame.repaint();
         mainFrame.pack();
+        //a small bug here that i dont know how to fix// never mind now i have an idea but dont have the time
+        mainFrame.setPreferredSize(sizeOfNow);
+        mainFrame.setLocation(locationOfNow);
+    }
+
+    private void createAuthTab(JPanel auth, int authType, int timesChanged){
+
+        auth.setLayout(new GridBagLayout());
+        if(timesChanged>0) {
+            try {
+//                Component toRemove = auth.getComponent(timesChanged-1);
+//                toRemove.setVisible(false);
+//                toRemove.setMaximumSize(new Dimension(0,0));
+//                toRemove.setPreferredSize(new Dimension(0,0));
+//                toRemove.setMinimumSize(new Dimension(0,0));
+                auth.removeAll();
+//            GridBagLayout layout = (GridBagLayout) body.getLayout();
+//            GridBagConstraints gbc = layout.getConstraints(toRemove);
+//                body.remove(0);
+//                body.remove(timesChanged-1);
+//                auth.setLayout(new GridBagLayout());
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("");
+            }
+        }
+        Dimension sizeOfNow = mainFrame.getSize();
+        Point locationOfNow = mainFrame.getLocationOnScreen();
+
+        if( authType == 0) {
+            //its "Bearer Token" form
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridx=0;
+            gbc.gridy = 0;
+            gbc.weightx=1;
+            gbc.weighty =1;
+            gbc.insets= new Insets(5,30,5,15);
+            gbc.ipady=0;
+            gbc.ipadx=0;
+            gbc.anchor=GridBagConstraints.PAGE_START;
+            gbc.fill=GridBagConstraints.HORIZONTAL;
+
+            //token label
+            JLabel tokenLabel = new JLabel("Token");
+            tokenLabel.setOpaque(false);
+            tokenLabel.setFont(new Font("TimesRoman", Font.BOLD, 15));
+            tokenLabel.setForeground(new java.awt.Color(128, 128, 128));
+            tokenLabel.setPreferredSize(new Dimension(50,20));
+            auth.add(tokenLabel, gbc);
+            //token text field
+            JTextField tokenTextField = new JTextField();
+            tokenTextField.setOpaque(false);
+            tokenTextField.setForeground(new java.awt.Color(128, 128, 128));
+            tokenTextField.setBackground(new java.awt.Color(38, 38, 38));
+            tokenTextField.setBorder(BorderFactory. createMatteBorder(0, 0, 1, 0, new java.awt.Color(128, 128, 128)));
+            tokenTextField.setPreferredSize(new Dimension(150,20));
+            gbc.gridx=1;
+            auth.add(tokenTextField, gbc);
+            //next line we have the Prefix
+            JLabel prefix =new JLabel("Prefix", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\question-mark-icon.png"), JLabel.LEFT);
+            prefix.setToolTipText("Prefix to use when sending the Authorization eader. Deafaults to Bearer");
+            prefix.setForeground(new java.awt.Color(128, 128, 128));
+            prefix.setBackground(new java.awt.Color(38, 38, 38));
+            prefix.setOpaque(false);
+            gbc.gridx=0;
+            gbc.gridy=1;
+            gbc.anchor=GridBagConstraints.FIRST_LINE_START;
+            auth.add(prefix, gbc);
+            //prefix text field
+            JTextField prefixTextField = new JTextField();
+            prefixTextField.setOpaque(false);
+            prefixTextField.setForeground(new java.awt.Color(128, 128, 128));
+            prefixTextField.setBackground(new java.awt.Color(38, 38, 38));
+            prefixTextField.setBorder(BorderFactory. createMatteBorder(0, 0, 1, 0, new java.awt.Color(128, 128, 128)));
+            prefixTextField.setPreferredSize(new Dimension(150,20));
+            gbc.gridx=1;
+            auth.add(prefixTextField, gbc);
+            //the Enabled Option
+            JCheckBox enabledCheckBox = new JCheckBox("Enabled", true);
+            enabledCheckBox.setOpaque(false);
+            gbc.gridx=1;
+            gbc.gridy=2;
+            auth.add(enabledCheckBox, gbc);
+
+        }else if(authType == 2) {
+            //no authentication
+            auth.removeAll();
+            auth.setLayout(new GridBagLayout());
+            GridBagConstraints constraints = new GridBagConstraints();
+            constraints.gridx = 0;
+            constraints.gridy = 0;
+            constraints.insets = new Insets(5, 5, 5, 5);
+            constraints.weightx = 1;
+            constraints.weighty = 1;
+            constraints.anchor = GridBagConstraints.PAGE_START;
+            constraints.fill = GridBagConstraints.BOTH;
+            JLabel openLock = new JLabel("", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\open-lock-icon1.png"), JLabel.CENTER);
+            auth.add(openLock, constraints);
+        }
+        mainFrame.revalidate();
+        mainFrame.repaint();
+        mainFrame.pack();
+        //a small bug here that i dont know how to fix// never mind now i have an idea but dont have the time
+        mainFrame.setPreferredSize(sizeOfNow);
+        mainFrame.setLocation(locationOfNow);
+    }
+
+    private void createQueryTab(JPanel query){
+
     }
 
     private void createHeaderTab(JPanel header, GridBagConstraints constraints){
+
+        
+
 
         //we create the first Jpanel containing the pair of key and value
         //if the user clicks on it this method should be called again with the same constaints but the gridx+1
@@ -774,7 +995,7 @@ public class CreateGUI{
         });
         newKeyValuePair.add(trash);
         header.add(newKeyValuePair, constraints);
-
+*/
     }
 
     private void createRequestHistoryPanel(){
