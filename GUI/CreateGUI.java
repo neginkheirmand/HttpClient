@@ -42,6 +42,81 @@ public class CreateGUI {
         createRequestInfo();
         createRequestHistoryPanel();
 
+
+
+        //preparing "Hide to system Tray" mode
+        TrayIcon trayIcon;
+        SystemTray tray;
+        tray=SystemTray.getSystemTray();
+
+        Image image=Toolkit.getDefaultToolkit().getImage("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\my-app-icon1.png");
+
+        //creating the pop up menu to be shown when clicked on the tray icon
+        PopupMenu trayPopupMenu=new PopupMenu();
+        MenuItem exitOption=new MenuItem("Exit");
+        exitOption.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //when clicked in this item the frame will close and the program will end
+                System.out.println("Thanks for using my app!  \n:)");
+                mainFrame.dispose();
+                System.exit(0);
+            }
+        });
+        trayPopupMenu.add(exitOption);
+        MenuItem openOption = new MenuItem("Open");
+        openOption.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.setVisible(true);
+                mainFrame.setExtendedState(JFrame.NORMAL);
+            }
+        });
+        trayPopupMenu.add(openOption);
+        //preparing the tray icon
+        trayIcon=new TrayIcon(image, ":)", trayPopupMenu);
+        trayIcon.setImageAutoSize(true);
+
+        //syncing the main frame
+        mainFrame.addWindowStateListener(new WindowStateListener() {
+            //sorce of the next method code:
+            //https://stackoverflow.com/questions/7461477/how-to-hide-a-jframe-in-system-tray-of-taskbar
+            @Override
+            public void windowStateChanged(WindowEvent e) {
+                if(e.getNewState()==JFrame.ICONIFIED){
+                    try {
+                        tray.add(trayIcon);
+                        mainFrame.setVisible(false);
+                        System.out.println("added to SystemTray");
+                    } catch (AWTException ex) {
+                        System.out.println("unable to add to tray");
+                    }
+                }
+                //the code above is for fixing another little bug, but its basically the same as before
+                if(e.getNewState()==7){
+                    try{
+                        tray.add(trayIcon);
+                        mainFrame.setVisible(false);
+                        System.out.println("added to SystemTray");
+                    }catch(AWTException ex){
+                        System.out.println("unable to add to system tray");
+                    }
+                }
+                if(e.getNewState()==JFrame.MAXIMIZED_BOTH){
+                    tray.remove(trayIcon);
+                    mainFrame.setVisible(true);
+                    System.out.println("Tray icon removed");
+                }
+                if(e.getNewState()==JFrame.NORMAL){
+                    tray.remove(trayIcon);
+                    mainFrame.setVisible(true);
+                    System.out.println("Tray icon removed");
+                }
+            }
+        });
+        //the icon in the top-left of the mainFrame window
+        mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\my-app-icon1.png"));
+
         mainFrame.pack();
 
     }
@@ -264,7 +339,7 @@ public class CreateGUI {
         constraintsInsomniaLabel.ipady = 0;
         constraintsInsomniaLabel.ipadx = 0;
         constraintsInsomniaLabel.anchor = GridBagConstraints.FIRST_LINE_START;
-        JLabel title = new JLabel("Insomnia", SwingConstants.CENTER);
+        JLabel title = new JLabel("Insomnia", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\my-app-icon111.png"), SwingConstants.CENTER);
         title.setBounds(new Rectangle(100, 100));
         title.setMaximumSize(new Dimension(100, 100));
         title.setForeground(Color.white);
