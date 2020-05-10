@@ -11,70 +11,80 @@ import java.net.URL;
 public class Main {
     public static void main(String[] args) {
 //        new CreateGUI();
-//        if(SystemTray.isSupported()) {
-//            System.out.println("system tray supported");
-//        }
+
+/*
+        TrayIcon trayIcon;
+        SystemTray tray;
+        tray = SystemTray.getSystemTray();
+
+        Image image = Toolkit.getDefaultToolkit().getImage("/media/faisal/DukeImg/Duke256.png");
+        ActionListener exitListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Exiting....");
+                System.exit(0);
+            }
+        };
+        PopupMenu popup = new PopupMenu();
+        MenuItem defaultItem = new MenuItem("Exit");
+        defaultItem.addActionListener(exitListener);
+        popup.add(defaultItem);
+        defaultItem = new MenuItem("Open");
+        defaultItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                setVisible(true);
+                setExtendedState(JFrame.NORMAL);
+            }
+        });
+        popup.add(defaultItem);
+        trayIcon = new TrayIcon(image, "SystemTray Demo", popup);
+        trayIcon.setImageAutoSize(true);
 
 
-//        System.out.println(("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb".length()));
+        addWindowStateListener(new WindowStateListener() {
+            public void windowStateChanged(WindowEvent e) {
+                if (e.getNewState() == ICONIFIED) {
+                    try {
+                        tray.add(trayIcon);
+                        setVisible(false);
+                        System.out.println("added to SystemTray");
+                    } catch (AWTException ex) {
+                        System.out.println("unable to add to tray");
+                    }
+                }
+                if (e.getNewState() == 7) {
+                    try {
+                        tray.add(trayIcon);
+                        setVisible(false);
+                        System.out.println("added to SystemTray");
+                    } catch (AWTException ex) {
+                        System.out.println("unable to add to system tray");
+                    }
+                }
+                if (e.getNewState() == MAXIMIZED_BOTH) {
+                    tray.remove(trayIcon);
+                    setVisible(true);
+                    System.out.println("Tray icon removed");
+                }
+                if (e.getNewState() == NORMAL) {
+                    tray.remove(trayIcon);
+                    setVisible(true);
+                    System.out.println("Tray icon removed");
+                }
+            }
+        });
 
-//        JEditorPane jep = new JEditorPane();
-//        jep.setEditable(false);
-//
-//        try {
-//            jep.setPage("http://www.google.com");
-//        }catch (IOException e) {
-//            jep.setContentType("text/html");
-//            jep.setText("<html>Could not load</html>");
-//        }
-//
-//        JScrollPane scrollPane = new JScrollPane(jep);
-//        JFrame f = new JFrame("Test HTML");
-//        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        f.getContentPane().add(scrollPane);
-//        f.setPreferredSize(new Dimension(800,600));
-//        f.setVisible(true);
+        setIconImage(Toolkit.getDefaultToolkit().
+
+                getImage("Duke256.png"));
+
+        setVisible(true);
+
+        setSize(300, 200);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+ */
 
 
-
-
-//        JFrame testFrame = new JFrame("NAME");
-//        testFrame.setPreferredSize(new Dimension(200,300));
-//        testFrame.setVisible(true);
-//        testFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//        URL url = new URL("https://i.stack.imgur.com/NoFA0.jpg");
-//        BufferedImage img = ImageIO.read(url);
-//        ImageIcon icon = new ImageIcon(img);
-//        JPanel testPanel1 = new JPanel();
-//        testPanel1.setBackground(Color.BLACK);
-//        testPanel1.setOpaque(true);
-
-//        JPanel testPanel2 = new JPanel();
-//        testPanel2.setBackground(Color.RED);
-//        jTabbedPaneTest.add("test Panel1", new JScrollPane(testPanel1));
-//        for(int i=0; i<200; i++){
-//            JButton newButton = new JButton("newButton"+i);
-//            newButton.setOpaque(true);
-//            newButton.setBackground(Color.CYAN);
-//            testPanel1.add(newButton);
-//        }
-//        jTabbedPaneTest.add("test Panel2", testPanel2);
-//        testFrame.add(testPanel1);
-//        testFrame.pack();
-//
-//        JFrame testFrame1 = new JFrame("NAME");
-//        testFrame1.setPreferredSize(new Dimension(200,300));
-//        testFrame1.setVisible(true);
-//        testFrame1.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//        JPanel testPanel2 = new JPanel();
-//        testPanel2.setBackground(Color.BLACK);
-//        testPanel2.setOpaque(false);
-//        testFrame1.add(testPanel2);
-//        String [] languages = {"hello","there"};
-//        JComboBox comboBox = new JComboBox(elements);
-//        comboBox.setRenderer(renderer);
-//        testFrame.add(comboBox, BorderLayout.CENTER);
-//        testFrame1.pack();
-//        testFrame1.setLocationRelativeTo(null);
     }
 }

@@ -16,6 +16,12 @@ public class CreateGUI {
     private static int timesBodyTypeComboBoxChanged = 0;
     private static int timesAuthTypeComboBoxChanged = 0;
 
+    private JLabel insomnia;
+    private GridBagConstraints insomniaConstraints;
+    private JScrollPane downInsomnia;
+    private GridBagConstraints downInsomniaConstraints;
+    private boolean sideBar = true;
+
     public CreateGUI() {
         mainFrame = new JFrame("Insomnia");
         mainFrame.setMinimumSize(new Dimension(1500, 450));
@@ -23,16 +29,16 @@ public class CreateGUI {
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
-
+        mainFrame.setBackground(new java.awt.Color(128,128, 128));
         createMenuBar();
 
         //working with the layout -> layout choosen was GridBagLayout
         mainFrame.setLayout(new GridBagLayout());
 
         createInsomniaDisplayArea();
+        createRequestClasifier();
         createRequestInfoPanel();
         createHistorialRequest();
-        createRequestClasifier();
         createRequestInfo();
         createRequestHistoryPanel();
 
@@ -180,8 +186,9 @@ public class CreateGUI {
         edit.add(selectAll);
 
         /*
-            menuItems of the View menu
+          menuItems of the View menu
          */
+
         JMenuItem toggleFullScreen = new JMenuItem("Toggle Full Screen");
         //source of the next line:
         //https://stackoverflow.com/questions/61576224/swing-full-screen-shortcut
@@ -189,8 +196,35 @@ public class CreateGUI {
         toggleFullScreen.addActionListener(e -> mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH));
         view.add(toggleFullScreen);
 
+        //Toggle Side Bar
+        JMenuItem toggleSideBar = new JMenuItem("Toggle Side Bar");
+        toggleSideBar.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.SHIFT_MASK));
+        toggleSideBar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Dimension sizeOfNow = mainFrame.getSize();
+                Point locationOfNow = mainFrame.getLocationOnScreen();
+                if(sideBar){
+                //now its false and we have to remove it from the main frame
+                    mainFrame.remove(insomnia);
+                    mainFrame.remove(downInsomnia);
+                }else{
+                    mainFrame.add(insomnia, insomniaConstraints);
+                    mainFrame.add(downInsomnia, downInsomniaConstraints);
+                }
+                mainFrame.setPreferredSize(sizeOfNow);
+                mainFrame.setLocation(locationOfNow);
+                mainFrame.revalidate();
+                mainFrame.repaint();
+                mainFrame.pack();
+                sideBar=!sideBar;
+            }
+
+        });
+        view.add(toggleSideBar);
+
         /*
-            menuItems of the Help menu
+         menuItems of the Help menu
          */
         JMenuItem keyBoardShortCuts = new JMenuItem("KeyBoard Short Cuts");
         keyBoardShortCuts.setMnemonic(KeyEvent.VK_K);
@@ -238,8 +272,8 @@ public class CreateGUI {
         title.setBackground(new java.awt.Color(123, 104, 238));
         title.setOpaque(true);
         mainFrame.add(title, constraintsInsomniaLabel);
-
-
+        insomnia=title;
+        insomniaConstraints=constraintsInsomniaLabel;
     }
 
     private void createRequestInfoPanel() {
@@ -303,7 +337,6 @@ public class CreateGUI {
         secondUpPart.add(sendButton);
 
         mainFrame.add(secondUpPart, constraintsCommand);
-
     }
 
     private void createHistorialRequest() {
@@ -363,8 +396,6 @@ public class CreateGUI {
         thirdUpPart.add(historialThisRequest);
 
         mainFrame.add(thirdUpPart, infoCommand);
-
-
     }
 
     private void createRequestClasifier() {
@@ -408,7 +439,8 @@ public class CreateGUI {
 //        js.setMinimumSize(new Dimension(112, 500));
 //        js.setSize(new Dimension(112, 500));
         mainFrame.add(js, historialConstraints);
-
+        downInsomnia=js;
+        downInsomniaConstraints=(GridBagConstraints)historialConstraints.clone();
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
@@ -448,7 +480,8 @@ public class CreateGUI {
         plusButton.setBackground(new java.awt.Color(38, 38, 38));
         plusButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                leftPanelPopUpMenu.show(plusButton, plusButton.getX() - 63, plusButton.getY() + 17);
+                //this pop up menu is to be shown when the plus button is pressed
+                leftPanelPopUpMenu.show(historialOfRequest, historialOfRequest.getX()+40 , historialOfRequest.getY()+20 );
             }
         });
         upperPart.add(plusButton);
@@ -1203,7 +1236,8 @@ public class CreateGUI {
         JPanel header = new JPanel();
         header.setBorder(BorderFactory.createLineBorder(new java.awt.Color(128, 128, 128)));
         header.setBackground(new java.awt.Color(38, 38, 38));
-        queryHistoryPanel.add("Header", header);
+        queryHistoryPanel.add("Header", new JScrollPane(header));
+        header.setLayout(new GridBagLayout());
         createStaticHeaderTab(header);
 
 
@@ -1246,15 +1280,16 @@ public class CreateGUI {
         };
 
         //better if the Header panel has GridBagLayout as its Layout Manager
-        header.setLayout(new GridBagLayout());
+
         //creating the GridBagConstraints
+        header.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.weightx = 0;
         constraints.weighty = 0;
-        constraints.fill = GridBagConstraints.FIRST_LINE_START;
-        constraints.anchor = GridBagConstraints.HORIZONTAL;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
         //just for the first line, after this the insets wil change
         constraints.insets = new Insets(15, 5, 5, 5);
 
@@ -1274,27 +1309,75 @@ public class CreateGUI {
         value.setFont(new Font("Serif", Font.BOLD, 18));
         header.add(value, constraints);
 
-
         for (int i = 0; i < nameValueInfo.length; i++) {
-            int numRows = ( (nameValueInfo[i][0] . length())/35)+1;
+            String nameOfField = getStringOfField(nameValueInfo[i][0]);
+
             //constraints JTextArea aval
+            int numRows = ( (nameValueInfo[i][0] . length())/35)+1;
             constraints.insets = new Insets(5, 10, 5, 5);
             constraints.gridx = 0;
             constraints.gridy = i+1;
-            JTextArea nameTextArea = new JTextArea(nameValueInfo[i][0], numRows, 1);
+            JTextArea nameTextArea = new JTextArea(nameOfField, numRows, 1);
             nameTextArea.setBorder(BorderFactory.createLineBorder( new java.awt.Color(38, 38, 38) ));
+            nameTextArea.setForeground(Color.WHITE);
             if(i%2==0) {
                 nameTextArea.setBackground(new java.awt.Color(117, 117, 117));
             }else{
                 nameTextArea.setBackground(new java.awt.Color(38, 38, 38));
             }
-
+            nameTextArea.setEditable(false);
+            header.add(nameTextArea, constraints);
 
             //constraints JTextArea dovom
-            constraints.insets = new Insets(5, 10, 5, 5);
+            numRows = ( (nameValueInfo[i][1] . length())/35)+1;
+            constraints.insets = new Insets(5, 5, 5, 10);
             constraints.gridx = 1;
+            String valueOfField = getStringOfField(nameValueInfo[i][1]);
+            JTextArea valueTextArea = new JTextArea(valueOfField, numRows, 1);
+            valueTextArea.setBorder(BorderFactory.createLineBorder( new java.awt.Color(38, 38, 38) ));
+            valueTextArea.setForeground(Color.WHITE);
+            if(i%2==0) {
+                valueTextArea.setBackground(new java.awt.Color(117, 117, 117));
+            }else{
+                valueTextArea.setBackground(new java.awt.Color(38, 38, 38));
+            }
+            valueTextArea.setEditable(false);
+            header.add(valueTextArea, constraints);
         }
 
+        //now the "Copy to Clipboard" JButton
+        constraints.gridx=0;
+        constraints.gridy++;
+        constraints.fill=GridBagConstraints.NONE;
+        constraints.anchor=GridBagConstraints.FIRST_LINE_END;
+        JButton copyToClipboard = new JButton("Copy to Clipboard", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\copy-icon2.png"));
+        copyToClipboard.setBackground(new java.awt.Color(38, 38, 38));
+        copyToClipboard.setBorder(BorderFactory.createLineBorder(new java.awt.Color(38, 38, 38)));
+        copyToClipboard.setForeground(new java.awt.Color(138, 138, 138));
+        copyToClipboard.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //we have to ACTUALLY SAVE THE FILE SOMEWHERE
+                System.out.println("we have to ACTUALLY SAVE THE FILE SOMEWHERE");
+                copyToClipboard.setIcon(new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\tick-icon.png"));
+                copyToClipboard.setText("Copied");
+                System.out.println("if he does this again this JButton should turn back to copy to clipboard format");
+            }
+        });
+        header.add(copyToClipboard, constraints);
 
     }
+
+    private String getStringOfField(String input) {
+        String newString = "";
+        for (int i = 0, j = 0; i < input.length(); i++, j++) {
+            newString += input.charAt(i);
+            if (j == 35) {
+                j = 0;
+                newString += "\n";
+            }
+        }
+        return newString;
+    }
+
 }
