@@ -1,7 +1,7 @@
         //-------STRUCTURED
         JMenuItem structured = new JMenuItem("STRUCTURED----------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\STRUCTURED-icon.png"));
         structured.setFont(new Font("Serif", Font.PLAIN, 10));
-        structured.setForeground(new java.awt.Color(128, 128, 128));
+        structured.setForeground(colorOfThemeBackground1);
         structured.setEnabled(false);
         bodyTypeMenu.add(structured);
         //Multipart Form
@@ -19,7 +19,7 @@
         //-------TEXT
         JMenuItem text = new JMenuItem("TEXT----------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\text-icon.png"));
         text.setFont(new Font("Serif", Font.PLAIN, 10));
-        text.setForeground(new java.awt.Color(128, 128, 128));
+        text.setForeground(colorOfThemeBackground1);
         text.setEnabled(false);
         bodyTypeMenu.add(text);
         //JSON
@@ -44,7 +44,7 @@
         //-------OTHER
         JMenuItem Other = new JMenuItem("OTHER------------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\Other-icon.png"));
         Other.setFont(new Font("Serif", Font.PLAIN, 10));
-        Other.setForeground(new java.awt.Color(128, 128, 128));
+        Other.setForeground(colorOfThemeBackground1);
         Other.setEnabled(false);
         bodyTypeMenu.add(Other);
         //Binary File

@@ -24,7 +24,7 @@
         //-------OTHER
         JMenuItem newOther = new JMenuItem("OTHER------------------------------------", new ImageIcon("C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\GUI\\resource\\Other-icon.png"));
         newOther.setFont(new Font("Serif", Font.PLAIN, 10));
-        newOther.setForeground(new java.awt.Color(128, 128, 128));
+        newOther.setForeground(colorOfThemeBackground1);
         newOther.setEnabled(false);
         authMenu.add(newOther);
         //No Authentication
