@@ -25,7 +25,7 @@ public class CreateGUI {
     private static Color colorOfThemeBackground1 = light1;
     private static Color colorOfThemeBackground2 = light2;
 
-    private boolean checkBoxSystemTray = false;
+    private boolean checkBoxSystemTray = true;
     private JLabel insomnia;
     private GridBagConstraints insomniaConstraints;
     private JScrollPane downInsomnia;
@@ -58,7 +58,11 @@ public class CreateGUI {
         createRequestInfo();
         createRequestHistoryPanel();
 
+        createToSystemTray();
 
+    }
+
+    private void createToSystemTray(){
 
         //preparing "Hide to system Tray" mode
         TrayIcon trayIcon;
@@ -89,6 +93,7 @@ public class CreateGUI {
             }
         });
         trayPopupMenu.add(openOption);
+
         //preparing the tray icon
         trayIcon=new TrayIcon(image, ":)", trayPopupMenu);
         trayIcon.setImageAutoSize(true);
@@ -135,10 +140,52 @@ public class CreateGUI {
 
         mainFrame.pack();
 
+
     }
 
-    
+    private void goToSystemTray(){
+/*
+//        mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_ICONIFIED));
+//        mainFrame.dispatchEvent(new WindowEvent(mainFrame, 7));
+//        createToSystemTray();
+        PopupMenu trayPopupMenu=new PopupMenu();
+        MenuItem exitOption=new MenuItem("Exit");
+        exitOption.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //when clicked in this item the frame will close and the program will end
+                System.out.println("Thanks for using my app!  \n:)");
+                mainFrame.dispose();
+                System.exit(0);
+            }
+        });
+        trayPopupMenu.add(exitOption);
+        MenuItem openOption = new MenuItem("Open");
+        openOption.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.setVisible(true);
+                mainFrame.setExtendedState(JFrame.NORMAL);
+            }
+        });
+        trayPopupMenu.add(openOption);
 
+
+        SystemTray tray=SystemTray.getSystemTray();
+        Image image = Toolkit.getDefaultToolkit().getImage((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\my-app-icon1.png");
+        TrayIcon trayIcon=new TrayIcon(image, ":)", trayPopupMenu);
+        trayIcon.setImageAutoSize(true);
+        try {
+            tray.add(trayIcon);
+            mainFrame.setVisible(false);
+        }catch(AWTException ex){
+            System.out.println("Unable to send the main frame to the system tray by the quit option");
+        }
+
+
+
+ */
+    }
 
     private void createMenuBar() {
 
@@ -225,7 +272,7 @@ public class CreateGUI {
             public void actionPerformed(ActionEvent e) {
                 if(checkBoxSystemTray){
                     //gotta go to system tray
-
+                    goToSystemTray();
                 }else{
                     mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
                 }
