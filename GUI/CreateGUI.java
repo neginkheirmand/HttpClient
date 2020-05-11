@@ -1,18 +1,11 @@
 package GUI;
 
-import GUI.CellRendererForBodyComboBox;
-import com.sun.xml.internal.ws.resources.DispatchMessages;
-import javafx.scene.control.Tooltip;
-
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.xml.stream.Location;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
 import java.io.File;
+
+import static javax.swing.JOptionPane.OK_OPTION;
 
 public class CreateGUI {
     private JFrame mainFrame;
@@ -23,7 +16,7 @@ public class CreateGUI {
     //the photos color
     private final static String purple = "\\purple";
     private final static String blue = "\\blue";
-    private static String colorOfThemeForground = purple;
+    private static String colorOfThemeForground = blue;
     //the BackGround color
     private final static Color light1 = new java.awt.Color(118,118,118);
     private final static Color light2 = new java.awt.Color(229,229,229);
@@ -32,6 +25,7 @@ public class CreateGUI {
     private static Color colorOfThemeBackground1 = light1;
     private static Color colorOfThemeBackground2 = light2;
 
+    private boolean checkBoxSystemTray = false;
     private JLabel insomnia;
     private GridBagConstraints insomniaConstraints;
     private JScrollPane downInsomnia;
@@ -143,6 +137,9 @@ public class CreateGUI {
 
     }
 
+    
+
+
     private void createMenuBar() {
 
         JMenuBar menuBarOfApplication = new JMenuBar();
@@ -163,6 +160,18 @@ public class CreateGUI {
         /*
             menuItems of the application menu
          */
+
+        //and the sub-menu of Application is Option and exit
+        JMenuItem options = new JMenuItem("Options");
+        application.setMnemonic(KeyEvent.VK_S);
+        options.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                optionMenu();
+            }
+        });
+        application.add(options);
+
         JMenuItem preferences = new JMenuItem("Preferences");
         preferences.setMnemonic((KeyEvent.VK_P));
         preferences.addActionListener(new ActionListener() {
@@ -207,13 +216,19 @@ public class CreateGUI {
 
         application.addSeparator();
 
-        JMenuItem quit = new JMenuItem("Quit", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\log-off-icon.png"));
+        icons[0]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\log-off-icon.png");
+        JMenuItem quit = new JMenuItem("Quit", icons[0]);
         quit.setMnemonic(KeyEvent.VK_Q);
         quit.setToolTipText("quit the application");
         quit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("choose quit from the Application of the menubar");
+                if(checkBoxSystemTray){
+                    //gotta go to system tray
+
+                }else{
+                    mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+                }
             }
         });
         application.add(quit);
@@ -222,7 +237,8 @@ public class CreateGUI {
         /*
             menuItems of the Edit menu
          */
-        JMenuItem undo = new JMenuItem("Undo", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\undo-icon.png"));
+        icons[1]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\undo-icon.png");
+        JMenuItem undo = new JMenuItem("Undo", icons[1]);
         undo.setMnemonic((KeyEvent.VK_U));
         undo.addActionListener(new ActionListener() {
             @Override
@@ -232,7 +248,8 @@ public class CreateGUI {
         });
         edit.add(undo);
 
-        JMenuItem redo = new JMenuItem("redo", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\redo-icon.png"));
+        icons[2]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\redo-icon.png");
+        JMenuItem redo = new JMenuItem("redo", icons[2]);
         redo.setMnemonic(KeyEvent.VK_R);
         redo.addActionListener(new ActionListener() {
             @Override
@@ -244,7 +261,8 @@ public class CreateGUI {
 
         edit.addSeparator();
 
-        JMenuItem cut = new JMenuItem("Cut", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\cut-icon.png"));
+        icons[3]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\cut-icon.png");
+        JMenuItem cut = new JMenuItem("Cut", icons[3]);
         cut.setMnemonic(KeyEvent.VK_C);
         cut.addActionListener(new ActionListener() {
             @Override
@@ -254,7 +272,8 @@ public class CreateGUI {
         });
         edit.add(cut);
 
-        JMenuItem copy = new JMenuItem("Copy", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\copy-icon.png"));
+        icons[4]= new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\copy-icon.png");
+        JMenuItem copy = new JMenuItem("Copy",icons[4]);
         copy.setMnemonic(KeyEvent.VK_O);
         copy.addActionListener(new ActionListener() {
             @Override
@@ -344,6 +363,211 @@ public class CreateGUI {
 
     }
 
+    private void optionMenu(){
+        JFrame optionFrame = new JFrame("Options");
+        optionFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//        optionFrame.setLocationRelativeTo(null);
+//        optionFrame.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width/2-optionFrame.getSize().width/2, Toolkit.getDefaultToolkit().getScreenSize().height/2-optionFrame.getSize().height/2);
+        optionFrame.setLocation(700,250);
+//        optionFrame.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width/2, Toolkit.getDefaultToolkit().getScreenSize().height/2);
+        optionFrame.setVisible(true);
+        optionFrame.setIconImage(Toolkit.getDefaultToolkit().getImage((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\settings-icon.png"));
+        optionFrame.setPreferredSize(new Dimension(700, 700));
+        Color colorOfBackGround ;
+        if(colorOfThemeForground.equals(purple)) {
+            colorOfBackGround = new java.awt.Color(174, 146, 255);
+        }else{
+            colorOfBackGround = new java.awt.Color(151, 255, 250);
+        }
+        optionFrame.setBackground(colorOfBackGround);
+
+
+        JTabbedPane optionTabs = new JTabbedPane();
+        optionTabs.setVisible(true);
+
+        JPanel general = new JPanel();
+        general.setPreferredSize(new Dimension(400, 300));
+        general.setBackground(colorOfBackGround);
+        general.setLayout(new GridBagLayout());
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridy=0;
+        gridBagConstraints.gridx=0;
+        gridBagConstraints.fill=GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor=GridBagConstraints.FIRST_LINE_END;
+        gridBagConstraints.insets= new Insets(20,20,10, 20);
+
+        Color secondColor;
+        if(colorOfThemeForground.equals(purple)){
+            secondColor = new java.awt.Color(67, 51, 146);
+        }else{
+            secondColor = new java.awt.Color(48, 116, 146);
+        }
+
+        //the general settings
+        JCheckBox followRedirect = new JCheckBox("Follow Redirect", false);
+        followRedirect.setOpaque(true);
+        followRedirect.setFont(new Font("Serif", Font.BOLD, 20));
+        followRedirect.setPreferredSize(new Dimension(350, 100));
+        followRedirect.setBackground(Color.WHITE);
+        followRedirect.setForeground(Color.BLUE);
+        followRedirect.setToolTipText("the Follow redirect Check Box");
+        followRedirect.setBorderPainted(true);
+        followRedirect.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, secondColor));
+
+        general.add(followRedirect, gridBagConstraints);
+
+        gridBagConstraints.gridy=1;
+        gridBagConstraints.insets= new Insets(20, 20, 50, 20);
+        JCheckBox systemTray = new JCheckBox("Hide in System Tray when closing the program", false);
+        systemTray.setBorderPainted(true);
+        systemTray.setForeground(Color.BLUE);
+        systemTray.setFont(new Font("Serif", Font.BOLD, 20));
+        systemTray.setPreferredSize(new Dimension(550, 100));
+        systemTray.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, secondColor));
+        systemTray.setOpaque(true);
+        systemTray.setBackground(Color.WHITE);
+        systemTray.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(systemTray.isSelected()){
+                    systemTray.setText("Close completely when exiting the program");
+                    checkBoxSystemTray=true;
+                }else{
+                    systemTray.setText("Hide in System Tray when closing the program");
+                    checkBoxSystemTray=false;
+                }
+            }
+        });
+        systemTray.setForeground(Color.BLACK);
+        systemTray.setToolTipText("the closing settings of the program");
+        general.add(systemTray, gridBagConstraints);
+
+        optionTabs.add("General", general);
+
+
+        JPanel preferences = new JPanel();
+        preferences.setBackground(colorOfBackGround);
+        preferences.setLayout(new GridBagLayout());
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridy=0;
+        gbc.gridx=0;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        gbc.anchor=GridBagConstraints.FIRST_LINE_START;
+
+
+        preferences.add(new JLabel(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\blue-black12.png")), gbc);
+        gbc.gridy=1;
+        JButton B_B_T=new JButton(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\blue-black.png"));
+        B_B_T.setOpaque(false);
+        B_B_T.setBackground(colorOfBackGround);
+        B_B_T.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(createPanelBeforeClose()) {
+                    colorOfThemeForground = blue;
+                    colorOfThemeBackground1 = dark1;
+                    colorOfThemeBackground2 = dark2;
+                    mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+                    System.out.println("dont forget to save  this in a file and then read from it the next time");
+                }else{
+                    return;
+                }
+            }
+        });
+        preferences.add(B_B_T, gbc);
+
+        gbc.gridx=1;
+        gbc.gridy=0;
+        preferences.add(new JLabel(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\blue-white12.png")), gbc);
+        gbc.gridy=1;
+        JButton B_W_T=new JButton(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\blue-white.png"));
+        B_W_T.setOpaque(false);
+        B_W_T.setBackground(colorOfBackGround);
+        B_W_T.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //but first an informating panel
+                if(createPanelBeforeClose()) {
+                    colorOfThemeForground = blue;
+                    colorOfThemeBackground1 = light1;
+                    colorOfThemeBackground2 = light2;
+                    mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+                    System.out.println("dont forget to save this in a file and  then read from it the next time");
+                }else{
+                    return;
+                }
+            }
+        });
+
+        preferences.add(B_W_T, gbc);
+
+        gbc.gridy=2;
+        gbc.gridx=0;
+        preferences.add(new JLabel(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\purple-white12.png")), gbc);
+        gbc.gridy=3;
+        JButton P_W_T=new JButton(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\purple-white.png"));
+        P_W_T.setOpaque(false);
+        P_W_T.setBackground(colorOfBackGround);
+        P_W_T.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //but first an informating panel
+                if(createPanelBeforeClose()) {
+                    colorOfThemeForground = purple;
+                    colorOfThemeBackground1 = light1;
+                    colorOfThemeBackground2 = light2;
+                    mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+                    System.out.println("dont  forget to save this in a file and then read from it the next time");
+                }else{
+                    return;
+                }
+            }
+        });
+        preferences.add(P_W_T, gbc);
+
+        gbc.gridx=1;
+        gbc.gridy=2;
+        preferences.add(new JLabel(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\purple-black12.png")), gbc);
+        gbc.gridy=3;
+        JButton P_B_T=new JButton(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\purple-black.png"));
+        P_B_T.setOpaque(false);
+        P_B_T.setBackground(colorOfBackGround);
+        P_B_T.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //but first an informating panel
+                if(createPanelBeforeClose()) {
+                    colorOfThemeForground = blue;
+                    colorOfThemeBackground1 = dark1;
+                    colorOfThemeBackground2 = dark2;
+                    mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+                    System.out.println("dont forget to save this in a file and then read from it the next time");
+                }else{
+                    return;
+                }
+            }
+        });
+        preferences.add(P_B_T, gbc);
+
+        optionTabs.add("Preferences", new JScrollPane(preferences));
+        optionFrame.add(optionTabs, BorderLayout.CENTER);
+        optionFrame.pack();
+
+
+    }
+
+    private boolean createPanelBeforeClose(){
+        String str = "if you want to change the theme of the app you should re-start the app\nif you press ok the Application will close, open it again and you have yout new Theme:)";
+        int warningDialog = JOptionPane.showConfirmDialog(mainFrame, str, "WARNING", JOptionPane.WARNING_MESSAGE);
+
+        if(warningDialog== OK_OPTION){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     private void createInsomniaDisplayArea() {
 
         GridBagConstraints constraintsInsomniaLabel = new GridBagConstraints();
@@ -362,7 +586,8 @@ public class CreateGUI {
         constraintsInsomniaLabel.ipadx = 0;
         constraintsInsomniaLabel.anchor = GridBagConstraints.FIRST_LINE_START;
 //        JLabel title = new JLabel("Insomnia", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\my-app-icon111.png"), SwingConstants.CENTER);
-        JLabel title = new JLabel("Insomnia", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\my-app-icon111.png"), SwingConstants.CENTER);
+        icons[5]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\my-app-icon111.png");
+        JLabel title = new JLabel("Insomnia", icons[5], SwingConstants.CENTER);
         title.setBounds(new Rectangle(100, 100));
         title.setMaximumSize(new Dimension(100, 100));
         title.setForeground(Color.white);
@@ -528,9 +753,11 @@ public class CreateGUI {
         // JMenuItems "New Request" and "New Folder"
         JPopupMenu leftPanelPopUpMenu = new JPopupMenu();
         //badan bayad barash ye action tarif koni
-        JMenuItem newRequestItem = new JMenuItem("New Request", new ImageIcon((new File(".").getAbsolutePath())+"src\\GUI\\resource"+colorOfThemeForground+"\\newRequest-icon.png"));
+        icons[6]=new ImageIcon((new File(".").getAbsolutePath())+"src\\GUI\\resource"+colorOfThemeForground+"\\newRequest-icon.png");
+        JMenuItem newRequestItem = new JMenuItem("New Request", icons[6]);
         newRequestItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
-        JMenuItem newFolderItem = new JMenuItem("New Folder", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\newFolder-icon.png"));
+        icons[7]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\newFolder-icon.png");
+        JMenuItem newFolderItem = new JMenuItem("New Folder", icons[7]);
 
         newFolderItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
         leftPanelPopUpMenu.add(newRequestItem);
@@ -592,7 +819,8 @@ public class CreateGUI {
         upperPart.add(searchField);
 
         //creating the "Create New Request Button"
-        JButton plusButton = new JButton(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\plus-icon.png"));
+        icons[8]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\plus-icon.png");
+        JButton plusButton = new JButton(icons[8]);
         plusButton.setPreferredSize(new Dimension(25, 25));
         plusButton.setBackground(colorOfThemeBackground2);
         plusButton.addActionListener(new ActionListener() {
@@ -666,13 +894,15 @@ public class CreateGUI {
         body.setBackground(colorOfThemeBackground2);
         setRequestTabedPane.add("", body);
 
-
+        icons[9]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\url-icon.png");
+        icons[10]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\json-icon-1.png");
+        icons[11]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\binary-file-icon1.png");
         Object dataTypes[][] = {
-
-        {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\url-icon.png"), "Form Url Encoded"},
-                {new Font("Serif", Font.BOLD, 15), new java.awt.Color(255, 161, 20), new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\json-icon-1.png"), "JSON"},
-                {new Font("Serif", Font.BOLD, 15), Color.BLACK, null, "SEPARATOR"},
-                {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\binary-file-icon1.png"), "Binary File"}
+        {
+            new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, icons[9], "Form Url Encoded"},
+            {new Font("Serif", Font.BOLD, 15), new java.awt.Color(255, 161, 20),icons[10] , "JSON"},
+            {new Font("Serif", Font.BOLD, 15), Color.BLACK, null, "SEPARATOR"},
+            {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, icons[11], "Binary File"}
 
         };
         //the costume renderer for the JcomboBox containing the methods for sending the data
@@ -724,11 +954,12 @@ public class CreateGUI {
         setRequestTabedPane.add("", auth);
 
         //the type of body chosen in the popup menu down the Body word of the tab reference
+        icons[12]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\bearer-token-icon1.png");
+        icons[13]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\no-authentication-icon.png");
         Object auths[][] = {
-
-        {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\bearer-token-icon1.png"), "Bearer Token"},
-                {new Font("Serif", Font.BOLD, 15), Color.BLACK, null, "SEPARATOR"},
-                {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\no-authentication-icon.png"), "No Authentication"}
+            {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, icons[12], "Bearer Token"},
+            {new Font("Serif", Font.BOLD, 15), Color.BLACK, null, "SEPARATOR"},
+            {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, icons[13], "No Authentication"}
         };
 
         //the costume renderer for the JcomboBox containing the methods for sending the data
@@ -908,7 +1139,8 @@ public class CreateGUI {
             constraints.gridx = 0;
             constraints.gridy = 2;
             constraints.anchor = GridBagConstraints.FIRST_LINE_START;
-            JButton resetFile = new JButton("Resest File", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\reset-icon.png"));
+            icons[14]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\reset-icon.png");
+            JButton resetFile = new JButton("Resest File", icons[14]);
             resetFile.setBackground(colorOfThemeBackground2);
             resetFile.setForeground(colorOfThemeBackground1);
             resetFile.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
@@ -934,7 +1166,8 @@ public class CreateGUI {
             //the JFileChooser and its JButton
 
             JFileChooser fileChooser = new JFileChooser();
-            JButton fileChooserButton = new JButton("Choose File ", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\choose-file-icon1.png"));
+            icons[15]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\choose-file-icon1.png");
+            JButton fileChooserButton = new JButton("Choose File ", icons[15]);
             fileChooserButton.setBackground(colorOfThemeBackground2);
             fileChooserButton.setForeground(colorOfThemeBackground1);
             fileChooserButton.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
@@ -1035,7 +1268,8 @@ public class CreateGUI {
             gbc.gridx = 1;
             auth.add(tokenTextField, gbc);
             //next line we have the Prefix
-            JLabel prefix = new JLabel("Prefix", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\question-mark-icon.png"), JLabel.LEFT);
+            icons[16]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\question-mark-icon.png");
+            JLabel prefix = new JLabel("Prefix", icons[16], JLabel.LEFT);
             prefix.setToolTipText("Prefix to use when sending the Authorization eader. Deafaults to Bearer");
             prefix.setForeground(colorOfThemeBackground1);
             prefix.setBackground(colorOfThemeBackground2);
@@ -1072,7 +1306,8 @@ public class CreateGUI {
             constraints.weighty = 1;
             constraints.anchor = GridBagConstraints.PAGE_START;
             constraints.fill = GridBagConstraints.BOTH;
-            JLabel openLock = new JLabel("", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\open-lock-icon1.png"), JLabel.CENTER);
+            icons[17]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\open-lock-icon1.png");
+            JLabel openLock = new JLabel("", icons[17], JLabel.CENTER);
             auth.add(openLock, constraints);
         }
         mainFrame.revalidate();
@@ -1089,7 +1324,8 @@ public class CreateGUI {
         newNameValuePair.setLayout(new FlowLayout());
         newNameValuePair.setBackground(colorOfThemeBackground2);
 //        //first component the 3 lines
-        JLabel _3_lines = new JLabel(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\3-purple-lines-icon.png"));
+        icons[18]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\3-purple-lines-icon.png");
+        JLabel _3_lines = new JLabel(icons[18]);
         newNameValuePair.add(_3_lines);
         //then the JTextField for the name
         JTextField nameTextField = new JTextField(" New Name");
@@ -1143,7 +1379,8 @@ public class CreateGUI {
         checkBox.setOpaque(false);
         newNameValuePair.add(checkBox);
         //now the trash icon Button
-        JButton trash = new JButton(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\delete-icon1.png"));
+        icons[19]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\delete-icon1.png");
+        JButton trash = new JButton(icons[19]);
         trash.setBackground(colorOfThemeBackground2);
         trash.setOpaque(false);
         trash.setPreferredSize(new Dimension(18, 18));
@@ -1175,7 +1412,8 @@ public class CreateGUI {
         newKeyValuePair.setLayout(new FlowLayout());
         newKeyValuePair.setBackground(colorOfThemeBackground2);
 //        //first component the 3 lines
-        JLabel _3_lines = new JLabel(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\3-grey-lines1-icon.png"));
+        icons[20]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\3-grey-lines1-icon.png");
+        JLabel _3_lines = new JLabel(icons[20]);
         newKeyValuePair.add(_3_lines);
         //then the JTextField for the Header
         JTextField headerTextField = new JTextField("New Header");
@@ -1230,7 +1468,8 @@ public class CreateGUI {
         checkBox.setOpaque(false);
         newKeyValuePair.add(checkBox);
         //now the trash icon Button
-        JButton trash = new JButton(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\delete-icon1.png"));
+        icons[21]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\delete-icon1.png");
+        JButton trash = new JButton(icons[21]);
         trash.setBackground(colorOfThemeBackground2);
         trash.setOpaque(false);
         trash.setPreferredSize(new Dimension(18, 18));
@@ -1335,7 +1574,8 @@ public class CreateGUI {
         actionsSeparator.setEnabled(false);
         previewModeMenu.add(actionsSeparator);
         //Save Raw Response
-        JMenuItem saveRawResponseMenuItem = new JMenuItem("Save Raw Response", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\save-icon.png"));
+        icons[22]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\save-icon.png");
+        JMenuItem saveRawResponseMenuItem = new JMenuItem("Save Raw Response", icons[22]);
         saveRawResponseMenuItem.setFont(new Font("Serif", Font.PLAIN, 15));
         saveRawResponseMenuItem.setForeground(new java.awt.Color(255, 161, 20));
         saveRawResponseMenuItem.addActionListener(new ActionListener() {
@@ -1503,7 +1743,8 @@ public class CreateGUI {
         constraints.gridy++;
         constraints.fill=GridBagConstraints.NONE;
         constraints.anchor=GridBagConstraints.FIRST_LINE_END;
-        JButton copyToClipboard = new JButton("  Copy to Clipboard  ", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\copy-icon2.png"));
+        icons[23]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\copy-icon2.png");
+        JButton copyToClipboard = new JButton("  Copy to Clipboard  ", icons[23]);
         copyToClipboard.setBackground(colorOfThemeBackground2);
         if(colorOfThemeForground.equals(purple)) {
             copyToClipboard.setBorder(BorderFactory.createLineBorder(new java.awt.Color(122, 141, 255)));
@@ -1516,7 +1757,8 @@ public class CreateGUI {
             public void actionPerformed(ActionEvent e) {
                 //we have to ACTUALLY SAVE THE FILE SOMEWHERE
                 System.out.println("we have to ACTUALLY SAVE THE FILE SOMEWHERE");
-                copyToClipboard.setIcon(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\tick-icon.png"));
+                icons[24]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\tick-icon.png");
+                copyToClipboard.setIcon(icons[24]);
                 copyToClipboard.setText("  Copied  ");
                 System.out.println("if he does this again this JButton should turn back to copy to clipboard format");
             }
