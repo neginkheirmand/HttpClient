@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.io.File;
 
 import static javax.swing.JOptionPane.OK_OPTION;
+import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 public class CreateGUI {
     private JFrame mainFrame;
@@ -58,11 +59,11 @@ public class CreateGUI {
         createRequestInfo();
         createRequestHistoryPanel();
 
-        createToSystemTray();
+        createSystemTray();
 
     }
 
-    private void createToSystemTray(){
+    private void createSystemTray(){
 
         //preparing "Hide to system Tray" mode
         TrayIcon trayIcon;
@@ -144,7 +145,7 @@ public class CreateGUI {
     }
 
     private void goToSystemTray(){
-/*
+
 //        mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_ICONIFIED));
 //        mainFrame.dispatchEvent(new WindowEvent(mainFrame, 7));
 //        createToSystemTray();
@@ -182,9 +183,6 @@ public class CreateGUI {
             System.out.println("Unable to send the main frame to the system tray by the quit option");
         }
 
-
-
- */
     }
 
     private void createMenuBar() {
@@ -823,7 +821,7 @@ public class CreateGUI {
         historialConstraints.fill = GridBagConstraints.BOTH;
 
         JScrollPane js = new JScrollPane(historialOfRequest,
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         js.setPreferredSize(new Dimension(112, 500));
 //        js.setMaximumSize(new Dimension(112, 500));
@@ -939,7 +937,7 @@ public class CreateGUI {
         JPanel body = new JPanel();
         body.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
         body.setBackground(colorOfThemeBackground2);
-        setRequestTabedPane.add("", body);
+        setRequestTabedPane.add("", new JScrollPane(body));
 
         icons[9]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\url-icon.png");
         icons[10]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\json-icon-1.png");
@@ -983,7 +981,7 @@ public class CreateGUI {
         }
         dataType.setForeground(Color.WHITE);
         dataType.setRenderer(renderer);
-        setRequestTabedPane.setTabComponentAt(0, dataType);
+        setRequestTabedPane.setTabComponentAt(0, new JScrollPane(dataType));
         dataType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -998,7 +996,7 @@ public class CreateGUI {
         JPanel auth = new JPanel();
         auth.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
         auth.setBackground(colorOfThemeBackground2);
-        setRequestTabedPane.add("", auth);
+        setRequestTabedPane.add("", new JScrollPane(auth));
 
         //the type of body chosen in the popup menu down the Body word of the tab reference
         icons[12]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\bearer-token-icon1.png");
@@ -1044,7 +1042,6 @@ public class CreateGUI {
         authType.setForeground(Color.WHITE);
         authType.setRenderer(authRenderer);
         authType.setSelectedIndex(2);
-        setRequestTabedPane.setTabComponentAt(1, authType);
         authType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1055,11 +1052,14 @@ public class CreateGUI {
                 mainFrame.pack();
             }
         });
+        setRequestTabedPane.setTabComponentAt(1, authType);
+
 
         JPanel query = new JPanel();
         query.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
         query.setBackground(colorOfThemeBackground2);
-        setRequestTabedPane.add("Query", query);
+        query.setLayout(new GridBagLayout());
+        setRequestTabedPane.add("Query", new JScrollPane(query, VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
         //query tab its basically the same as the header tab
 
         GridBagConstraints queryTabConstraints = new GridBagConstraints();
@@ -1069,13 +1069,14 @@ public class CreateGUI {
         queryTabConstraints.weighty = 0;
         queryTabConstraints.fill = GridBagConstraints.HORIZONTAL;
         queryTabConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
+        queryTabConstraints.insets = new Insets(5,0,0,5);
         createQueryTab(query, queryTabConstraints);
 
         JPanel header = new JPanel();
         header.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
         header.setBackground(colorOfThemeBackground2);
         header.setLayout(new GridBagLayout());
-        setRequestTabedPane.add("Header", header);
+        setRequestTabedPane.add("Header", new JScrollPane(header));
         GridBagConstraints headerConstraints = new GridBagConstraints();
         headerConstraints.gridx = 0;
         headerConstraints.gridy = 0;
@@ -1083,7 +1084,7 @@ public class CreateGUI {
         headerConstraints.weighty = 0;
 //        headerConstraints.ipadx = 0;
 //        headerConstraints.ipady = 0;
-//        headerConstraints.insets = new Insets(0, 0, 0, 0);
+        headerConstraints.insets = new Insets(0, 0, 0, 0);
         headerConstraints.fill = GridBagConstraints.HORIZONTAL;
         headerConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
         createHeaderTab(header, headerConstraints);
@@ -1137,9 +1138,17 @@ public class CreateGUI {
 
         if (bodyType == 0) {
             //its "From URL Encoded
-            JLabel hello = new JLabel(bodyType + "");
-            hello.setBackground(Color.BLUE);
-            body.add(hello, constraints);
+            GridBagConstraints constraints1 = new GridBagConstraints();
+            constraints1.gridy=0;
+            constraints1.gridx=0;
+            constraints1.weightx=0;
+            constraints1.weighty=0;
+            constraints1.fill=GridBagConstraints.HORIZONTAL;
+            constraints1.anchor=GridBagConstraints.FIRST_LINE_START;
+            createFormData(body, constraints1);
+            mainFrame.revalidate();
+            mainFrame.repaint();
+            mainFrame.pack();
 
         } else if (bodyType == 1) {
             //its "JSON"
@@ -1262,6 +1271,96 @@ public class CreateGUI {
         mainFrame.setLocation(locationOfNow);
     }
 
+    private void createFormData(JPanel body, GridBagConstraints constraints){
+
+        //we create the first Jpanel containing the pair of key and value
+        //if the user clicks on it this method should be called again with the same constaints but the gridx+1
+//
+        JPanel newKeyValuePair = new JPanel();
+//        newKeyValuePair.setPreferredSize(new Dimension());
+        newKeyValuePair.setLayout(new FlowLayout());
+        newKeyValuePair.setBackground(colorOfThemeBackground2);
+//        //first component the 3 lines
+        JLabel _3_lines = new JLabel(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\3-purple-lines-icon.png"));
+        newKeyValuePair.add(_3_lines);
+        //then the JTextField for the Header
+        JTextField nameTextField = new JTextField("New Name");
+        nameTextField.setPreferredSize(new Dimension(150, 35));
+        nameTextField.setFont(new Font("Serif", Font.PLAIN, 15));
+        nameTextField.setForeground(colorOfThemeBackground1);
+        nameTextField.setBackground(colorOfThemeBackground2);
+        nameTextField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, colorOfThemeBackground1));
+//        boolean alreadyCreated = false;
+        nameTextField.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (nameTextField.getText().equals("New Name")) {
+                    nameTextField.setText(" ");
+                    System.out.println("clicked on the header");
+//                //and add a new Pair of Header and values
+                    GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
+                    newGridConstraints.gridy = constraints.gridy + 1;
+                    createFormData(body, newGridConstraints);
+                    mainFrame.revalidate();
+                    mainFrame.repaint();
+                }
+            }
+        });
+        newKeyValuePair.add(nameTextField);
+        //then the JTextField for the value
+        JTextField valueTextField = new JTextField("New value");
+        valueTextField.setPreferredSize(new Dimension(150, 35));
+        valueTextField.setFont(new Font("Serif", Font.PLAIN, 15));
+        valueTextField.setForeground(colorOfThemeBackground1);
+        valueTextField.setBackground(colorOfThemeBackground2);
+        valueTextField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, colorOfThemeBackground1));
+        valueTextField.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(valueTextField.getText().equals("New value")) {
+                    valueTextField.setText(" ");
+                    System.out.println("clicked on the value");
+                    //and add a new Pair of Header and values
+                    GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
+                    newGridConstraints.gridy = constraints.gridy + 1;
+//                newGridConstraints.weightx=1;
+//                newGridConstraints.weighty=1;
+//                constraints.weightx=0;
+//                constraints.weighty=0;
+                    createFormData(body, newGridConstraints);
+                    mainFrame.revalidate();
+                    mainFrame.repaint();
+                }
+            }
+        });
+        newKeyValuePair.add(valueTextField);
+        //now the JCheckBox
+        JCheckBox checkBox = new JCheckBox(" ", true);
+        checkBox.setBackground(colorOfThemeBackground2);
+        checkBox.setOpaque(false);
+        newKeyValuePair.add(checkBox);
+        //now the trash icon Button
+        icons[21]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\delete-icon1.png");
+        JButton trash = new JButton(icons[21]);
+        trash.setBackground(colorOfThemeBackground2);
+        trash.setOpaque(false);
+        trash.setPreferredSize(new Dimension(18, 18));
+        trash.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("user clicked on the trash JButton");
+                body.remove(newKeyValuePair);
+                if (constraints.gridy == 0) {
+                    createFormData(body, constraints);
+                }
+                mainFrame.revalidate();
+                mainFrame.repaint();
+            }
+        });
+        newKeyValuePair.add(trash);
+        body.add(newKeyValuePair, constraints);
+
+    }
+
     private void createAuthTab(JPanel auth, int authType, int timesChanged) {
 
         auth.setLayout(new GridBagLayout());
@@ -1368,12 +1467,21 @@ public class CreateGUI {
     private void createQueryTab(JPanel query, GridBagConstraints constraints) {
 
         JPanel newNameValuePair = new JPanel();
-        newNameValuePair.setLayout(new FlowLayout());
+        newNameValuePair.setLayout(new GridBagLayout());
+        GridBagConstraints eachInfoConstraints = new GridBagConstraints();
+        eachInfoConstraints.gridy=0;
+        eachInfoConstraints.gridx=0;
+        eachInfoConstraints.weightx=1;
+        eachInfoConstraints.weighty=1;
+        eachInfoConstraints.insets=new Insets(0,2,0,2);
+        eachInfoConstraints.anchor=GridBagConstraints.FIRST_LINE_START;
+        eachInfoConstraints.fill=GridBagConstraints.BOTH;
+
         newNameValuePair.setBackground(colorOfThemeBackground2);
 //        //first component the 3 lines
-        icons[18]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\3-purple-lines-icon.png");
-        JLabel _3_lines = new JLabel(icons[18]);
-        newNameValuePair.add(_3_lines);
+        JLabel _3_lines = new JLabel(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\3-purple-lines-icon.png"));
+        newNameValuePair.add(_3_lines, eachInfoConstraints);
+        eachInfoConstraints.gridx++;
         //then the JTextField for the name
         JTextField nameTextField = new JTextField(" New Name");
         nameTextField.setPreferredSize(new Dimension(150, 35));
@@ -1384,17 +1492,20 @@ public class CreateGUI {
         nameTextField.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                nameTextField.setText(" ");
-                System.out.println("clicked on the name");
+                if(nameTextField.getText().equals(" New Name")) {
+                    nameTextField.setText(" ");
+                    System.out.println("clicked on the name");
 //                //and add a new Pair of name and values
-                GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
-                newGridConstraints.gridy = constraints.gridy + 1;
-                createQueryTab(query, newGridConstraints);
-                mainFrame.revalidate();
-                mainFrame.repaint();
+                    GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
+                    newGridConstraints.gridy = constraints.gridy + 1;
+                    createQueryTab(query, newGridConstraints);
+                    mainFrame.revalidate();
+                    mainFrame.repaint();
+                }
             }
         });
-        newNameValuePair.add(nameTextField);
+        newNameValuePair.add(nameTextField, eachInfoConstraints);
+        eachInfoConstraints.gridx++;
         //then the JTextField for the value
         JTextField valueTextField = new JTextField("New Value");
         valueTextField.setPreferredSize(new Dimension(150, 35));
@@ -1405,29 +1516,32 @@ public class CreateGUI {
         valueTextField.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                valueTextField.setText(" ");
-                System.out.println("clicked on the value");
-                //and add a new Pair of name and values
-                GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
-                newGridConstraints.gridy = constraints.gridy + 1;
+                if(valueTextField.getText().equals("New Value")) {
+                    valueTextField.setText(" ");
+                    System.out.println("clicked on the value");
+                    //and add a new Pair of name and values
+                    GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
+                    newGridConstraints.gridy = constraints.gridy + 1;
 //                newGridConstraints.weightx=1;
 //                newGridConstraints.weighty=1;
 //                constraints.weightx=0;
 //                constraints.weighty=0;
-                createQueryTab(query, newGridConstraints);
-                mainFrame.revalidate();
-                mainFrame.repaint();
+                    createQueryTab(query, newGridConstraints);
+                    mainFrame.revalidate();
+                    mainFrame.repaint();
+                }
             }
         });
-        newNameValuePair.add(valueTextField);
+        newNameValuePair.add(valueTextField, eachInfoConstraints);
+        eachInfoConstraints.gridx++;
         //now the JCheckBox
         JCheckBox checkBox = new JCheckBox(" ", true);
         checkBox.setBackground(colorOfThemeBackground2);
         checkBox.setOpaque(false);
-        newNameValuePair.add(checkBox);
+        newNameValuePair.add(checkBox, eachInfoConstraints);
+        eachInfoConstraints.gridx++;
         //now the trash icon Button
-        icons[19]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\delete-icon1.png");
-        JButton trash = new JButton(icons[19]);
+        JButton trash = new JButton(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\delete-icon1.png"));
         trash.setBackground(colorOfThemeBackground2);
         trash.setOpaque(false);
         trash.setPreferredSize(new Dimension(18, 18));
@@ -1442,7 +1556,7 @@ public class CreateGUI {
                 mainFrame.repaint();
             }
         });
-        newNameValuePair.add(trash);
+        newNameValuePair.add(trash, eachInfoConstraints);
         query.add(newNameValuePair, constraints);
 
 
