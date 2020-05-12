@@ -10,6 +10,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
+
+
+
+/**
+ * this class saves the info passed to it
+ * @author      Negin Kheirmand <venuskheirmand@gmail.com>
+ * @version     1.1
+ * @since       1.0
+ */
+
+
+
+
+
 public class SaveInfo {
 
     public SaveInfo(ArrayList<Request> requestsInfo) {

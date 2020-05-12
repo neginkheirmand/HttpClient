@@ -9,9 +9,21 @@ import java.util.ArrayList;
 import static javax.swing.JOptionPane.OK_OPTION;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
+
+
+ /**
+  * this class creates an frame in which the user can get and put information about requests
+ * @author      Negin Kheirmand <venuskheirmand@gmail.com>
+ * @version     1.1
+ * @since       1.0
+ */
+
 public class CreateGUI {
+    //the main frame of the app
     private JFrame mainFrame;
+    //number of times the Body Type ComboBox changed
     private static int timesBodyTypeComboBoxChanged = 0;
+    //number of times the ayth ComboBox changed
     private static int timesAuthTypeComboBoxChanged = 0;
 
 
@@ -27,6 +39,7 @@ public class CreateGUI {
     private static Color colorOfThemeBackground1 = dark1;
     private static Color colorOfThemeBackground2 = dark2;
 
+    //the next fields are basically for the display of JFrame and depends of the preference
     private boolean checkBoxSystemTray = true;
     private JLabel insomnia;
     private GridBagConstraints insomniaConstraints;
@@ -35,8 +48,12 @@ public class CreateGUI {
     private boolean sideBar = true;
     private ImageIcon[] icons = new ImageIcon[26];
 
+    //an array list holding all the requests
     private ArrayList<Request> savedRequests;
 
+    /**
+     * the constructor of the class, here the frame is created and each one of its characteristics will be created by calling other methods
+     */
     public CreateGUI() {
 
 //first we create the requests or in the case of saved in file, we load them
@@ -99,6 +116,9 @@ public class CreateGUI {
 
     }
 
+    /**
+     * this method is called to create the system tray capacity of the app
+     */
     private void createSystemTray(){
 
 
@@ -181,6 +201,9 @@ public class CreateGUI {
 
     }
 
+    /**
+     * this method is called when we want to pass the frame of the app to the Tray System
+     */
     private void goToSystemTray(){
 
 //        mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_ICONIFIED));
@@ -222,6 +245,9 @@ public class CreateGUI {
 
     }
 
+    /**
+     * this menu is called so the menu bar of the app is created
+     */
     private void createMenuBar() {
 
         JMenuBar menuBarOfApplication = new JMenuBar();
@@ -445,6 +471,9 @@ public class CreateGUI {
 
     }
 
+    /**
+     * this method is called so the Menu bar has an Option item on it
+     */
     private void optionMenu(){
         JFrame optionFrame = new JFrame("Options");
         optionFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -639,6 +668,10 @@ public class CreateGUI {
 
     }
 
+    /**
+     * this method is called so if the close option is chosed the app does what is suposted to in the case the user hits the close button
+     * @return
+     */
     private boolean createPanelBeforeClose(){
         String str = "if you want to change the theme of the app you should re-start the app\nif you press ok the Application will close, open it again and you have yout new Theme:)";
         int warningDialog = JOptionPane.showConfirmDialog(mainFrame, str, "WARNING", JOptionPane.WARNING_MESSAGE);
@@ -650,6 +683,9 @@ public class CreateGUI {
         }
     }
 
+    /**
+     * this method is called so that the insomnia display area is created
+     */
     private void createInsomniaDisplayArea() {
 
         GridBagConstraints constraintsInsomniaLabel = new GridBagConstraints();
@@ -685,6 +721,9 @@ public class CreateGUI {
         insomniaConstraints=constraintsInsomniaLabel;
     }
 
+    /**
+     * this method is called so that the second upper panel is created (the one containing the info about request
+     */
     private void createRequestInfoPanel() {
 
         //preparing the second head part as a panel
@@ -765,6 +804,9 @@ public class CreateGUI {
         mainFrame.add(secondUpPart, constraintsCommand);
     }
 
+    /**
+     * this method is called so that the third upper panel is called
+     */
     private void createHistorialRequest() {
 
         //preparing the third head part as a panel
@@ -824,6 +866,9 @@ public class CreateGUI {
         mainFrame.add(thirdUpPart, infoCommand);
     }
 
+    /**
+     * this method is called so that the first panel containing the requests is created and they are calisified in different folder or different types
+     */
     private void createRequestClasifier() {
         //the first panel down the "Insomnia" label containig the history of requests
         JPanel historialOfRequest = new JPanel();
@@ -999,6 +1044,9 @@ public class CreateGUI {
 
     }
 
+    /**
+     * this method is method is called so that the panel containing the information about an request is created
+     */
     private void createRequestInfo() {
 
 
@@ -1180,6 +1228,12 @@ public class CreateGUI {
 
     }
 
+    /**
+     * this method creates the first tab of the panel created in the method before
+     * @param body the panel to be added the components at
+     * @param bodyType the type of body which is the number of the type in the CheckBox
+     * @param timesChanged the number of times the check box is changed
+     */
     private void createBodyTab(JPanel body, int bodyType, int timesChanged) {
         body.setLayout(new GridBagLayout());
         if (timesChanged > 0) {
@@ -1345,6 +1399,11 @@ public class CreateGUI {
         mainFrame.setLocation(locationOfNow);
     }
 
+    /**
+     * this method creates the second tab of the panel created in the method before
+     * @param body the in which the components are added at
+     * @param constraints the constraints in which should be added
+     */
     private void createFormData(JPanel body, GridBagConstraints constraints){
 
         //we create the first Jpanel containing the pair of key and value
@@ -1435,6 +1494,12 @@ public class CreateGUI {
 
     }
 
+    /**
+     * the third tab which is the authentication tab is created in this method
+     * @param auth panel to be added the components at
+     * @param authType the type of auth which is the number of the type in the CheckBox
+     * @param timesChanged the number of times the check box is changed
+     */
     private void createAuthTab(JPanel auth, int authType, int timesChanged) {
 
         auth.setLayout(new GridBagLayout());
@@ -1537,6 +1602,11 @@ public class CreateGUI {
         mainFrame.setLocation(locationOfNow);
     }
 
+    /**
+     * the third tab which is the query tab is created in this method
+     * @param query panel to be added the components at
+     * @param constraints the constraints in which should be added
+     */
     private void createQueryTab(JPanel query, GridBagConstraints constraints) {
 
         JPanel newNameValuePair = new JPanel();
@@ -1635,6 +1705,11 @@ public class CreateGUI {
 
     }
 
+    /**
+     * the forth tab which is the query tab is created in this method
+     * @param header
+     * @param constraints
+     */
     private void createHeaderTab(JPanel header, GridBagConstraints constraints) {
 
 
@@ -1722,6 +1797,9 @@ public class CreateGUI {
         header.add(newKeyValuePair, constraints);
     }
 
+    /**
+     * this method is called so that the down part of the third panel containing info about the answer is created
+     */
     private void createRequestHistoryPanel() {
 
         //the second panel down the "Insomnia" label containig the command info of requests
@@ -1879,6 +1957,9 @@ public class CreateGUI {
         mainFrame.add(queryHistoryPanel, settingRequestConstraints);
     }
 
+    /**
+     * this method is called so that the down part of the third panel containing info about the answer is created
+     */
     private void CreatePreview(JPanel preview, int typeOfPreview){
         preview.removeAll();
         if(typeOfPreview==0){
@@ -1907,7 +1988,10 @@ public class CreateGUI {
         }
     }
 
-
+    /**
+     * this method is called so that the Header tab in the third panel is created
+     * @param header the panel in which the components are added at
+     */
     private void createStaticHeaderTab(JPanel header) {
         //first we take in the information to be shown
         String[][] nameValueInfo = {
@@ -2033,6 +2117,11 @@ public class CreateGUI {
 
     }
 
+    /**
+     * this method takes an string and inserts some "\n" into it so that they will look better on a JTextArea
+     * @param input the input string
+     * @return the string with "\n" on it
+     */
     private String getStringOfField(String input) {
         String newString = "";
         for (int i = 0, j = 0; i < input.length(); i++, j++) {

@@ -8,6 +8,12 @@ public enum TYPE{
     GET,
     HEAD,
     OPTION;
+
+    /**
+     * this method takes a type as an TYPE and return it in String mode
+     * @param type the TYPE  to the function
+     * @return the String returned
+     */
     public static String getName(TYPE type){
         if(type.equals(POST)){
             return "POST";
@@ -28,6 +34,11 @@ public enum TYPE{
         }
     }
 
+    /**
+     * this method takes a TYPE as an string and return it in TYPE mode
+     * @param type the string passed to the function
+     * @return the Type returned
+     */
     public static TYPE getTYPE(String type){
         if(type.equals("POST")){
             return POST;
