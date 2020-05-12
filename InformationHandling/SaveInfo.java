@@ -4,6 +4,7 @@ import GUI.FORM_DATA;
 import GUI.Request;
 import GUI.TYPE;
 
+import java.io.FileNotFoundException;
 import java.io.FileWriter;   // Import the FileWriter class
 import java.io.File;
 import java.io.IOException;
@@ -42,54 +43,136 @@ public class SaveInfo {
                 //now the type of FORM DATA and after it depending of this type, the Object is to be written in the file
                 String typeOfFormData = FORM_DATA.getName(requestsInfo.get(i).getTypeOfData());
                 fileWriter.write(typeOfFormData+"\n");
-                writeTheFormDataInFile(fileWriter, typeOfFormData, requestsInfo.get(i).getFormDataInfo());
+                fileWriter.close();
+                if(!writeTheFormDataInFile(file, typeOfFormData, requestsInfo.get(i).getFormDataInfo())){
+                    System.out.println("Could not save the info10");
+                    return;
+                }
+                fileWriter = new FileWriter(file, true);
+                //now the request's info
+                fileWriter.write(requestsInfo.get(i).getAuth()+"\n");
+                fileWriter.close();
+                if((requestsInfo.get(i).getAuth()+"").equals("true")){
+                    //we call the write bearer token as its auth
+                    if(! writeAuthInFile(file, requestsInfo.get(i).getAuthInfo())){
+                        return;
+                    }
+                }
+                //now the query
+                if(requestsInfo.get(i).getQueryInfo()!=null){
+                    writeQueryInFile(file, requestsInfo.get(i).getQueryInfo());
+                }else{
+                    fileWriter = new FileWriter(file, true);
+                    fileWriter.write("null-query\n");
+                    fileWriter.close();
+                }
 
+                //now the header
+                if(requestsInfo.get(i).getHeaderInfo()!=null){
+                    writeQueryInFile(file, requestsInfo.get(i).getHeaderInfo());
+                }else{
+                    fileWriter = new FileWriter(file, true);
+                    fileWriter.write("null-header\n");
+                    fileWriter.close();
+                }
+                //the info about the request has been written
+                fileWriter = new FileWriter(file, true);
+                fileWriter.write("----\n");
             }
+            System.out.println("done");
             fileWriter.close();
         }catch(IOException exception){
-            System.out.println("Could not save the info");
+            System.out.println("Could not save the info8");
             return;
         }
 
     }
 
-    private boolean writeTheFormDataInFile(FileWriter fileWriter, String typeOfFormat, Object format) {
-        if (FORM_DATA.getIndex(typeOfFormat) == 0) {
-            ArrayList<String[]> formURLEncoded = (ArrayList<String[]>) format;
-            try {
-                fileWriter.write(formURLEncoded.size() + "\n");
-                for (int i = 0; i < formURLEncoded.size(); i++) {
+    private boolean writeTheFormDataInFile(File file, String typeOfFormat, Object format) {
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+            if (FORM_DATA.getIndex(typeOfFormat) == 0) {
+                ArrayList<String[]> formURLEncoded = (ArrayList<String[]>) format;
+                try {
+                    fileWriter.write(formURLEncoded.size() + "\n");
+                    for (int i = 0; i < formURLEncoded.size(); i++) {
 
-                    String name = (formURLEncoded.get(i))[0];
-                    String value = (formURLEncoded.get(i))[1];
-                    String enabled = (formURLEncoded.get(i))[2];
-                    fileWriter.write(name + "-" + value + "-" + enabled + "\n");
+                        String name = (formURLEncoded.get(i))[0];
+                        String value = (formURLEncoded.get(i))[1];
+                        String enabled = (formURLEncoded.get(i))[2];
+                        fileWriter.write(name + "-" + value + "-" + enabled + "\n");
+                    }
+                fileWriter.close();
+                } catch (IOException exception) {
+                    System.out.println("not able to save in the file3");
+                    return false;
                 }
-            } catch (IOException exception) {
-                System.out.println("not able to save in the file");
+                return true;
+            } else if (FORM_DATA.getIndex(typeOfFormat) == 1) {
+                String JSON = (String) format;
+                try {
+                    fileWriter.write(getNumOfLines(JSON) + "\n");
+                    fileWriter.write(JSON + "\n");
+                    fileWriter.close();
+                } catch (IOException exception) {
+                    System.out.println("not able to save the file4");
+                    return false;
+                }
+                return true;
+            } else if (FORM_DATA.getIndex(typeOfFormat) == 2) {
+                try {
+                    String pathPfFile = (String) format;
+                    fileWriter.write(pathPfFile + "\n");
+                } catch (IOException exception) {
+                    System.out.println("not able to save the file5");
+                    return false;
+                }
+                fileWriter.close();
+                return true;
+            } else {
+                System.out.println("not able to save the file6");
                 return false;
             }
-            return true;
-        } else if (FORM_DATA.getIndex(typeOfFormat) == 1) {
-            String JSON = (String) format;
-            try {
-                fileWriter.write(getNumOfLines(JSON) + "\n");
-                for
-
-            } catch (IOException exception) {
-                System.out.println("not able to save the file");
-                return false;
-            }
-            return true;
-        } else if (FORM_DATA.getIndex(typeOfFormat) == 2) {
-
-            return true;
-        } else {
-            System.out.println("not able to save the file");
+        }catch (IOException exception) {
+            System.out.println("couldnt open the file7");
             return false;
         }
     }
 
+    private boolean writeAuthInFile(File file, String[] authInfo){
+        try {
+            FileWriter fileWriter = new FileWriter(file, true);
+            fileWriter.write(authInfo[0] + "\n");
+            fileWriter.write(authInfo[1] + "\n");
+            fileWriter.write(authInfo[2] + "\n");
+            fileWriter.close();
+            return true;
+        }catch(IOException exception){
+            System.out.println("could not save the info2");
+            return false;
+        }
+    }
+
+    private boolean writeQueryInFile(File file, ArrayList<String[]> queryInfo){
+        FileWriter fileWriter;
+        try {
+            fileWriter = new FileWriter(file, true);
+            System.out.println( queryInfo.size());
+            for (int i = 0; i < queryInfo.size(); i++) {
+                fileWriter.write(queryInfo.get(i)[0]+"-"+queryInfo.get(i)[1]+"-"+queryInfo.get(i)[2]+"\n");
+                System.out.println( queryInfo.get(i)[0]+"-"+queryInfo.get(i)[1]+"-"+queryInfo.get(i)[2]+"\n");
+            }
+//            fileWriter.flush();
+            fileWriter.close();
+        }catch (FileNotFoundException exception){
+            System.out.println("not able to save the file1");
+            return false;
+        }catch(IOException exception){
+            System.out.println("not able to save the file1");
+            return false;
+        }
+        return true;
+    }
 
     private int getNumOfLines(String str){
         int num=0;
@@ -102,7 +185,24 @@ public class SaveInfo {
     }
 
     public static void main(String[] args) {
-//        new SaveInfo();
+/*
+        Request request = new Request("name Of request", TYPE.GET, "www.google.com", FORM_DATA.JSON);
+        request.setAuth(true);
+        String[] authInfo = {"bearer token", "prefix", "true"};
+        request.setAuthInfo(authInfo);
+        ArrayList<String[]> header = new ArrayList<>();
+        String[] header1={
+                "new header", "new value", "true"
+        };
+        header.add(header1);
+        request.setHeaderInfo(header);
+        request.setQueryInfo(null);
+        request.setFormDataInfo("its a JSON Form Data");
+        ArrayList<Request> myRequests = new ArrayList<>();
+        myRequests.add(request);
+        new SaveInfo(myRequests);
+
+ */
     }
 }
 

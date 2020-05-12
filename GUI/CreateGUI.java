@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
 
 import static javax.swing.JOptionPane.OK_OPTION;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
@@ -23,8 +24,8 @@ public class CreateGUI {
     private final static Color light2 = new java.awt.Color(229,229,229);
     private final static Color dark1 = new java.awt.Color(128,128,128);
     private final static Color dark2 = new java.awt.Color(38, 38, 38);
-    private static Color colorOfThemeBackground1 = light1;
-    private static Color colorOfThemeBackground2 = light2;
+    private static Color colorOfThemeBackground1 = dark1;
+    private static Color colorOfThemeBackground2 = dark2;
 
     private boolean checkBoxSystemTray = true;
     private JLabel insomnia;
@@ -34,8 +35,43 @@ public class CreateGUI {
     private boolean sideBar = true;
     private ImageIcon[] icons = new ImageIcon[26];
 
+    private ArrayList<Request> savedRequests;
 
     public CreateGUI() {
+
+//first we create the requests or in the case of saved in file, we load them
+        savedRequests= new ArrayList<>();
+
+        Request request = new Request("name request1", TYPE.GET, "www.google.com", FORM_DATA.JSON);
+        request.setAuth(true);
+        String[] authInfo = {"bearer token", "prefix", "true"};
+        request.setAuthInfo(authInfo);
+        ArrayList<String[]> headers1 = new ArrayList<>();
+        String[] header1={
+                "new header1", "new value1", "true"
+        };
+        headers1.add(header1);
+        request.setHeaderInfo(headers1);
+        request.setQueryInfo(null);
+        request.setFormDataInfo("its a JSON Form Data");
+        savedRequests.add(request);
+
+        request = new Request("name request2", TYPE.DELETE, "www.delete.com", FORM_DATA.BINARY);
+        request.setAuth(false);
+        request.setAuthInfo(null);
+        ArrayList<String[]> headers2 = new ArrayList<>();
+        String[] header2={
+                "new header2", "new value2", "true"
+        };
+        headers2.add(header2);
+        request.setHeaderInfo(headers2);
+        request.setQueryInfo(null);
+        request.setFormDataInfo("its a JSON Form Data");
+        savedRequests.add(request);
+
+
+
+
         mainFrame = new JFrame("Insomnia");
         Image taskbarIcon = Toolkit.getDefaultToolkit().getImage((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\my-app-icon1.png");
 
@@ -64,6 +100,7 @@ public class CreateGUI {
     }
 
     private void createSystemTray(){
+
 
         //preparing "Hide to system Tray" mode
         TrayIcon trayIcon;
@@ -718,6 +755,13 @@ public class CreateGUI {
         sendButton.setForeground(new java.awt.Color(166, 166, 166));
         secondUpPart.add(sendButton);
 
+        JButton saveButton = new JButton("Save");
+        saveButton.setBackground(Color.white);
+        saveButton.setPreferredSize(new Dimension(100, 48));
+        saveButton.setForeground(new java.awt.Color(166, 166, 166));
+        secondUpPart.add(saveButton);
+
+
         mainFrame.add(secondUpPart, constraintsCommand);
     }
 
@@ -798,11 +842,15 @@ public class CreateGUI {
         // JMenuItems "New Request" and "New Folder"
         JPopupMenu leftPanelPopUpMenu = new JPopupMenu();
         //badan bayad barash ye action tarif koni
-        icons[6]=new ImageIcon((new File(".").getAbsolutePath())+"src\\GUI\\resource"+colorOfThemeForground+"\\newRequest-icon.png");
-        JMenuItem newRequestItem = new JMenuItem("New Request", icons[6]);
+        JMenuItem newRequestItem = new JMenuItem("New Request", new ImageIcon((new File(".").getAbsolutePath())+"src\\GUI\\resource"+colorOfThemeForground+"\\newRequest-icon.png"));
         newRequestItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
-        icons[7]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\newFolder-icon.png");
-        JMenuItem newFolderItem = new JMenuItem("New Folder", icons[7]);
+        newRequestItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //create new Request and add it to the list
+            }
+        });
+        JMenuItem newFolderItem = new JMenuItem("New Folder", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\newFolder-icon.png"));
 
         newFolderItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
         leftPanelPopUpMenu.add(newRequestItem);
@@ -894,7 +942,7 @@ public class CreateGUI {
 //        historialOfRequest.add(downSidePart, gridConstraints);
 //        downSidePart.setLayout(new BoxLayout(downSidePart, BoxLayout.Y_AXIS));
 
-
+/*
         //here is the part we get the information of the already done requests
         //and we make a JButton list of them and then we show them
         //button proto-type
@@ -904,7 +952,7 @@ public class CreateGUI {
                 constraints.weighty = 1;
             }
             historialOfRequest.setPreferredSize(new Dimension(112, 100 + numberOfButtons * 25));
-            JButton protoTypeButton = new JButton("prototype-request" + i, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\GET2-icon.png"));
+            JButton protoTypeButton = new JButton("prototype-request" + i, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\GET.png"));
             protoTypeButton.setMaximumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
             protoTypeButton.setMinimumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
             protoTypeButton.setPreferredSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
@@ -919,6 +967,34 @@ public class CreateGUI {
             numberOfButtons++;
 
         }
+
+
+ */
+        for (int i = 0; i < savedRequests.size(); i++) {
+            if (i == savedRequests.size()-1) {
+                constraints.weightx = 1;
+                constraints.weighty = 1;
+            }
+            historialOfRequest.setPreferredSize(new Dimension(112, 100 + numberOfButtons * 25));
+            JButton protoTypeButton = new JButton(savedRequests.get(i).getNameOfRequest(), new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\"+savedRequests.get(i).getTypeOfRequest()+".png"));
+            protoTypeButton.setMaximumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
+            protoTypeButton.setMinimumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
+            protoTypeButton.setPreferredSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
+            protoTypeButton.setSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
+//            protoTypeButton.setFont(new Font("SansSerif", Font.BOLD, 15));
+            protoTypeButton.setBackground(colorOfThemeBackground2);
+            protoTypeButton.setOpaque(true);
+            protoTypeButton.setForeground(colorOfThemeBackground1);
+            protoTypeButton.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground2));
+            historialOfRequest.add(protoTypeButton, constraints);
+            constraints.gridy += 1.0;
+            numberOfButtons++;
+
+        }
+//*/
+
+
+
 //        historialOfRequest.add(downSidePart, gridBagConstraints2);
 
     }
@@ -1450,8 +1526,7 @@ public class CreateGUI {
             constraints.weighty = 1;
             constraints.anchor = GridBagConstraints.PAGE_START;
             constraints.fill = GridBagConstraints.BOTH;
-            icons[17]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\open-lock-icon1.png");
-            JLabel openLock = new JLabel("", icons[17], JLabel.CENTER);
+            JLabel openLock = new JLabel("", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\open-lock-icon1.png"), JLabel.CENTER);
             auth.add(openLock, constraints);
         }
         mainFrame.revalidate();
@@ -1660,7 +1735,7 @@ public class CreateGUI {
         JPanel preview = new JPanel();
         preview.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
         preview.setBackground(colorOfThemeBackground2);
-        queryHistoryPanel.add("preview", preview);
+        queryHistoryPanel.add("preview", new JScrollPane( preview , VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
         //the type of body chosen in the popup menu down the Body word of the tab reference
         JButton previewButton = new JButton("Preview");
         previewButton.setToolTipText("right click here to see the different preview modes available");
@@ -1694,6 +1769,7 @@ public class CreateGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 previewButton.setText("Visual Preview");
+                CreatePreview(preview, 0);
                 mainFrame.revalidate();
                 mainFrame.repaint();
                 mainFrame.pack();
@@ -1716,6 +1792,8 @@ public class CreateGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 previewButton.setText("Raw Data");
+                //and change the panel
+                CreatePreview(preview, 1);
                 mainFrame.revalidate();
                 mainFrame.repaint();
                 mainFrame.pack();
@@ -1800,6 +1878,35 @@ public class CreateGUI {
         settingRequestConstraints.fill = GridBagConstraints.BOTH;
         mainFrame.add(queryHistoryPanel, settingRequestConstraints);
     }
+
+    private void CreatePreview(JPanel preview, int typeOfPreview){
+        preview.removeAll();
+        if(typeOfPreview==0){
+            //its visual preview
+            //first we have to check its actually an image
+            //i will use of an image just to see the result
+            JLabel visualPreview = new JLabel(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\open-lock-icon1.png"));
+            preview.add(visualPreview);
+        }else if(typeOfPreview==1){
+            JTextArea rawData = new JTextArea("\n1hhhhhhhhhhhhhhhhhhhhhh\n2hhhhhhhhhhhhhh\n3hhhhhhhhhh\n4hhhhhhhhhhhhhh\n4hhhhhhhhhh" +
+                    "\n4hhhhhhhhhhhhhhhhhhhhhh\n5hhhhhhhhhhhhhh\n6hhhhhhhhhh\n7hhhhhhhhhhhhhh\n8hhhhhhhhhh"+
+                    "\n4hhhhhhhhhhhhhhhhhhhhhh\n5hhhhhhhhhhhhhh\n6hhhhhhhhhh\n7hhhhhhhhhhhhhh\n8hhhhhhhhhh"+
+                    "\n8hhhhhhhhhhhhhhhhhhhhhh\n9hhhhhhhhhhhhhh\n10hhhhhhhhhh\n11hhhhhhhhhhhhhh\n12hhhhhhhhhh");
+            rawData.setEditable(false);
+            rawData.setFont(new Font("Serif", Font.BOLD, 18));
+            rawData.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1, 2, true));
+            if(colorOfThemeBackground1.equals(light1)) {
+                rawData.setForeground(Color.BLACK);
+                rawData.setBackground(Color.WHITE);
+            }else{
+                rawData.setForeground(Color.WHITE);
+                rawData.setBackground(Color.BLACK);
+            }
+            rawData.setPreferredSize(new Dimension(preview.getWidth()-20, preview.getHeight()-20));
+            preview.add(rawData);
+        }
+    }
+
 
     private void createStaticHeaderTab(JPanel header) {
         //first we take in the information to be shown

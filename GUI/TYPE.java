@@ -27,4 +27,25 @@ public enum TYPE{
             return null;
         }
     }
+
+    public static TYPE getTYPE(String type){
+        if(type.equals("POST")){
+            return POST;
+        }else if(type.equals("PATCH")){
+            return PATCH;
+        }else if(type.equals("PUT")){
+            return PUT;
+        }else if(type.equals("DELETE")){
+            return DELETE;
+        }else if(type.equals("GET")){
+            return GET;
+        }else if(type.equals("HEAD")){
+            return HEAD;
+        }else if(type.equals("OPTION")){
+            return OPTION;
+        }else{
+            return null;
+        }
+    }
+
 }
