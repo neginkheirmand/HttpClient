@@ -2,22 +2,6 @@ package GUI;
 
 import java.util.ArrayList;
 
-enum TYPE{
-    POST,
-    PATCH,
-    PUT,
-    DELETE,
-    GET,
-    HEAD,
-    OPTION
-}
-
-
-enum FORM_DATA{
-    FORM_URL,
-    JSON,
-    BINARY
-}
 
 public class Request {
     private String nameOfRequest="";

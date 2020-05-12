@@ -999,13 +999,13 @@ public class CreateGUI {
         setRequestTabedPane.add("", new JScrollPane(auth));
 
         //the type of body chosen in the popup menu down the Body word of the tab reference
-        icons[12]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\bearer-token-icon1.png");
-        icons[13]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\no-authentication-icon.png");
         Object auths[][] = {
-            {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, icons[12], "Bearer Token"},
+            {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\bearer-token-icon1.png"), "Bearer Token"},
             {new Font("Serif", Font.BOLD, 15), Color.BLACK, null, "SEPARATOR"},
-            {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, icons[13], "No Authentication"}
+            {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\no-authentication-icon.png"), "No Authentication"}
         };
+
+        System.out.println(new ImageIcon(new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\no-authentication-icon.png");
 
         //the costume renderer for the JcomboBox containing the methods for sending the data
         ListCellRenderer authRenderer = new CellRendererForBodyComboBox();
