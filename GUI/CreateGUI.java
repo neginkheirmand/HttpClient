@@ -1005,8 +1005,6 @@ public class CreateGUI {
             {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\no-authentication-icon.png"), "No Authentication"}
         };
 
-        System.out.println(new ImageIcon(new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\no-authentication-icon.png");
-
         //the costume renderer for the JcomboBox containing the methods for sending the data
         ListCellRenderer authRenderer = new CellRendererForBodyComboBox();
         JComboBox authType = new JComboBox(auths);

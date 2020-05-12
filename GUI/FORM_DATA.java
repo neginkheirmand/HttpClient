@@ -15,4 +15,16 @@ public enum FORM_DATA{
             return null;
         }
     }
+
+    public static int getIndex(String formData){
+        if(formData.equals(FORM_URL+"")){
+            return 0;
+        }else if(formData.equals(JSON+"")){
+            return 1;
+        }else if(formData.equals(BINARY+"")){
+            return 2;
+        }else{
+            return -1;
+        }
+    }
 }
