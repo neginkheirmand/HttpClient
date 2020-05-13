@@ -26,9 +26,9 @@ public enum FORM_DATA{
     }
 
     /**
-     * this method takes a form dataas an string and return it in FORM_DATA mode
+     * this method takes a form data as an string and return it in FORM_DATA.ordinal() mode
      * @param formData the string passed to the function
-     * @return the FORM_DATA returned
+     * @return the FORM_DATA.ordinal() returned
      */
     public static int getIndex(String formData){
         if(formData.equals(FORM_URL+"")){
@@ -41,4 +41,24 @@ public enum FORM_DATA{
             return -1;
         }
     }
+
+    /**
+     * this method takes a form data as an string and return it in FORM_DATA mode
+     * @param formData the string passed to the function
+     * @return the FORM_DATA returned
+     */
+    public static FORM_DATA getFormData(String formData){
+        System.out.println("-->*"+formData+"*<--");
+        if(formData.equals(FORM_URL+"")){
+            return FORM_URL;
+        }else if(formData.equals(JSON+"")){
+            return JSON;
+        }else if(formData.equals(BINARY+"")){
+            return BINARY;
+        }else{
+            return null;
+        }
+    }
+
+
 }

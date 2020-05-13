@@ -1,9 +1,35 @@
+2
+name Of request1
+GET
+www.google1.com
+JSON
 0
-its a JSON Form Data
+this text written as the code in Json 
 true
 bearer token
 prefix
 true
-null-query
-new header-new value-true
+null
+new header
+new value
+true
+----
+name Of request2
+PATCH
+www.google2.com
+BINARY
+this is supposed to be the path of a file
+true
+bearer token
+prefix
+true
+new name query2
+new value2
+true
+new header1
+new value1
+true
+new header2
+new value2
+true
 ----

@@ -70,7 +70,7 @@ public class CreateGUI {
         headers1.add(header1);
         request.setHeaderInfo(headers1);
         request.setQueryInfo(null);
-        request.setFormDataInfo("its a JSON Form Data");
+        request.setFormDataInfo("JSON");
         savedRequests.add(request);
 
         request = new Request("name request2", TYPE.DELETE, "www.delete.com", FORM_DATA.BINARY);
@@ -83,7 +83,7 @@ public class CreateGUI {
         headers2.add(header2);
         request.setHeaderInfo(headers2);
         request.setQueryInfo(null);
-        request.setFormDataInfo("its a JSON Form Data");
+        request.setFormDataInfo("JSON");
         savedRequests.add(request);
 
 
@@ -1350,8 +1350,7 @@ public class CreateGUI {
             //the JFileChooser and its JButton
 
             JFileChooser fileChooser = new JFileChooser();
-            icons[15]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\choose-file-icon1.png");
-            JButton fileChooserButton = new JButton("Choose File ", icons[15]);
+            JButton fileChooserButton = new JButton("Choose File ", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\choose-file-icon1.png"));
             fileChooserButton.setBackground(colorOfThemeBackground2);
             fileChooserButton.setForeground(colorOfThemeBackground1);
             fileChooserButton.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
@@ -1367,7 +1366,6 @@ public class CreateGUI {
                     } else {
                         System.out.println("didnt want to open the file");
                     }
-
                     if (selectedFile.getText().equals("No file selected")) {
                         resetFile.setEnabled(false);
                         resetFile.setForeground(new java.awt.Color(94, 94, 94));

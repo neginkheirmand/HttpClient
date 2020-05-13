@@ -75,10 +75,12 @@ public class SaveInfo {
                 }
                 //now the query
                 if(requestsInfo.get(i).getQueryInfo()!=null){
-                    writeQueryInFile(file, requestsInfo.get(i).getQueryInfo());
+                    if(!writeQueryInFile(file, requestsInfo.get(i).getQueryInfo())){
+                        return;
+                    }
                 }else{
                     fileWriter = new FileWriter(file, true);
-                    fileWriter.write("null-query\n");
+                    fileWriter.write("null\n");
                     fileWriter.close();
                 }
 
@@ -87,7 +89,7 @@ public class SaveInfo {
                     writeQueryInFile(file, requestsInfo.get(i).getHeaderInfo());
                 }else{
                     fileWriter = new FileWriter(file, true);
-                    fileWriter.write("null-header\n");
+                    fileWriter.write("null\n");
                     fileWriter.close();
                 }
                 //the info about the request has been written
@@ -103,9 +105,11 @@ public class SaveInfo {
 
     }
 
+
+    //if its json write the number of lines before writing the actual code
     private boolean writeTheFormDataInFile(File file, String typeOfFormat, Object format) {
         try {
-            FileWriter fileWriter = new FileWriter(file);
+            FileWriter fileWriter = new FileWriter(file, true);
             if (FORM_DATA.getIndex(typeOfFormat) == 0) {
                 ArrayList<String[]> formURLEncoded = (ArrayList<String[]>) format;
                 try {
@@ -115,7 +119,7 @@ public class SaveInfo {
                         String name = (formURLEncoded.get(i))[0];
                         String value = (formURLEncoded.get(i))[1];
                         String enabled = (formURLEncoded.get(i))[2];
-                        fileWriter.write(name + "-" + value + "-" + enabled + "\n");
+                        fileWriter.write(name + "\n" + value + "\n" + enabled + "\n");
                     }
                 fileWriter.close();
                 } catch (IOException exception) {
@@ -124,6 +128,7 @@ public class SaveInfo {
                 }
                 return true;
             } else if (FORM_DATA.getIndex(typeOfFormat) == 1) {
+
                 String JSON = (String) format;
                 try {
                     fileWriter.write(getNumOfLines(JSON) + "\n");
@@ -174,11 +179,12 @@ public class SaveInfo {
             fileWriter = new FileWriter(file, true);
             System.out.println( queryInfo.size());
             for (int i = 0; i < queryInfo.size(); i++) {
-                fileWriter.write(queryInfo.get(i)[0]+"-"+queryInfo.get(i)[1]+"-"+queryInfo.get(i)[2]+"\n");
-                System.out.println( queryInfo.get(i)[0]+"-"+queryInfo.get(i)[1]+"-"+queryInfo.get(i)[2]+"\n");
+                fileWriter.write(queryInfo.get(i)[0]+"\n"+queryInfo.get(i)[1]+"\n"+queryInfo.get(i)[2]+"\n");
+                System.out.println( queryInfo.get(i)[0]+"\n"+queryInfo.get(i)[1]+"\n"+queryInfo.get(i)[2]+"\n");
             }
 //            fileWriter.flush();
             fileWriter.close();
+            return true;
         }catch (FileNotFoundException exception){
             System.out.println("not able to save the file1");
             return false;
@@ -186,7 +192,6 @@ public class SaveInfo {
             System.out.println("not able to save the file1");
             return false;
         }
-        return true;
     }
 
     private int getNumOfLines(String str){
@@ -200,24 +205,54 @@ public class SaveInfo {
     }
 
     public static void main(String[] args) {
-/*
-        Request request = new Request("name Of request", TYPE.GET, "www.google.com", FORM_DATA.JSON);
-        request.setAuth(true);
-        String[] authInfo = {"bearer token", "prefix", "true"};
-        request.setAuthInfo(authInfo);
-        ArrayList<String[]> header = new ArrayList<>();
+
+        Request request1 = new Request("name Of request1", TYPE.GET, "www.google1.com", FORM_DATA.JSON);
+        request1.setAuth(true);
+        String[] authInfo1 = {"bearer token", "prefix", "true"};
+        request1.setAuthInfo(authInfo1);
+        ArrayList<String[]> headers1 = new ArrayList<>();
         String[] header1={
                 "new header", "new value", "true"
         };
-        header.add(header1);
-        request.setHeaderInfo(header);
-        request.setQueryInfo(null);
-        request.setFormDataInfo("its a JSON Form Data");
+        headers1.add(header1);
+        request1.setHeaderInfo(headers1);
+        request1.setQueryInfo(null);
+        request1.setFormDataInfo("this text written as the code in Json ");
+
+
+        Request request2 = new Request("name Of request2", TYPE.PATCH, "www.google2.com", FORM_DATA.BINARY);
+        request2.setAuth(true);
+        String[] authInfo2 = {"bearer token", "prefix", "true"};
+        request2.setAuthInfo(authInfo2);
+        ArrayList<String[]> headers2 = new ArrayList<>();
+        String[] header21={
+                "new header1", "new value1", "true"
+        };
+        String[] header22={
+                "new header2", "new value2", "true"
+        };
+        headers2.add(header21);
+        headers2.add(header22);
+        request2.setHeaderInfo(headers2);
+        String[] query2={
+                "new name query2", "new value2", "true"
+        };
+        ArrayList<String []> queryPairs = new ArrayList<>();
+        queryPairs.add(query2);
+        request2.setQueryInfo(queryPairs);
+        request2.setFormDataInfo("this is supposed to be the path of a file");
+
+
         ArrayList<Request> myRequests = new ArrayList<>();
-        myRequests.add(request);
+        myRequests.add(request1);
+        myRequests.add(request2);
+
+
+
+
         new SaveInfo(myRequests);
 
- */
+
     }
 }
 

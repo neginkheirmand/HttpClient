@@ -1,5 +1,5 @@
 0
-its a JSON Form Data
+JSON
 true
 bearer token
 prefix

@@ -196,5 +196,16 @@ public class Request {
         this.formDataInfo = formDataInfo;
     }
 
+    //costume methods
+    public boolean isBearerTokenEnabled(){
+        if(!auth) {
+            return false;
+        }else if(authInfo[2].equals("true")){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
 }
