@@ -15,19 +15,19 @@ public class LoadInfo {
 
     public LoadInfo() {
         couldReadWithOutProblems=true;
-        System.out.println(couldReadWithOutProblems+"1");
+//        System.out.println(couldReadWithOutProblems+"1");
         File file = new File(".");
         savedRequests = new ArrayList<>();
         file = new File((new File(".")).getAbsolutePath() + "\\src\\InformationHandling\\SavedInformation\\RequestHistory.txt");
         if (file.exists()) {
-            System.out.println("we have saved info");
+            System.out.println("we have saved info1");
         } else {
             System.out.println("dont really have saved info");
             couldReadWithOutProblems=false;
             return;
         }
         //created or not what is important is that the file exists already
-        System.out.println(couldReadWithOutProblems+"2");
+//        System.out.println(couldReadWithOutProblems+"2");
 
 
         try {
@@ -80,7 +80,7 @@ public class LoadInfo {
                 savedRequests.add(newRequest);
 //                fileReader.close();
 
-                if (!readTheFormDataInFile(fileReader, typeOfFormData, i)) {
+                if (!readTheFormDataInFile(fileReader, typeOfFormData, i )) {
                     couldReadWithOutProblems=false;
 //                    System.out.println("Could not save the info10");
                     return;
@@ -120,7 +120,7 @@ public class LoadInfo {
 //                System.out.println(couldReadWithOutProblems+"12 i="+i);
 
                 //now the header
-                if(!readQueryInFile( fileReader, i )){
+                if(!readHeaderInFile( fileReader, i )){
                     couldReadWithOutProblems=false;
                     System.out.println("Could not load the info10");
                     return;
@@ -213,7 +213,6 @@ public class LoadInfo {
         }
     }
 
-
     private boolean readAuthInFile(Scanner fileReader, int index) {
 
 //            Scanner fileReader = new Scanner(file);
@@ -240,7 +239,6 @@ public class LoadInfo {
         }
 
     }
-
 
     private boolean readQueryInFile(Scanner fileReader, int index) {
 
@@ -283,12 +281,90 @@ public class LoadInfo {
 
     }
 
+    private boolean readHeaderInFile(Scanner fileReader, int index) {
+
+//            fileReader = new Scanner(file);
+        String str = fileReader.nextLine();
+        str = str.replace("\n", "").replace("\r", "");
+//        System.out.println("the next thing readen is: *"+str+"* its either null or the number of query's");
+        if(str.equals("null")){
+//            System.out.println("was null so will return");
+            return true;
+        }
+        int numberOfQueryPairs=0;
+        try {
+            numberOfQueryPairs = Integer.parseInt(str);
+        }catch (NumberFormatException exception){
+            System.out.println("cant transform "+str+" to int0");
+        }
+        ArrayList<String[]> queryInfo = new ArrayList<>();
+
+//        System.out.println("the number of query pairs in the query tab is *"+numberOfQueryPairs+"*");
+        for (int i = 0; i < numberOfQueryPairs; i++) {
+//            System.out.println(1);
+            str = fileReader.nextLine();
+            String name = str.replace("\n", "").replace("\r", "");
+//            System.out.println(2);
+            str = fileReader.nextLine();
+            String value = str.replace("\n", "").replace("\r", "");
+//            System.out.println(3);
+            str = fileReader.nextLine();
+            String enabled = str.replace("\n", "").replace("\r", "");
+//            System.out.println(4);
+            String[] queryPair = {name, value, enabled};
+//            System.out.println(5);
+            queryInfo.add(queryPair);
+//            System.out.println("the header info is :*"+queryInfo.get(i)[0] + "-" + queryInfo.get(i)[1] + "-" + queryInfo.get(i)[2] + "*\n");
+        }
+        savedRequests.get(index).setHeaderInfo(queryInfo);
+//            fileReader.close();
+        return true;
+
+    }
+
+
     /**
      * this method is to make sure the loaded info is valuable
      * does it by printing the info loaded
      */
     private void paint(){
-        
+        for(int i=0; i<savedRequests.size(); i++){
+            System.out.println("name: "+savedRequests.get(i).getNameOfRequest());
+            System.out.println("TYPE: "+savedRequests.get(i).getTypeOfRequest());
+            System.out.println("url: "+savedRequests.get(i).getUrl());
+            System.out.println("FORMAT: "+savedRequests.get(i).getTypeOfData());
+            if(savedRequests.get(i).getTypeOfData().equals(FORM_DATA.FORM_URL)) {
+                System.out.println("Form Url: ");
+                ArrayList<String[]> form = (ArrayList<String[]>)savedRequests.get(i).getFormDataInfo();
+                for(int j=0; j<form.size(); j++){
+                    System.out.println(j+")"+form.get(i));
+                }
+            }else if(savedRequests.get(i).getTypeOfData().equals(FORM_DATA.BINARY)){
+                System.out.println("binary path: "+(String)savedRequests.get(i).getFormDataInfo());
+            }else if(savedRequests.get(i).getTypeOfData().equals(FORM_DATA.JSON)){
+                System.out.println("JSON text: "+(String)savedRequests.get(i).getFormDataInfo());
+            }
+            System.out.println("auth enabled?: "+savedRequests.get(i).getAuth());
+            System.out.println("auth: \n"+savedRequests.get(i).getAuthInfo()[0]+"  "+savedRequests.get(i).getAuthInfo()[1]+"   check: "+savedRequests.get(i).getAuthInfo()[2]);
+            if(savedRequests.get(i).getQueryInfo()!=null){
+                System.out.println("query:");
+                for(int j=0; j<savedRequests.get(i).getQueryInfo().size(); j++){
+                    System.out.println(j+") "+savedRequests.get(i).getQueryInfo().get(i)[0]+"   "+savedRequests.get(i).getQueryInfo().get(i)[1]);
+                }
+            }else{
+                System.out.println("no querys");
+            }
+            System.out.println();
+            if(savedRequests.get(i).getHeaderInfo()!=null){
+                System.out.println("header:");
+                for(int j=0; j<savedRequests.get(i).getHeaderInfo().size(); j++){
+                    System.out.println(j+") "+savedRequests.get(i).getHeaderInfo().get(i)[0]+"  "+savedRequests.get(i).getHeaderInfo().get(i)[1]);
+                }
+            }else{
+                System.out.println("no headers");
+            }
+            System.out.println("-------------------------");
+        }
     }
 
     public static void main(String[] args) {
