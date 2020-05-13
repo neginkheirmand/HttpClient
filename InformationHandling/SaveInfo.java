@@ -11,20 +11,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-
-
-
 /**
  * this class saves the info passed to it
  * @author      Negin Kheirmand <venuskheirmand@gmail.com>
  * @version     1.1
  * @since       1.0
  */
-
-
-
-
-
 public class SaveInfo {
 
     public SaveInfo(ArrayList<Request> requestsInfo) {
@@ -96,6 +88,41 @@ public class SaveInfo {
                 fileWriter = new FileWriter(file, true);
                 fileWriter.write("----\n");
             }
+            System.out.println("done");
+            fileWriter.close();
+        }catch(IOException exception){
+            System.out.println("Could not save the info8");
+            return;
+        }
+
+    }
+
+    public void savePreferences( ArrayList<String> preferences){
+        File preferenceFile;
+        try {
+            preferenceFile = new File((new File(".")).getAbsolutePath()+"\\src\\InformationHandling\\SavedInformation\\Preferences.txt");
+            if(preferenceFile.createNewFile()) {
+                System.out.println("was created");
+            }else{
+                System.out.println("wasnt created");
+            }
+            //created or not what is important is that the file exists already
+
+        } catch (IOException exception) {
+            System.out.println("Could not save the preference info");
+            return;
+        }
+
+        try {
+            FileWriter fileWriter = new FileWriter(preferenceFile);
+            //first we write the follow redirect
+            fileWriter.write(preferences.get(0)+"\n");
+            //first we write the tray in system
+            fileWriter.write(preferences.get(1)+"\n");
+            //first we write the color of forground
+            fileWriter.write(preferences.get(2)+"\n");
+            //first we write the color of background
+            fileWriter.write(preferences.get(3)+"\n");
             System.out.println("done");
             fileWriter.close();
         }catch(IOException exception){
@@ -244,7 +271,7 @@ public class SaveInfo {
         request2.setFormDataInfo("this is supposed to be the path of a file");
 
 
-        Request request3 = new Request("name Of request3", TYPE.PATCH, "www.google3.com", FORM_DATA.FORM_URL);
+        Request request3 = new Request("name Of request3", TYPE.PUT, "www.google3.com", FORM_DATA.FORM_URL);
         request3.setAuth(false);
         ArrayList<String[]> headers3 = new ArrayList<>();
         String[] header31={
@@ -300,8 +327,13 @@ public class SaveInfo {
 
 
 
-        new SaveInfo(myRequests);
-
+        SaveInfo newSaveInfo = new SaveInfo(myRequests);
+        ArrayList<String> preferencesArrayList = new ArrayList<>();
+        preferencesArrayList.add("true");
+        preferencesArrayList.add("true");
+        preferencesArrayList.add("purple");
+        preferencesArrayList.add("blue");
+        newSaveInfo.savePreferences(preferencesArrayList);
 
     }
 }

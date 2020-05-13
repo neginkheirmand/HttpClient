@@ -37,7 +37,7 @@ new value2
 true
 ----
 name Of request3
-PATCH
+PUT
 www.google3.com
 FORM_URL
 3

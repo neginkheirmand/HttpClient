@@ -1,0 +1,4 @@
+1- FollowRedirect is enabled: true or false
+2- hide on system tray : true pr false
+3- forground color purple or blue
+4- background color dark or light

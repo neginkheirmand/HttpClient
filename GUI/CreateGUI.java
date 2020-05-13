@@ -1,5 +1,7 @@
 package GUI;
 
+import InformationHandling.LoadInfo;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -49,45 +51,23 @@ public class CreateGUI {
     private ImageIcon[] icons = new ImageIcon[26];
 
     //an array list holding all the requests
-    private ArrayList<Request> savedRequests;
+    private ArrayList<Request> savedRequests = null;
 
     /**
      * the constructor of the class, here the frame is created and each one of its characteristics will be created by calling other methods
      */
     public CreateGUI() {
 
-//first we create the requests or in the case of saved in file, we load them
-        savedRequests= new ArrayList<>();
+        //we load the requests saved in the last run of the application
 
-        Request request = new Request("name request1", TYPE.GET, "www.google.com", FORM_DATA.JSON);
-        request.setAuth(true);
-        String[] authInfo = {"bearer token", "prefix", "true"};
-        request.setAuthInfo(authInfo);
-        ArrayList<String[]> headers1 = new ArrayList<>();
-        String[] header1={
-                "new header1", "new value1", "true"
-        };
-        headers1.add(header1);
-        request.setHeaderInfo(headers1);
-        request.setQueryInfo(null);
-        request.setFormDataInfo("JSON");
-        savedRequests.add(request);
-
-        request = new Request("name request2", TYPE.DELETE, "www.delete.com", FORM_DATA.BINARY);
-        request.setAuth(false);
-        request.setAuthInfo(null);
-        ArrayList<String[]> headers2 = new ArrayList<>();
-        String[] header2={
-                "new header2", "new value2", "true"
-        };
-        headers2.add(header2);
-        request.setHeaderInfo(headers2);
-        request.setQueryInfo(null);
-        request.setFormDataInfo("JSON");
-        savedRequests.add(request);
-
-
-
+        LoadInfo loader = new LoadInfo();
+        if(loader.getCouldReadWithOutProblems()){
+            savedRequests = new ArrayList<>();
+            System.out.println("nothing saved, the historial of the requests i empty");
+        }else{
+            savedRequests = loader.getSavedRequests();
+            System.out.println("the historial of requests was updated");
+        }
 
         mainFrame = new JFrame("Insomnia");
         Image taskbarIcon = Toolkit.getDefaultToolkit().getImage((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\my-app-icon1.png");
@@ -961,10 +941,11 @@ public class CreateGUI {
         JButton plusButton = new JButton(icons[8]);
         plusButton.setPreferredSize(new Dimension(25, 25));
         plusButton.setBackground(colorOfThemeBackground2);
+        plusButton.setComponentPopupMenu(leftPanelPopUpMenu);
         plusButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //this pop up menu is to be shown when the plus button is pressed
-                leftPanelPopUpMenu.show(historialOfRequest, historialOfRequest.getX()+40 , historialOfRequest.getY()+20 );
+                leftPanelPopUpMenu.show(plusButton, plusButton.getX()-70, plusButton.getY()-10);
             }
         });
         upperPart.add(plusButton);

@@ -12,6 +12,8 @@ public class LoadInfo {
 
     private ArrayList<Request> savedRequests = null;
     private boolean couldReadWithOutProblems ;
+    private ArrayList<String> preferences = null;
+
 
     public LoadInfo() {
         couldReadWithOutProblems=true;
@@ -142,6 +144,54 @@ public class LoadInfo {
             return;
         }
 
+    }
+
+    public ArrayList<String> loadPreferences(){
+        File preferenceFile = new File((new File(".")).getAbsolutePath() + "\\src\\InformationHandling\\SavedInformation\\Preferences.txt");
+        preferences = new ArrayList<>();
+
+        if (preferenceFile.exists()) {
+            System.out.println("we have saved preference");
+        } else {
+            System.out.println("dont really have saved preference info");
+            return null;
+        }
+//*
+        try {
+            Scanner fileReader = new Scanner(preferenceFile);
+            //first we read the Follow Redirect
+            String str = fileReader.nextLine();
+            str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
+            System.out.println("1-  *"+str+"*");
+            preferences.add(str);
+
+            //then the hide in tray system
+            str = fileReader.nextLine();
+            str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
+            System.out.println("2-  *"+str+"*");
+            preferences.add(str);
+
+            //then the forground color
+            str = fileReader.nextLine();
+            str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
+            System.out.println("3-  *"+str+"*");
+            preferences.add(str);
+
+            //then the forground color
+            str = fileReader.nextLine();
+            str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
+            System.out.println("4-  *"+str+"*");
+            preferences.add(str);
+
+            System.out.println("done");
+            fileReader.close();
+            return preferences;
+        } catch (IOException exception) {
+            couldReadWithOutProblems=false;
+            System.out.println("Could not load the info8");
+            return null;
+        }
+// */
     }
 
     public boolean getCouldReadWithOutProblems(){
@@ -386,6 +436,8 @@ public class LoadInfo {
         LoadInfo lo=new LoadInfo();
         System.out.println("is true? :"+lo.couldReadWithOutProblems);
         lo.paint();
+
+        lo.loadPreferences();
 
     }
     */
