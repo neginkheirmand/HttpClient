@@ -1,6 +1,7 @@
 package GUI;
 
 import InformationHandling.LoadInfo;
+import InformationHandling.SaveInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -121,6 +122,13 @@ public class CreateGUI {
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
         mainFrame.setBackground(new java.awt.Color(128,128, 128));
+        mainFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                saveInfoOfthisRun();
+                System.exit(0);
+            }
+        });
         createMenuBar();
 
         //working with the layout -> layout choosen was GridBagLayout
@@ -159,6 +167,7 @@ public class CreateGUI {
                 //when clicked in this item the frame will close and the program will end
                 System.out.println("Thanks for using my app!  \n:)");
                 mainFrame.dispose();
+                saveInfoOfthisRun();
                 System.exit(0);
             }
         });
@@ -237,6 +246,7 @@ public class CreateGUI {
             public void actionPerformed(ActionEvent e) {
                 //when clicked in this item the frame will close and the program will end
                 System.out.println("Thanks for using my app!  \n:)");
+                saveInfoOfthisRun();
                 mainFrame.dispose();
                 System.exit(0);
             }
@@ -536,7 +546,12 @@ public class CreateGUI {
         }
 
         //the general settings
-        JCheckBox followRedirect = new JCheckBox("Follow Redirect", checkBoxFollowRedirect);
+        JCheckBox followRedirect;
+        if(checkBoxFollowRedirect) {
+            followRedirect = new JCheckBox("Follow Redirect is enabled", checkBoxFollowRedirect);
+        }else{
+            followRedirect = new JCheckBox("Follow Redirect is not enabled", checkBoxFollowRedirect);
+        }
         followRedirect.setOpaque(true);
         followRedirect.setFont(new Font("Serif", Font.BOLD, 20));
         followRedirect.setPreferredSize(new Dimension(350, 100));
@@ -545,12 +560,30 @@ public class CreateGUI {
         followRedirect.setToolTipText("the Follow redirect Check Box");
         followRedirect.setBorderPainted(true);
         followRedirect.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, secondColor));
+        followRedirect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(followRedirect.isSelected()){
+                    followRedirect.setText("Follow Redirect is enabled");
+                    checkBoxFollowRedirect=true;
+                }else{
+                    followRedirect.setText("Follow Redirect is not enabled");
+                    checkBoxFollowRedirect=false;
+                }
+            }
+        });
 
         general.add(followRedirect, gridBagConstraints);
 
         gridBagConstraints.gridy=1;
         gridBagConstraints.insets= new Insets(20, 20, 50, 20);
-        JCheckBox systemTray = new JCheckBox("Hide in System Tray when closing the program", checkBoxSystemTray);
+        JCheckBox systemTray;
+        if(checkBoxSystemTray) {
+            systemTray = new JCheckBox("Hide in System Tray when closing the program", checkBoxSystemTray);
+        }else{
+            systemTray = new JCheckBox("Close completely when exiting the program", checkBoxSystemTray);
+
+        }
         systemTray.setBorderPainted(true);
         systemTray.setForeground(Color.BLUE);
         systemTray.setFont(new Font("Serif", Font.BOLD, 20));
@@ -562,10 +595,10 @@ public class CreateGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(systemTray.isSelected()){
-                    systemTray.setText("Close completely when exiting the program");
+                    systemTray.setText("Hide in System Tray when closing the program");
                     checkBoxSystemTray=true;
                 }else{
-                    systemTray.setText("Hide in System Tray when closing the program");
+                    systemTray.setText("Close completely when exiting the program");
                     checkBoxSystemTray=false;
                 }
             }
@@ -591,8 +624,8 @@ public class CreateGUI {
         preferences.add(new JLabel(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\blue-black12.png")), gbc);
         gbc.gridy=1;
         JButton B_B_T=new JButton(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\blue-black.png"));
-        B_B_T.setOpaque(false);
-        B_B_T.setBackground(colorOfBackGround);
+        B_B_T.setOpaque(true);
+        B_B_T.setBackground(new java.awt.Color(25, 74, 255));
         B_B_T.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -600,8 +633,8 @@ public class CreateGUI {
                     colorOfThemeForground = blue;
                     colorOfThemeBackground1 = dark1;
                     colorOfThemeBackground2 = dark2;
+                    saveInfoOfthisRun();
                     mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
-                    System.out.println("dont forget to save  this in a file and then read from it the next time");
                 }else{
                     return;
                 }
@@ -614,8 +647,8 @@ public class CreateGUI {
         preferences.add(new JLabel(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\blue-white12.png")), gbc);
         gbc.gridy=1;
         JButton B_W_T=new JButton(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\blue-white.png"));
-        B_W_T.setOpaque(false);
-        B_W_T.setBackground(colorOfBackGround);
+        B_W_T.setOpaque(true);
+        B_W_T.setBackground(new java.awt.Color(74, 248, 255));
         B_W_T.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -624,8 +657,8 @@ public class CreateGUI {
                     colorOfThemeForground = blue;
                     colorOfThemeBackground1 = light1;
                     colorOfThemeBackground2 = light2;
+                    saveInfoOfthisRun();
                     mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
-                    System.out.println("dont forget to save this in a file and  then read from it the next time");
                 }else{
                     return;
                 }
@@ -639,8 +672,8 @@ public class CreateGUI {
         preferences.add(new JLabel(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\purple-white12.png")), gbc);
         gbc.gridy=3;
         JButton P_W_T=new JButton(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\purple-white.png"));
-        P_W_T.setOpaque(false);
-        P_W_T.setBackground(colorOfBackGround);
+        P_W_T.setOpaque(true);
+        P_W_T.setBackground(new java.awt.Color(171, 145, 255));
         P_W_T.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -649,8 +682,8 @@ public class CreateGUI {
                     colorOfThemeForground = purple;
                     colorOfThemeBackground1 = light1;
                     colorOfThemeBackground2 = light2;
+                    saveInfoOfthisRun();
                     mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
-                    System.out.println("dont  forget to save this in a file and then read from it the next time");
                 }else{
                     return;
                 }
@@ -663,18 +696,18 @@ public class CreateGUI {
         preferences.add(new JLabel(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\purple-black12.png")), gbc);
         gbc.gridy=3;
         JButton P_B_T=new JButton(new ImageIcon(new File(".").getAbsolutePath()+"\\src\\GUI\\resource\\themes\\purple-black.png"));
-        P_B_T.setOpaque(false);
-        P_B_T.setBackground(colorOfBackGround);
+        P_B_T.setOpaque(true);
+        P_B_T.setBackground(new java.awt.Color(68, 19, 118));
         P_B_T.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //but first an informating panel
                 if(createPanelBeforeClose()) {
-                    colorOfThemeForground = blue;
+                    colorOfThemeForground = purple;
                     colorOfThemeBackground1 = dark1;
                     colorOfThemeBackground2 = dark2;
+                    saveInfoOfthisRun();
                     mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
-                    System.out.println("dont forget to save this in a file and then read from it the next time");
                 }else{
                     return;
                 }
@@ -979,7 +1012,6 @@ public class CreateGUI {
 
         //creating the "Create New Request Button"
         JButton plusButton = new JButton(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\plus-icon.png"));
-        System.out.println("the plus button :\n"+(new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\plus-icon.png");
         plusButton.setPreferredSize(new Dimension(25, 25));
         plusButton.setBackground(colorOfThemeBackground2);
         plusButton.setComponentPopupMenu(leftPanelPopUpMenu);
@@ -1044,7 +1076,6 @@ public class CreateGUI {
             }
             historialOfRequest.setPreferredSize(new Dimension(112, 100 + numberOfButtons * 25));
             JButton protoTypeButton = new JButton(savedRequests.get(i).getNameOfRequest(), new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\"+savedRequests.get(i).getTypeOfRequest()+".png"));
-            System.out.println((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\"+savedRequests.get(i).getTypeOfRequest()+".png");
             protoTypeButton.setMaximumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
             protoTypeButton.setMinimumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
             protoTypeButton.setPreferredSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
@@ -2154,4 +2185,26 @@ public class CreateGUI {
         }
         return newString;
     }
+
+    private void saveInfoOfthisRun(){
+        //save the request:
+        SaveInfo saveInfo = new SaveInfo(savedRequests);
+        //save the preferences:
+        ArrayList<String> preferences = new ArrayList<>();
+        preferences.add(checkBoxFollowRedirect+"");
+        preferences.add(checkBoxSystemTray+"");
+        if(colorOfThemeForground==purple) {
+            preferences.add("purple");
+        }else{
+            preferences.add("blue");
+        }
+        if(colorOfThemeBackground1 == dark1){
+            preferences.add("dark");
+        }else{
+            preferences.add("light");
+        }
+        saveInfo.savePreferences(preferences);
+    }
+
+
 }

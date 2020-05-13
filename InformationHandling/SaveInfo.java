@@ -109,7 +109,7 @@ public class SaveInfo {
             //created or not what is important is that the file exists already
 
         } catch (IOException exception) {
-            System.out.println("Could not save the preference info");
+            System.out.println("Could not save the preference info in the save class");
             return;
         }
 
@@ -123,10 +123,11 @@ public class SaveInfo {
             fileWriter.write(preferences.get(2)+"\n");
             //first we write the color of background
             fileWriter.write(preferences.get(3)+"\n");
-            System.out.println("done");
+            System.out.println("done in the save class for the preference");
             fileWriter.close();
+            return;
         }catch(IOException exception){
-            System.out.println("Could not save the info8");
+            System.out.println("Could not save the info about preference in the save file class");
             return;
         }
 
@@ -329,8 +330,8 @@ public class SaveInfo {
 
         SaveInfo newSaveInfo = new SaveInfo(myRequests);
         ArrayList<String> preferencesArrayList = new ArrayList<>();
-        preferencesArrayList.add("true");
-        preferencesArrayList.add("true");
+        preferencesArrayList.add("false");
+        preferencesArrayList.add("false");
         preferencesArrayList.add("purple");
         preferencesArrayList.add("dark");
         newSaveInfo.savePreferences(preferencesArrayList);
