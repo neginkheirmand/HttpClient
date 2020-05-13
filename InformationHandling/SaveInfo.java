@@ -105,7 +105,6 @@ public class SaveInfo {
 
     }
 
-
     //if its json write the number of lines before writing the actual code
     private boolean writeTheFormDataInFile(File file, String typeOfFormat, Object format) {
         try {

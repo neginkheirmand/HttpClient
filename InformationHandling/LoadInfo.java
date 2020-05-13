@@ -144,6 +144,10 @@ public class LoadInfo {
 
     }
 
+    public ArrayList<Request> getSavedRequests(){
+        return savedRequests;
+    }
+
     private boolean readTheFormDataInFile(Scanner fileReader, FORM_DATA typeOfFormat, int index) {
 
 //            Scanner fileReader = new Scanner(file);
@@ -260,18 +264,18 @@ public class LoadInfo {
 
 //        System.out.println("the number of query pairs in the query tab is *"+numberOfQueryPairs+"*");
         for (int i = 0; i < numberOfQueryPairs; i++) {
-//            System.out.println(1);
+            System.out.println("query"+1);
             str = fileReader.nextLine();
             String name = str.replace("\n", "").replace("\r", "");
-//            System.out.println(2);
+            System.out.println("query"+2);
             str = fileReader.nextLine();
             String value = str.replace("\n", "").replace("\r", "");
-//            System.out.println(3);
+            System.out.println("query"+3);
             str = fileReader.nextLine();
             String enabled = str.replace("\n", "").replace("\r", "");
-//            System.out.println(4);
+            System.out.println("query"+4);
             String[] queryPair = {name, value, enabled};
-//            System.out.println(5);
+            System.out.println("query"+5);
             queryInfo.add(queryPair);
 //            System.out.println("the query info is :*"+queryInfo.get(i)[0] + "-" + queryInfo.get(i)[1] + "-" + queryInfo.get(i)[2] + "*\n");
         }
@@ -297,31 +301,30 @@ public class LoadInfo {
         }catch (NumberFormatException exception){
             System.out.println("cant transform "+str+" to int0");
         }
-        ArrayList<String[]> queryInfo = new ArrayList<>();
+        ArrayList<String[]> headerInfo = new ArrayList<>();
 
 //        System.out.println("the number of query pairs in the query tab is *"+numberOfQueryPairs+"*");
         for (int i = 0; i < numberOfQueryPairs; i++) {
-//            System.out.println(1);
+            System.out.println("header"+1);
             str = fileReader.nextLine();
             String name = str.replace("\n", "").replace("\r", "");
-//            System.out.println(2);
+            System.out.println("header"+2);
             str = fileReader.nextLine();
             String value = str.replace("\n", "").replace("\r", "");
-//            System.out.println(3);
+            System.out.println("header"+3);
             str = fileReader.nextLine();
             String enabled = str.replace("\n", "").replace("\r", "");
-//            System.out.println(4);
+            System.out.println("header"+4);
             String[] queryPair = {name, value, enabled};
-//            System.out.println(5);
-            queryInfo.add(queryPair);
-//            System.out.println("the header info is :*"+queryInfo.get(i)[0] + "-" + queryInfo.get(i)[1] + "-" + queryInfo.get(i)[2] + "*\n");
+            System.out.println("header"+5);
+            headerInfo.add(queryPair);
+            System.out.println("the header info is :*"+headerInfo.get(i)[0] + "-" + headerInfo.get(i)[1] + "-" + headerInfo.get(i)[2] + "*\n");
         }
-        savedRequests.get(index).setHeaderInfo(queryInfo);
+        savedRequests.get(index).setHeaderInfo(headerInfo);
 //            fileReader.close();
         return true;
 
     }
-
 
     /**
      * this method is to make sure the loaded info is valuable
@@ -337,7 +340,7 @@ public class LoadInfo {
                 System.out.println("Form Url: ");
                 ArrayList<String[]> form = (ArrayList<String[]>)savedRequests.get(i).getFormDataInfo();
                 for(int j=0; j<form.size(); j++){
-                    System.out.println(j+")"+form.get(i));
+                    System.out.println(j+")"+form.get(j));
                 }
             }else if(savedRequests.get(i).getTypeOfData().equals(FORM_DATA.BINARY)){
                 System.out.println("binary path: "+(String)savedRequests.get(i).getFormDataInfo());
@@ -347,9 +350,9 @@ public class LoadInfo {
             System.out.println("auth enabled?: "+savedRequests.get(i).getAuth());
             System.out.println("auth: \n"+savedRequests.get(i).getAuthInfo()[0]+"  "+savedRequests.get(i).getAuthInfo()[1]+"   check: "+savedRequests.get(i).getAuthInfo()[2]);
             if(savedRequests.get(i).getQueryInfo()!=null){
-                System.out.println("query:");
+                System.out.println("query: ");
                 for(int j=0; j<savedRequests.get(i).getQueryInfo().size(); j++){
-                    System.out.println(j+") "+savedRequests.get(i).getQueryInfo().get(i)[0]+"   "+savedRequests.get(i).getQueryInfo().get(i)[1]);
+                    System.out.println(j+") "+savedRequests.get(i).getQueryInfo().get(j)[0]+"   "+savedRequests.get(i).getQueryInfo().get(j)[1]);
                 }
             }else{
                 System.out.println("no querys");
@@ -358,7 +361,7 @@ public class LoadInfo {
             if(savedRequests.get(i).getHeaderInfo()!=null){
                 System.out.println("header:");
                 for(int j=0; j<savedRequests.get(i).getHeaderInfo().size(); j++){
-                    System.out.println(j+") "+savedRequests.get(i).getHeaderInfo().get(i)[0]+"  "+savedRequests.get(i).getHeaderInfo().get(i)[1]);
+                    System.out.println(j+") "+savedRequests.get(i).getHeaderInfo().get(j)[0]+"  "+savedRequests.get(i).getHeaderInfo().get(j)[1]);
                 }
             }else{
                 System.out.println("no headers");
@@ -367,6 +370,8 @@ public class LoadInfo {
         }
     }
 
+    /*
+    //this class works great :)
     public static void main(String[] args) {
 
         LoadInfo lo=new LoadInfo();
@@ -374,4 +379,5 @@ public class LoadInfo {
         lo.paint();
 
     }
+    */
 }
