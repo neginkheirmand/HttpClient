@@ -52,6 +52,8 @@ public class CreateGUI {
     private boolean sideBar = true;
     private ImageIcon[] icons = new ImageIcon[26];
 
+    private int indexOfRequest = 0 ;
+
     //an array list holding all the requests
     private ArrayList<Request> savedRequests = null;
 
@@ -724,7 +726,7 @@ public class CreateGUI {
 
     /**
      * this method is called so if the close option is chosed the app does what is suposted to in the case the user hits the close button
-     * @return
+     * @return true if the user choose to close the app and false if the user did'nt choose to close the app
      */
     private boolean createPanelBeforeClose(){
         String str = "if you want to change the theme of the app you should re-start the app\nif you press ok the Application will close, open it again and you have yout new Theme:)";
@@ -829,14 +831,23 @@ public class CreateGUI {
 //        method.add(new JToolBar.Separator(),7);
         secondUpPart.add(method);
 
+        if(indexOfRequest!=-1){
+            method.setSelectedIndex(savedRequests.get(indexOfRequest).getTypeOfRequest().ordinal());
+        }
 
         JTextField addressField = new JTextField("https://api.myproduct.com/v1/users");
         addressField.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if(addressField.getText().equals("https://api.myproduct.com/v1/users"))
                 addressField.setText("");
             }
         });
+
+        if(indexOfRequest!=-1){
+            addressField.setText(savedRequests.get(indexOfRequest).getUrl());
+        }
+
         addressField.setForeground(new java.awt.Color(166, 166, 166));
         addressField.setFont(new Font("Serif", Font.PLAIN, 17));
         addressField.setPreferredSize(new Dimension(350, 48));
@@ -880,13 +891,14 @@ public class CreateGUI {
 
         //badan bayad time va hajmesh ro bedast biyari
         //creating components of the JPanel
-        JLabel error = new JLabel("Error", SwingConstants.CENTER);
-        error.setPreferredSize(new Dimension(50, 35));
-        error.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));
-        error.setForeground(Color.white);
-        error.setFont(new Font("Serif", Font.BOLD, 15));
-        error.setBackground(new java.awt.Color(205, 71, 78));
-        error.setOpaque(true);
+        JLabel error = new StatusCodeButton("Error", true);
+//        JLabel error = new JLabel("Error", SwingConstants.CENTER);
+//        error.setPreferredSize(new Dimension(50, 35));
+//        error.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));
+//        error.setForeground(Color.white);
+//        error.setFont(new Font("Serif", Font.BOLD, 15));
+//        error.setBackground(new java.awt.Color(205, 71, 78));
+//        error.setOpaque(true);
         thirdUpPart.add(error);
 
         String time = "0ms";

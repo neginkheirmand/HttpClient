@@ -34,6 +34,8 @@ public enum TYPE{
         }
     }
 
+
+
     /**
      * this method takes a TYPE as an string and return it in TYPE mode
      * @param type the string passed to the function
