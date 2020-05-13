@@ -332,7 +332,7 @@ public class SaveInfo {
         preferencesArrayList.add("true");
         preferencesArrayList.add("true");
         preferencesArrayList.add("purple");
-        preferencesArrayList.add("blue");
+        preferencesArrayList.add("dark");
         newSaveInfo.savePreferences(preferencesArrayList);
 
     }

@@ -12,6 +12,7 @@ public class LoadInfo {
 
     private ArrayList<Request> savedRequests = null;
     private boolean couldReadWithOutProblems ;
+    private boolean couldReadPreferencesWithOutProblems ;
     private ArrayList<String> preferences = null;
 
 
@@ -147,13 +148,15 @@ public class LoadInfo {
     }
 
     public ArrayList<String> loadPreferences(){
+        couldReadPreferencesWithOutProblems=true;
         File preferenceFile = new File((new File(".")).getAbsolutePath() + "\\src\\InformationHandling\\SavedInformation\\Preferences.txt");
         preferences = new ArrayList<>();
 
         if (preferenceFile.exists()) {
-            System.out.println("we have saved preference");
+            System.out.println("we have saved preference in the load info class");
         } else {
-            System.out.println("dont really have saved preference info");
+            System.out.println("dont really have saved preference info in the load info class");
+            couldReadPreferencesWithOutProblems=false;
             return null;
         }
 //*
@@ -187,7 +190,7 @@ public class LoadInfo {
             fileReader.close();
             return preferences;
         } catch (IOException exception) {
-            couldReadWithOutProblems=false;
+            couldReadPreferencesWithOutProblems=false;
             System.out.println("Could not load the info8");
             return null;
         }
@@ -196,6 +199,10 @@ public class LoadInfo {
 
     public boolean getCouldReadWithOutProblems(){
         return couldReadWithOutProblems;
+    }
+
+    public boolean isCouldReadPreferencesWithOutProblems() {
+        return couldReadPreferencesWithOutProblems;
     }
 
     public ArrayList<Request> getSavedRequests(){
@@ -429,7 +436,7 @@ public class LoadInfo {
         }
     }
 
-    /*
+//    /*
     //this class works great :)
     public static void main(String[] args) {
 
@@ -438,7 +445,7 @@ public class LoadInfo {
         lo.paint();
 
         lo.loadPreferences();
-
+        System.out.println(lo.couldReadPreferencesWithOutProblems);
     }
-    */
+//    */
 }

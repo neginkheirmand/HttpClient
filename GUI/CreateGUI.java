@@ -43,6 +43,7 @@ public class CreateGUI {
 
     //the next fields are basically for the display of JFrame and depends of the preference
     private boolean checkBoxSystemTray = true;
+    private boolean checkBoxFollowRedirect = true;
     private JLabel insomnia;
     private GridBagConstraints insomniaConstraints;
     private JScrollPane downInsomnia;
@@ -61,13 +62,53 @@ public class CreateGUI {
         //we load the requests saved in the last run of the application
 
         LoadInfo loader = new LoadInfo();
-        if(loader.getCouldReadWithOutProblems()){
+        if(!loader.getCouldReadWithOutProblems()){
             savedRequests = new ArrayList<>();
             System.out.println("nothing saved, the historial of the requests i empty");
         }else{
             savedRequests = loader.getSavedRequests();
+            ArrayList<String> preferences = loader.loadPreferences();
+            if(!loader.isCouldReadPreferencesWithOutProblems()){
+                System.out.println("could not load the preferences saved");
+            }else {
+
+                //the follow redirect
+                if(preferences.get(0).equals("true")){
+                    checkBoxFollowRedirect=true;
+                }else{
+                    checkBoxFollowRedirect=false;
+                }
+
+                //the hide on system tray
+                if(preferences.get(1).equals("true")){
+                    checkBoxSystemTray=true;
+                }else{
+                    checkBoxSystemTray=false;
+                }
+
+                //the forground color
+                if(preferences.get(2).equals("blue")){
+                    colorOfThemeForground=blue;
+                }else{
+                    colorOfThemeForground=purple;
+                }
+
+                //the background color
+                if(preferences.get(3).equals("dark")){
+                    colorOfThemeBackground1=dark1;
+                    colorOfThemeBackground2=dark2;
+                }else{
+                    colorOfThemeBackground1=light1;
+                    colorOfThemeBackground2=light2;
+                }
+            }
             System.out.println("the historial of requests was updated");
         }
+
+        System.out.println("1- "+checkBoxFollowRedirect);
+        System.out.println("2- "+checkBoxSystemTray);
+        System.out.println("3- "+colorOfThemeForground);
+        System.out.println("4- "+colorOfThemeBackground2);
 
         mainFrame = new JFrame("Insomnia");
         Image taskbarIcon = Toolkit.getDefaultToolkit().getImage((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\my-app-icon1.png");
@@ -495,7 +536,7 @@ public class CreateGUI {
         }
 
         //the general settings
-        JCheckBox followRedirect = new JCheckBox("Follow Redirect", false);
+        JCheckBox followRedirect = new JCheckBox("Follow Redirect", checkBoxFollowRedirect);
         followRedirect.setOpaque(true);
         followRedirect.setFont(new Font("Serif", Font.BOLD, 20));
         followRedirect.setPreferredSize(new Dimension(350, 100));
@@ -509,7 +550,7 @@ public class CreateGUI {
 
         gridBagConstraints.gridy=1;
         gridBagConstraints.insets= new Insets(20, 20, 50, 20);
-        JCheckBox systemTray = new JCheckBox("Hide in System Tray when closing the program", false);
+        JCheckBox systemTray = new JCheckBox("Hide in System Tray when closing the program", checkBoxSystemTray);
         systemTray.setBorderPainted(true);
         systemTray.setForeground(Color.BLUE);
         systemTray.setFont(new Font("Serif", Font.BOLD, 20));
@@ -937,8 +978,8 @@ public class CreateGUI {
         upperPart.add(searchField);
 
         //creating the "Create New Request Button"
-        icons[8]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\plus-icon.png");
-        JButton plusButton = new JButton(icons[8]);
+        JButton plusButton = new JButton(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\plus-icon.png"));
+        System.out.println("the plus button :\n"+(new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\plus-icon.png");
         plusButton.setPreferredSize(new Dimension(25, 25));
         plusButton.setBackground(colorOfThemeBackground2);
         plusButton.setComponentPopupMenu(leftPanelPopUpMenu);
@@ -1003,6 +1044,7 @@ public class CreateGUI {
             }
             historialOfRequest.setPreferredSize(new Dimension(112, 100 + numberOfButtons * 25));
             JButton protoTypeButton = new JButton(savedRequests.get(i).getNameOfRequest(), new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\"+savedRequests.get(i).getTypeOfRequest()+".png"));
+            System.out.println((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\"+savedRequests.get(i).getTypeOfRequest()+".png");
             protoTypeButton.setMaximumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
             protoTypeButton.setMinimumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
             protoTypeButton.setPreferredSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
