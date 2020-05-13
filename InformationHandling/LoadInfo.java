@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class LoadInfo {
 
-    private ArrayList<Request> savedRequests;
+    private ArrayList<Request> savedRequests = null;
     private boolean couldReadWithOutProblems ;
 
     public LoadInfo() {
@@ -144,6 +144,10 @@ public class LoadInfo {
 
     }
 
+    public boolean getCouldReadWithOutProblems(){
+        return couldReadWithOutProblems;
+    }
+
     public ArrayList<Request> getSavedRequests(){
         return savedRequests;
     }
@@ -264,18 +268,18 @@ public class LoadInfo {
 
 //        System.out.println("the number of query pairs in the query tab is *"+numberOfQueryPairs+"*");
         for (int i = 0; i < numberOfQueryPairs; i++) {
-            System.out.println("query"+1);
+//            System.out.println("query"+1);
             str = fileReader.nextLine();
             String name = str.replace("\n", "").replace("\r", "");
-            System.out.println("query"+2);
+//            System.out.println("query"+2);
             str = fileReader.nextLine();
             String value = str.replace("\n", "").replace("\r", "");
-            System.out.println("query"+3);
+//            System.out.println("query"+3);
             str = fileReader.nextLine();
             String enabled = str.replace("\n", "").replace("\r", "");
-            System.out.println("query"+4);
+//            System.out.println("query"+4);
             String[] queryPair = {name, value, enabled};
-            System.out.println("query"+5);
+//            System.out.println("query"+5);
             queryInfo.add(queryPair);
 //            System.out.println("the query info is :*"+queryInfo.get(i)[0] + "-" + queryInfo.get(i)[1] + "-" + queryInfo.get(i)[2] + "*\n");
         }
@@ -305,20 +309,20 @@ public class LoadInfo {
 
 //        System.out.println("the number of query pairs in the query tab is *"+numberOfQueryPairs+"*");
         for (int i = 0; i < numberOfQueryPairs; i++) {
-            System.out.println("header"+1);
+//            System.out.println("header"+1);
             str = fileReader.nextLine();
             String name = str.replace("\n", "").replace("\r", "");
-            System.out.println("header"+2);
+//            System.out.println("header"+2);
             str = fileReader.nextLine();
             String value = str.replace("\n", "").replace("\r", "");
-            System.out.println("header"+3);
+//            System.out.println("header"+3);
             str = fileReader.nextLine();
             String enabled = str.replace("\n", "").replace("\r", "");
-            System.out.println("header"+4);
+//            System.out.println("header"+4);
             String[] queryPair = {name, value, enabled};
-            System.out.println("header"+5);
+//            System.out.println("header"+5);
             headerInfo.add(queryPair);
-            System.out.println("the header info is :*"+headerInfo.get(i)[0] + "-" + headerInfo.get(i)[1] + "-" + headerInfo.get(i)[2] + "*\n");
+//            System.out.println("the header info is :*"+headerInfo.get(i)[0] + "-" + headerInfo.get(i)[1] + "-" + headerInfo.get(i)[2] + "*\n");
         }
         savedRequests.get(index).setHeaderInfo(headerInfo);
 //            fileReader.close();
@@ -340,7 +344,7 @@ public class LoadInfo {
                 System.out.println("Form Url: ");
                 ArrayList<String[]> form = (ArrayList<String[]>)savedRequests.get(i).getFormDataInfo();
                 for(int j=0; j<form.size(); j++){
-                    System.out.println(j+")"+form.get(j));
+                    System.out.println(j+")"+form.get(j)[0]+" "+form.get(j)[1]+" "+form.get(j)[2]);
                 }
             }else if(savedRequests.get(i).getTypeOfData().equals(FORM_DATA.BINARY)){
                 System.out.println("binary path: "+(String)savedRequests.get(i).getFormDataInfo());
@@ -348,7 +352,12 @@ public class LoadInfo {
                 System.out.println("JSON text: "+(String)savedRequests.get(i).getFormDataInfo());
             }
             System.out.println("auth enabled?: "+savedRequests.get(i).getAuth());
-            System.out.println("auth: \n"+savedRequests.get(i).getAuthInfo()[0]+"  "+savedRequests.get(i).getAuthInfo()[1]+"   check: "+savedRequests.get(i).getAuthInfo()[2]);
+            if(savedRequests.get(i).getAuth()) {
+                System.out.println("auth: \n" + savedRequests.get(i).getAuthInfo()[0] + "  " + savedRequests.get(i).getAuthInfo()[1] + "   check: " + savedRequests.get(i).getAuthInfo()[2]);
+            }else{
+                System.out.println("no auth");
+            }
+
             if(savedRequests.get(i).getQueryInfo()!=null){
                 System.out.println("query: ");
                 for(int j=0; j<savedRequests.get(i).getQueryInfo().size(); j++){

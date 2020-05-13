@@ -1,4 +1,4 @@
-2
+3
 name Of request1
 GET
 www.google1.com
@@ -34,5 +34,41 @@ new value1
 true
 new header2
 new value2
+true
+----
+name Of request3
+PATCH
+www.google3.com
+FORM_URL
+3
+new form url 1
+new value 1
+true
+new form url 2
+new value 2
+true
+new form url 3
+new value 3
+true
+false
+2
+new name query3 1
+new value3 1
+true
+new name query3 2
+new value3 2
+true
+4
+new header1
+new value1
+true
+new header2
+new value2
+true
+new header3
+new value3
+true
+new header4
+new value4
 true
 ----

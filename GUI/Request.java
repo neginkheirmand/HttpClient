@@ -165,7 +165,9 @@ public class Request {
      * @return auth info of the request
      */
     public void setAuthInfo(String[] authInfo) {
-        this.authInfo = authInfo;
+        if(auth) {
+            this.authInfo = authInfo;
+        }
     }
 
     /**

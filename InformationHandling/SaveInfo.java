@@ -244,10 +244,59 @@ public class SaveInfo {
         request2.setFormDataInfo("this is supposed to be the path of a file");
 
 
+        Request request3 = new Request("name Of request3", TYPE.PATCH, "www.google3.com", FORM_DATA.FORM_URL);
+        request3.setAuth(false);
+        ArrayList<String[]> headers3 = new ArrayList<>();
+        String[] header31={
+                "new header1", "new value1", "true"
+        };
+        String[] header32={
+                "new header2", "new value2", "true"
+        };
+        String[] header33={
+                "new header3", "new value3", "true"
+        };
+        String[] header34={
+                "new header4", "new value4", "true"
+        };
+        headers3.add(header31);
+        headers3.add(header32);
+        headers3.add(header33);
+        headers3.add(header34);
+        request3.setHeaderInfo(headers3);
+        String[] query31={
+                "new name query3 1", "new value3 1", "true"
+        };
+        String[] query32={
+                "new name query3 2", "new value3 2", "true"
+        };
+
+        ArrayList<String []> queryPairs3 = new ArrayList<>();
+        queryPairs3.add(query31);
+        queryPairs3.add(query32);
+        request3.setQueryInfo(queryPairs3);
+        ArrayList<String[]> formUrl = new ArrayList<>();
+        String[] form1={
+                "new form url 1", "new value 1", "true"
+        };
+        String[] form2={
+                "new form url 2", "new value 2", "true"
+        };
+        String[] form3={
+                "new form url 3", "new value 3", "true"
+        };
+
+        formUrl.add(form1);
+        formUrl.add(form2);
+        formUrl.add(form3);
+        request3.setFormDataInfo(formUrl);
+
+
+
         ArrayList<Request> myRequests = new ArrayList<>();
         myRequests.add(request1);
         myRequests.add(request2);
-
+        myRequests.add(request3);
 
 
 
