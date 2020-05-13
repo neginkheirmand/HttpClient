@@ -48,7 +48,6 @@ public enum FORM_DATA{
      * @return the FORM_DATA returned
      */
     public static FORM_DATA getFormData(String formData){
-        System.out.println("-->*"+formData+"*<--");
         if(formData.equals(FORM_URL+"")){
             return FORM_URL;
         }else if(formData.equals(JSON+"")){

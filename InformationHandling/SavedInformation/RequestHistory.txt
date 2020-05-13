@@ -10,6 +10,7 @@ bearer token
 prefix
 true
 null
+1
 new header
 new value
 true
@@ -23,9 +24,11 @@ true
 bearer token
 prefix
 true
+1
 new name query2
 new value2
 true
+2
 new header1
 new value1
 true

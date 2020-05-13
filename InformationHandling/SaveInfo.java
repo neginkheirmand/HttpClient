@@ -178,6 +178,8 @@ public class SaveInfo {
         try {
             fileWriter = new FileWriter(file, true);
             System.out.println( queryInfo.size());
+            //should save the number of pair so we now when to stop
+            fileWriter.write(queryInfo.size()+"\n");
             for (int i = 0; i < queryInfo.size(); i++) {
                 fileWriter.write(queryInfo.get(i)[0]+"\n"+queryInfo.get(i)[1]+"\n"+queryInfo.get(i)[2]+"\n");
                 System.out.println( queryInfo.get(i)[0]+"\n"+queryInfo.get(i)[1]+"\n"+queryInfo.get(i)[2]+"\n");
