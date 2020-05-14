@@ -759,19 +759,8 @@ public class CreateGUI {
         constraintsInsomniaLabel.ipady = 0;
         constraintsInsomniaLabel.ipadx = 0;
         constraintsInsomniaLabel.anchor = GridBagConstraints.FIRST_LINE_START;
-//        JLabel title = new JLabel("Insomnia", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\my-app-icon111.png"), SwingConstants.CENTER);
-        icons[5]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\my-app-icon111.png");
-        JLabel title = new JLabel("Insomnia", icons[5], SwingConstants.CENTER);
-        title.setBounds(new Rectangle(100, 100));
-        title.setMaximumSize(new Dimension(100, 100));
-        title.setForeground(Color.white);
-        title.setFont(new Font("SansSerif", Font.BOLD, 23));
-        if(colorOfThemeForground.equals(purple)) {
-            title.setBackground(new java.awt.Color(123, 104, 238));
-        }else{
-            title.setBackground(new java.awt.Color(61, 189, 238));
-        }
-        title.setOpaque(true);
+
+        JLabel title = new InsomniaDisplayPanel(colorOfThemeForground);
         mainFrame.add(title, constraintsInsomniaLabel);
         insomnia=title;
         insomniaConstraints=constraintsInsomniaLabel;
@@ -1023,32 +1012,6 @@ public class CreateGUI {
             }
         });
         upperPart.add(plusButton);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
         historialOfRequest.add(upperPart, constraints);
 
         constraints.gridx = 0;
