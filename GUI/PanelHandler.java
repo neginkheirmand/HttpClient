@@ -20,12 +20,13 @@ public class PanelHandler {
     private final GridBagConstraints thirdPanelConstraints;
 
     //the url and save and send button area of the request
+    private JScrollPane ScroolPanelPointer;
     private JPanel forthPanel;
     private GridBagConstraints forthPanelConstraints;
 
     //the url and save and send button area of the request
-    private JPanel fifthPanel;
-    private GridBagConstraints fifthPanelConstraints;
+    private JTabbedPane fifthPanel;
+    private final GridBagConstraints fifthPanelConstraints;
 
     //the url and save and send button area of the request
     private JPanel sixthPanel;
@@ -81,6 +82,20 @@ public class PanelHandler {
         thirdPanelConstraints.weighty = -1;
         thirdPanelConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
         thirdPanelConstraints.fill = GridBagConstraints.BOTH;
+
+
+        //the forth JPanel(JScrollPane) which contains the requests and the collections  --> since some bugs could show up will leave this constraints alone
+
+
+        //the fifth JPanel(JTabbedPane) with the body message on its tabs
+        fifthPanelConstraints= new GridBagConstraints();
+        fifthPanelConstraints.gridx = 1;
+        fifthPanelConstraints.gridy = 1;
+        //growing constant
+        fifthPanelConstraints.weightx = 1;
+        fifthPanelConstraints.weighty = 1;
+        fifthPanelConstraints.anchor = GridBagConstraints.LINE_START;
+        fifthPanelConstraints.fill = GridBagConstraints.BOTH;
     }
 
 
@@ -127,6 +142,41 @@ public class PanelHandler {
     }
 
 
+    //the forth part which is the classifier of requests and collections
+    public JScrollPane getScroolPanelPointer() {
+        return ScroolPanelPointer;
+    }
 
-    
+    public void setScroolPanelPointer(JScrollPane scroolPanelPointer) {
+        ScroolPanelPointer = scroolPanelPointer;
+    }
+
+    public JPanel getForthPanel() {
+        return forthPanel;
+    }
+
+    public void setForthPanel(JPanel forthPanel) {
+        this.forthPanel = forthPanel;
+    }
+
+    public GridBagConstraints getForthPanelConstraints() {
+        return forthPanelConstraints;
+    }
+
+    public void setForthPanelConstraints(GridBagConstraints constraints){
+        forthPanelConstraints = constraints;
+    }
+
+    //create fifth JPanel(JTabbedPane)
+    public JTabbedPane getFifthPanel() {
+        return fifthPanel;
+    }
+
+    public void setFifthPanel(JTabbedPane fifthPanel) {
+        this.fifthPanel = fifthPanel;
+    }
+
+    public GridBagConstraints getFifthPanelConstraints() {
+        return fifthPanelConstraints;
+    }
 }

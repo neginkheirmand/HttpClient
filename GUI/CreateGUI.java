@@ -46,8 +46,6 @@ public class CreateGUI {
     private PanelHandler insomniaPanelHandler = new PanelHandler();
     private boolean checkBoxSystemTray = true;
     private boolean checkBoxFollowRedirect = true;
-    private JScrollPane downInsomnia;
-    private GridBagConstraints downInsomniaConstraints;
     private boolean sideBar = true;
     private ImageIcon[] icons = new ImageIcon[26];
 
@@ -463,10 +461,10 @@ public class CreateGUI {
                 if(sideBar){
                 //now its false and we have to remove it from the main frame
                     mainFrame.remove(insomniaPanelHandler.getFirstPanel());
-                    mainFrame.remove(downInsomnia);
+                    mainFrame.remove(insomniaPanelHandler.getScroolPanelPointer());
                 }else{
                     mainFrame.add(insomniaPanelHandler.getFirstPanel(), insomniaPanelHandler.getFirstPanelConstraints());
-                    mainFrame.add(downInsomnia, downInsomniaConstraints);
+                    mainFrame.add(insomniaPanelHandler.getScroolPanelPointer(), insomniaPanelHandler.getForthPanelConstraints());
                 }
                 mainFrame.setPreferredSize(sizeOfNow);
                 mainFrame.setLocation(locationOfNow);
@@ -866,7 +864,8 @@ public class CreateGUI {
         historialThisRequest.setForeground(new java.awt.Color(166, 166, 166));
         thirdUpPart.add(historialThisRequest);
 
-        mainFrame.add(thirdUpPart, infoCommand);
+        insomniaPanelHandler.setThirdPanel(thirdUpPart);
+        mainFrame.add(insomniaPanelHandler.getThirdPanel(), insomniaPanelHandler.getThirdPanelConstraints());
     }
 
     /**
@@ -923,16 +922,14 @@ public class CreateGUI {
         historialConstraints.anchor = GridBagConstraints.PAGE_START;
         historialConstraints.fill = GridBagConstraints.BOTH;
 
+        insomniaPanelHandler.setForthPanelConstraints(historialConstraints);
+
         JScrollPane js = new JScrollPane(historialOfRequest,
                 VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         js.setPreferredSize(new Dimension(112, 500));
-//        js.setMaximumSize(new Dimension(112, 500));
-//        js.setMinimumSize(new Dimension(112, 500));
-//        js.setSize(new Dimension(112, 500));
-        mainFrame.add(js, historialConstraints);
-        downInsomnia=js;
-        downInsomniaConstraints=(GridBagConstraints)historialConstraints.clone();
+        insomniaPanelHandler.setScroolPanelPointer(js);
+        mainFrame.add(insomniaPanelHandler.getScroolPanelPointer(), insomniaPanelHandler.getForthPanelConstraints());
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
@@ -991,39 +988,6 @@ public class CreateGUI {
         constraints.fill = GridBagConstraints.HORIZONTAL;
         //then the requests and the folders containing them
 
-        //now we have to add the new scrollable Jpanel down the search bar and the "new request" button
-//        JPanel downSidePart = new JPanel();
-//        historialOfRequest.add(downSidePart, gridConstraints);
-//        downSidePart.setLayout(new BoxLayout(downSidePart, BoxLayout.Y_AXIS));
-
-/*
-        //here is the part we get the information of the already done requests
-        //and we make a JButton list of them and then we show them
-        //button proto-type
-        for (int i = 0; i < 5; i++) {
-            if (i == 4) {
-                constraints.weightx = 1;
-                constraints.weighty = 1;
-            }
-            historialOfRequest.setPreferredSize(new Dimension(112, 100 + numberOfButtons * 25));
-            JButton protoTypeButton = new JButton("prototype-request" + i, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\GET.png"));
-            protoTypeButton.setMaximumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
-            protoTypeButton.setMinimumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
-            protoTypeButton.setPreferredSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
-            protoTypeButton.setSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
-//            protoTypeButton.setFont(new Font("SansSerif", Font.BOLD, 15));
-            protoTypeButton.setBackground(colorOfThemeBackground2);
-            protoTypeButton.setOpaque(true);
-            protoTypeButton.setForeground(colorOfThemeBackground1);
-            protoTypeButton.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground2));
-            historialOfRequest.add(protoTypeButton, constraints);
-            constraints.gridy += 1.0;
-            numberOfButtons++;
-
-        }
-
-
- */
         for (int i = 0; i < savedRequests.size(); i++) {
             if (i == savedRequests.size()-1) {
                 constraints.weightx = 1;
@@ -1045,12 +1009,6 @@ public class CreateGUI {
             numberOfButtons++;
 
         }
-//*/
-
-
-
-//        historialOfRequest.add(downSidePart, gridBagConstraints2);
-
     }
 
     /**
@@ -1225,15 +1183,8 @@ public class CreateGUI {
         docs.setBackground(colorOfThemeBackground2);
         setRequestTabedPane.add("Docs", docs);
 
-        GridBagConstraints settingRequestConstraints = new GridBagConstraints();
-        settingRequestConstraints.gridx = 1;
-        settingRequestConstraints.gridy = 1;
-        //growing constant
-        settingRequestConstraints.weightx = 1;
-        settingRequestConstraints.weighty = 1;
-        settingRequestConstraints.anchor = GridBagConstraints.LINE_START;
-        settingRequestConstraints.fill = GridBagConstraints.BOTH;
-        mainFrame.add(setRequestTabedPane, settingRequestConstraints);
+        insomniaPanelHandler.setFifthPanel(setRequestTabedPane);
+        mainFrame.add(insomniaPanelHandler.getFifthPanel(), insomniaPanelHandler.getFifthPanelConstraints());
 
     }
 
