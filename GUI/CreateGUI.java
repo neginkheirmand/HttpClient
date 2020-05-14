@@ -947,7 +947,7 @@ public class CreateGUI {
                 newRequest.setSaved(false);
                 savedRequests.add(newRequest);
                 //inja bayad update konim
-                
+
             }
         });
         JMenuItem newFolderItem = new JMenuItem("New Folder", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\newFolder-icon.png"));
@@ -1024,6 +1024,31 @@ public class CreateGUI {
         });
         upperPart.add(plusButton);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         historialOfRequest.add(upperPart, constraints);
 
         constraints.gridx = 0;
