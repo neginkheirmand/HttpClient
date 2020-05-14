@@ -1904,15 +1904,8 @@ public class CreateGUI {
         timeline.setBackground(colorOfThemeBackground2);
         queryHistoryPanel.add("Timeline", timeline);
 
-        GridBagConstraints settingRequestConstraints = new GridBagConstraints();
-        settingRequestConstraints.gridx = 2;
-        settingRequestConstraints.gridy = 1;
-        //growing constant
-        settingRequestConstraints.weightx = 1;
-        settingRequestConstraints.weighty = 1;
-        settingRequestConstraints.anchor = GridBagConstraints.LINE_START;
-        settingRequestConstraints.fill = GridBagConstraints.BOTH;
-        mainFrame.add(queryHistoryPanel, settingRequestConstraints);
+        insomniaPanelHandler.setSixthPanel(queryHistoryPanel);
+        mainFrame.add(insomniaPanelHandler.getSixthPanel(), insomniaPanelHandler.getSixthPanelConstraints());
     }
 
     /**

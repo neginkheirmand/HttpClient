@@ -29,8 +29,8 @@ public class PanelHandler {
     private final GridBagConstraints fifthPanelConstraints;
 
     //the url and save and send button area of the request
-    private JPanel sixthPanel;
-    private GridBagConstraints sixthPanelConstraints;
+    private JTabbedPane sixthPanel;
+    private final GridBagConstraints sixthPanelConstraints;
 
 
 
@@ -96,6 +96,19 @@ public class PanelHandler {
         fifthPanelConstraints.weighty = 1;
         fifthPanelConstraints.anchor = GridBagConstraints.LINE_START;
         fifthPanelConstraints.fill = GridBagConstraints.BOTH;
+
+
+
+        //the sixth JPanel(JTabbedPane) which contains the response of the request
+        sixthPanelConstraints = new GridBagConstraints();
+        sixthPanelConstraints.gridx = 2;
+        sixthPanelConstraints.gridy = 1;
+        //growing constant
+        sixthPanelConstraints.weightx = 1;
+        sixthPanelConstraints.weighty = 1;
+        sixthPanelConstraints.anchor = GridBagConstraints.LINE_START;
+        sixthPanelConstraints.fill = GridBagConstraints.BOTH;
+
     }
 
 
@@ -178,5 +191,21 @@ public class PanelHandler {
 
     public GridBagConstraints getFifthPanelConstraints() {
         return fifthPanelConstraints;
+    }
+
+
+    //the sixth JPanel(JTabbedPane)
+
+
+    public JTabbedPane getSixthPanel() {
+        return sixthPanel;
+    }
+
+    public void setSixthPanel(JTabbedPane sixthPanel) {
+        this.sixthPanel = sixthPanel;
+    }
+
+    public GridBagConstraints getSixthPanelConstraints() {
+        return sixthPanelConstraints;
     }
 }
