@@ -890,21 +890,17 @@ public class CreateGUI {
         infoCommand.fill = GridBagConstraints.BOTH;
 
         //badan bayad time, hajmesh va code status esh ro bedast biyari
+
         //creating components of the JPanel
         JLabel error = new StatusCodeLabel("Error", true);
         thirdUpPart.add(error);
 
+        //the time taken
         JLabel timeTaken = new ResponseTimeInfo(0, colorOfThemeBackground1);
         thirdUpPart.add(timeTaken);
 
-        String dataUsed = "0B";
-        JLabel netTaken = new JLabel(dataUsed, SwingConstants.CENTER);
-        netTaken.setPreferredSize(new Dimension(40, 30));
-        netTaken.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));
-        netTaken.setForeground(colorOfThemeBackground1);
-        netTaken.setFont(new Font("Serif", Font.BOLD, 15));
-        netTaken.setBackground(new java.awt.Color(166, 166, 166));
-        netTaken.setOpaque(true);
+        //the size
+        JLabel netTaken = new ResponseSizeInfo(0, colorOfThemeBackground1);
         thirdUpPart.add(netTaken);
 
         //badan bayad barash pup up menu ham bezani ke bere historial ghabli haro ham bebine
@@ -924,7 +920,8 @@ public class CreateGUI {
     private void createRequestClasifier() {
         //the first panel down the "Insomnia" label containig the history of requests
         JPanel historialOfRequest = new JPanel();
-        int numberOfButtons = 1;
+//        int numberOfButtons = 1;
+        int numberOfButtons = savedRequests.size();
         historialOfRequest.setPreferredSize(new Dimension(112, 100 + numberOfButtons * 25));
 //        historialOfRequest.setSize(new Dimension(112, 500));
         historialOfRequest.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
@@ -945,11 +942,17 @@ public class CreateGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //create new Request and add it to the list
+                //this request is not automatically saved you have to press the save button
+                Request newRequest = new Request("", TYPE.GET, "https://api.myproduct.com/v1/users", FORM_DATA.FORM_URL);
+                newRequest.setSaved(false);
+                savedRequests.add(newRequest);
+                //inja bayad update konim
+                
             }
         });
         JMenuItem newFolderItem = new JMenuItem("New Folder", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\newFolder-icon.png"));
-
         newFolderItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
+        //in newFolderItem bayad ye action listener dashte bashe
         leftPanelPopUpMenu.add(newRequestItem);
         leftPanelPopUpMenu.add(newFolderItem);
         //with right click in this component you will see the JPopUpMenu poping up

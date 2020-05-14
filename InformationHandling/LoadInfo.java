@@ -80,6 +80,7 @@ public class LoadInfo {
 //                System.out.println(i+")FormData = "+typeOfFormData);
 //                System.out.println(couldReadWithOutProblems+"9 i="+i);
                 Request newRequest = new Request(nameOfRequest, typeOfRequest, url, typeOfFormData);
+                newRequest.setSaved(true);
                 savedRequests.add(newRequest);
 //                fileReader.close();
 

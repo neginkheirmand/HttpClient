@@ -30,6 +30,8 @@ public class Request {
     private ArrayList<String[]> queryInfo = null;
     //the header tab
     private ArrayList<String[]> headerInfo = null;
+    //this if this request is saved or not
+    private boolean saved;
 
     /**
      * constructor of the class
@@ -47,6 +49,16 @@ public class Request {
         headerInfo=new ArrayList<>();
         authInfo=new String[3];
     }
+
+
+    /**
+     * getter method
+     * @return boolean showing if the request is saved or not
+     */
+    public boolean isSaved(){
+        return saved;
+    }
+
 
     /**
      * getter method
@@ -196,6 +208,16 @@ public class Request {
         //if JSON : String
         //if Binary : File
         this.formDataInfo = formDataInfo;
+    }
+
+
+    /**
+     * getter method
+     * @return TYPE of request
+     */
+    public void setSaved(boolean save){
+        saved=save;
+        return;
     }
 
     //costume methods
