@@ -43,10 +43,9 @@ public class CreateGUI {
     private static Color colorOfThemeBackground2 = dark2;
 
     //the next fields are basically for the display of JFrame and depends of the preference
+    private PanelHandler insomniaPanelHandler = new PanelHandler();
     private boolean checkBoxSystemTray = true;
     private boolean checkBoxFollowRedirect = true;
-    private JLabel insomnia;
-    private GridBagConstraints insomniaConstraints;
     private JScrollPane downInsomnia;
     private GridBagConstraints downInsomniaConstraints;
     private boolean sideBar = true;
@@ -463,10 +462,10 @@ public class CreateGUI {
                 Point locationOfNow = mainFrame.getLocationOnScreen();
                 if(sideBar){
                 //now its false and we have to remove it from the main frame
-                    mainFrame.remove(insomnia);
+                    mainFrame.remove(insomniaPanelHandler.getFirstPanel());
                     mainFrame.remove(downInsomnia);
                 }else{
-                    mainFrame.add(insomnia, insomniaConstraints);
+                    mainFrame.add(insomniaPanelHandler.getFirstPanel(), insomniaPanelHandler.getFirstPanelConstraints());
                     mainFrame.add(downInsomnia, downInsomniaConstraints);
                 }
                 mainFrame.setPreferredSize(sizeOfNow);
@@ -744,26 +743,9 @@ public class CreateGUI {
      */
     private void createInsomniaDisplayArea() {
 
-        GridBagConstraints constraintsInsomniaLabel = new GridBagConstraints();
-        //preparing the Insomnia label to be add
-        constraintsInsomniaLabel.fill = GridBagConstraints.BOTH;
-        //(0,0)
-        constraintsInsomniaLabel.gridx = 0;
-        constraintsInsomniaLabel.gridy = 0;
-        constraintsInsomniaLabel.gridwidth = 1;
-        constraintsInsomniaLabel.gridheight = 1;
-        //growing constant
-        constraintsInsomniaLabel.weightx = 1;
-        constraintsInsomniaLabel.weighty = -1;
-        //padding sides
-        constraintsInsomniaLabel.ipady = 0;
-        constraintsInsomniaLabel.ipadx = 0;
-        constraintsInsomniaLabel.anchor = GridBagConstraints.FIRST_LINE_START;
-
         JLabel title = new InsomniaDisplayPanel(colorOfThemeForground);
-        mainFrame.add(title, constraintsInsomniaLabel);
-        insomnia=title;
-        insomniaConstraints=constraintsInsomniaLabel;
+        mainFrame.add(title, insomniaPanelHandler.getFirstPanelConstraints());
+        insomniaPanelHandler.setFirstPanel(title);
     }
 
     /**
@@ -776,16 +758,7 @@ public class CreateGUI {
         secondUpPart.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));
 //        secondUpPart.setBounds(new Rectangle(200,60));
         secondUpPart.setSize(new Dimension(200, 60));
-        GridBagConstraints constraintsCommand = new GridBagConstraints();
-        constraintsCommand.gridx = 1;
-        constraintsCommand.gridy = 0;
-        //growing constant
-        constraintsCommand.weightx = 1;
-        constraintsCommand.weighty = -1;
-        constraintsCommand.gridheight = 1;
-        constraintsCommand.gridwidth = 1;
-        constraintsCommand.anchor = GridBagConstraints.FIRST_LINE_START;
-        constraintsCommand.fill = GridBagConstraints.BOTH;
+
 
         //badan bayad commandesh chi bashe ro malum koni
         //creating components of the JPanel
@@ -813,8 +786,8 @@ public class CreateGUI {
         method.setPreferredSize(new Dimension(200, 48));
         if(colorOfThemeForground.equals(blue)){
             method.setBackground(new java.awt.Color(67, 154, 166));
-        }else if(constraintsCommand.equals(purple)) {
-            method.setBackground(new java.awt.Color(122, 111, 166));
+        }else if(colorOfThemeForground.equals(purple)) {
+            method.setBackground(new java.awt.Color(187, 171, 255));
         }
         method.setRenderer(renderer);
 //        method.add(new JToolBar.Separator(),7);
@@ -854,8 +827,8 @@ public class CreateGUI {
         saveButton.setForeground(new java.awt.Color(166, 166, 166));
         secondUpPart.add(saveButton);
 
-
-        mainFrame.add(secondUpPart, constraintsCommand);
+        insomniaPanelHandler.setSecondPanel(secondUpPart);
+        mainFrame.add(insomniaPanelHandler.getSecondPanel(), insomniaPanelHandler.getSecondPanelConstraints());
     }
 
     /**
@@ -869,14 +842,7 @@ public class CreateGUI {
         thirdUpPart.setMaximumSize(new Dimension(200, 60));
         thirdUpPart.setBounds(new Rectangle(200, 60));
         thirdUpPart.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));
-        GridBagConstraints infoCommand = new GridBagConstraints();
-        infoCommand.gridx = 2;
-        infoCommand.gridy = 0;
-        //growing constant
-        infoCommand.weightx = 1;
-        infoCommand.weighty = -1;
-        infoCommand.anchor = GridBagConstraints.FIRST_LINE_START;
-        infoCommand.fill = GridBagConstraints.BOTH;
+
 
         //badan bayad time, hajmesh va code status esh ro bedast biyari
 
