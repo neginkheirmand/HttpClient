@@ -36,7 +36,12 @@ public class LoadInfo {
         try {
             Scanner fileReader = new Scanner(file);
             //first we write the number of requests
-            String str = fileReader.nextLine();
+            String str;
+            if(fileReader.hasNext()) {
+                str = fileReader.nextLine();
+            }else{
+                return;
+            }
             str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
 //            System.out.println("1)number of requests= *"+str+"*");
             int numRequests=0;
@@ -53,26 +58,43 @@ public class LoadInfo {
 //            System.out.println("2)num of request = *" + numRequests+"*");
             for (int i = 0; i < numRequests; i++) {
 //                System.out.println(couldReadWithOutProblems+"5");
-
-                // 1- the name of request
-                str = fileReader.nextLine();
+                if(fileReader.hasNext()) {
+                    // 1- the name of request
+                    str = fileReader.nextLine();
+                }else{
+                    return;
+                }
                 String nameOfRequest = str.replace("\n", "").replace("\r", "");
 //                System.out.println(i+") name of request: *" + nameOfRequest+"*");
 //                System.out.println(couldReadWithOutProblems+"6 i="+i);
 
                 //the Type of request : GET
-                str = fileReader.nextLine();
+                if(fileReader.hasNext()) {
+                    str = fileReader.nextLine();
+                }else{
+                    return;
+                }
                 str = str.replace("\n", "").replace("\r", "");
 //                System.out.println(i+")method Request = *"+TYPE.getTYPE(str)+"*");
                 TYPE typeOfRequest = TYPE.getTYPE(str);
                 //the url "it could be nothing"
-                str = fileReader.nextLine();
+                if(fileReader.hasNext()) {
+                    str = fileReader.nextLine();
+                }else{
+                    System.out.println("not able to load");
+                    return;
+                }
                 String url = str.replace("\n", "").replace("\r", "");
 //                System.out.println(i+")url = *"+url+"*");
 //                System.out.println(couldReadWithOutProblems+"7 i="+i);
 //                savedRequests.get(i).setUrl(str);
                 //now the type of FORM DATA and after it depending of this type, the Object is to be written in the file
-                str = fileReader.nextLine();
+                if(fileReader.hasNext()) {
+                    str = fileReader.nextLine();
+                }else{
+                    System.out.println("not able to load");
+                    return;
+                }
 //                System.out.println(couldReadWithOutProblems+"8 i="+i);
                 str = str.replace("\n", "").replace("\r", "");
 //                System.out.println("(if the next is wrong check it)the Form Data is : *"+str+"*");
@@ -93,7 +115,12 @@ public class LoadInfo {
 
 //                fileReader = new Scanner(file);
                 //now the request's info
-                str = fileReader.nextLine();
+                if(fileReader.hasNext()) {
+                    str = fileReader.nextLine();
+                }else{
+                    System.out.println("not able to load");
+                    return;
+                }
                 str = str.replace("\n", "").replace("\r", "");
 //                System.out.println(i+")have auth = "+str);
                 if(str.equals("true")) {
@@ -133,7 +160,12 @@ public class LoadInfo {
 
                 //the info about the request has been written
 //                fileReader = new Scanner(file);
-                fileReader.nextLine();
+                if(fileReader.hasNext()) {
+                    fileReader.nextLine();
+                }else{
+                    System.out.println("not able to load");
+                    return;
+                }
             }
 //            System.out.println(couldReadWithOutProblems+"16");
 
@@ -164,25 +196,47 @@ public class LoadInfo {
         try {
             Scanner fileReader = new Scanner(preferenceFile);
             //first we read the Follow Redirect
-            String str = fileReader.nextLine();
+            String str;
+            if(fileReader.hasNext()) {
+                str = fileReader.nextLine();
+            }else{
+                System.out.println("not able to load");
+                return null;
+            }
             str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
             System.out.println("1-  *"+str+"*");
             preferences.add(str);
 
             //then the hide in tray system
-            str = fileReader.nextLine();
+
+            if(fileReader.hasNext()) {
+                str = fileReader.nextLine();
+            }else{
+                System.out.println("not able to load");
+                return null;
+            }
             str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
             System.out.println("2-  *"+str+"*");
             preferences.add(str);
-
-            //then the forground color
-            str = fileReader.nextLine();
+            if(fileReader.hasNext()) {
+                //then the forground color
+                str = fileReader.nextLine();
+            }else {
+                System.out.println("not able to load");
+                return null;
+            }
             str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
             System.out.println("3-  *"+str+"*");
             preferences.add(str);
 
             //then the forground color
-            str = fileReader.nextLine();
+            if(fileReader.hasNext()) {
+                //then the forground color
+                str = fileReader.nextLine();
+            }else {
+                System.out.println("not able to load");
+                return null;
+            }
             str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
             System.out.println("4-  *"+str+"*");
             preferences.add(str);
@@ -217,7 +271,15 @@ public class LoadInfo {
             System.out.println("the type of Format data is Url encoded");
             //Form URL Encoded
             ArrayList<String[]> formURLEncoded = new ArrayList<String[]>();
-            String str =fileReader.nextLine();
+
+            String str;
+            if(fileReader.hasNext()) {
+                //then the forground color
+                str = fileReader.nextLine();
+            }else {
+                System.out.println("not able to load");
+                return false;
+            }
             str = str.replace("\n", "").replace("\r", "");
             int numOfPairs=0;
             try {
@@ -228,15 +290,34 @@ public class LoadInfo {
             }
             System.out.println("has *"+numOfPairs+"* number of pairs");
             for (int i = 0; i < numOfPairs; i++) {
-                str =fileReader.nextLine();
+                if(fileReader.hasNext()) {
+                    //then the forground color
+                    str = fileReader.nextLine();
+                }else {
+                    System.out.println("not able to load");
+                    return false;
+                }
                 String name = str.replace("\n", "").replace("\r", "");
 //                System.out.println("the name in the*"+i+"* pair is *"+name+"*");
 
-                str =fileReader.nextLine();
+                if(fileReader.hasNext()) {
+                    //then the forground color
+                    str = fileReader.nextLine();
+                }else {
+                    System.out.println("not able to load");
+                    return false;
+                }
                 String value = str.replace("\n", "").replace("\r", "");
 //                System.out.println("the value in the*"+i+"* pair is *"+value+"*");
 
-                str =fileReader.nextLine();
+                if(fileReader.hasNext()) {
+                    //then the forground color
+                    str = fileReader.nextLine();
+                }else {
+                    System.out.println("not able to load");
+                    return false;
+                }
+
                 String enabled = str.replace("\n", "").replace("\r", "");
 //                System.out.println("the pair*"+i+"* is enabled: *"+value+"*");
                 String[] formInfo={name, value, enabled};
@@ -248,7 +329,16 @@ public class LoadInfo {
         } else if (typeOfFormat.ordinal()==1) {
             //its in JSON format
             String JSON ="";
-            String str = fileReader.nextLine();
+            String str;
+
+            if(fileReader.hasNext()) {
+                //then the forground color
+                str = fileReader.nextLine();
+            }else {
+                System.out.println("not able to load");
+                return false;
+            }
+
             str = str.replace("\n", "").replace("\r", "");
             int numOfLines=0;
             try {
@@ -259,17 +349,27 @@ public class LoadInfo {
             }
 //            System.out.println("Json.numberOfLines= *"+numOfLines+"*");
             for(int i=0; i<numOfLines; i++) {
-                JSON += fileReader.nextLine();
+                if(fileReader.hasNext()) {
+                    JSON += fileReader.nextLine();
+                }else{
+                    System.out.println("not able to read the saved requests");
+                    return false;
+                }
             }
 //            System.out.println("JSON text = *"+JSON+"*");
             savedRequests.get(index).setFormDataInfo(JSON);
 //                fileReader.close();
             return true;
         } else if (typeOfFormat.ordinal() == 2) {
-            String pathPfFile = fileReader.nextLine();
-            pathPfFile = pathPfFile.replace("\n", "").replace("\r", "");
+            String pathOfFile ="";
+            if(fileReader.hasNext()) {
+                pathOfFile = fileReader.nextLine();
+            }else{
+                return false;
+            }
+            pathOfFile = pathOfFile.replace("\n", "").replace("\r", "");
 //            System.out.println("path of file = *"+pathPfFile+"*");
-            savedRequests.get(index).setFormDataInfo(pathPfFile);
+            savedRequests.get(index).setFormDataInfo(pathOfFile);
 //                fileReader.close();
             return true;
         } else {
@@ -284,15 +384,33 @@ public class LoadInfo {
 //            Scanner fileReader = new Scanner(file);
         try {
             //loading the toke
-            String str = fileReader.nextLine();
+            String str;
+
+            if(fileReader.hasNext()) {
+                str = fileReader.nextLine();
+            }else {
+                System.out.println("could not load the saved files/there was a problem while saving them");
+                return false;
+            }
             String token = str.replace("\n", "").replace("\r", "");
 //            System.out.println("   the token = *" + str + "*");
 
-            str = fileReader.nextLine();
+            if(fileReader.hasNext()) {
+                str = fileReader.nextLine();
+            }else {
+                System.out.println("could not load the saved files/there was a problem while saving them");
+                return false;
+            }
             String prefix = str.replace("\n", "").replace("\r", "");
 
 //            System.out.println("   the prefix = *" + str + "*");
-            str = fileReader.nextLine();
+
+            if(fileReader.hasNext()) {
+                str = fileReader.nextLine();
+            }else {
+                System.out.println("could not load the saved files/there was a problem while saving them");
+                return false;
+            }
             String enabled = str.replace("\n", "").replace("\r", "");
 //            System.out.println("   enabled = *" + str + "*");
 
@@ -309,7 +427,16 @@ public class LoadInfo {
     private boolean readQueryInFile(Scanner fileReader, int index) {
 
 //            fileReader = new Scanner(file);
-        String str = fileReader.nextLine();
+        String str;
+
+
+        if(fileReader.hasNext()) {
+            str = fileReader.nextLine();
+        }else {
+            System.out.println("could not load the saved files/there was a problem while saving them");
+            return false;
+        }
+
         str = str.replace("\n", "").replace("\r", "");
 //        System.out.println("the next thing readen is: *"+str+"* its either null or the number of query's");
         if(str.equals("null")){
@@ -327,13 +454,36 @@ public class LoadInfo {
 //        System.out.println("the number of query pairs in the query tab is *"+numberOfQueryPairs+"*");
         for (int i = 0; i < numberOfQueryPairs; i++) {
 //            System.out.println("query"+1);
-            str = fileReader.nextLine();
+
+            if(fileReader.hasNext()) {
+                str = fileReader.nextLine();
+            }else {
+                System.out.println("could not load the saved files/there was a problem while saving them");
+                return false;
+            }
+
             String name = str.replace("\n", "").replace("\r", "");
 //            System.out.println("query"+2);
-            str = fileReader.nextLine();
+
+
+            if(fileReader.hasNext()) {
+                str = fileReader.nextLine();
+            }else {
+                System.out.println("could not load the saved files/there was a problem while saving them");
+                return false;
+            }
+
             String value = str.replace("\n", "").replace("\r", "");
 //            System.out.println("query"+3);
-            str = fileReader.nextLine();
+
+
+            if(fileReader.hasNext()) {
+                str = fileReader.nextLine();
+            }else {
+                System.out.println("could not load the saved files/there was a problem while saving them");
+                return false;
+            }
+
             String enabled = str.replace("\n", "").replace("\r", "");
 //            System.out.println("query"+4);
             String[] queryPair = {name, value, enabled};
@@ -350,7 +500,16 @@ public class LoadInfo {
     private boolean readHeaderInFile(Scanner fileReader, int index) {
 
 //            fileReader = new Scanner(file);
-        String str = fileReader.nextLine();
+        String str;
+
+
+        if(fileReader.hasNext()) {
+            str = fileReader.nextLine();
+        }else {
+            System.out.println("could not load the saved files/there was a problem while saving them");
+            return false;
+        }
+
         str = str.replace("\n", "").replace("\r", "");
 //        System.out.println("the next thing readen is: *"+str+"* its either null or the number of query's");
         if(str.equals("null")){
@@ -368,13 +527,31 @@ public class LoadInfo {
 //        System.out.println("the number of query pairs in the query tab is *"+numberOfQueryPairs+"*");
         for (int i = 0; i < numberOfQueryPairs; i++) {
 //            System.out.println("header"+1);
-            str = fileReader.nextLine();
+
+            if(fileReader.hasNext()) {
+                str = fileReader.nextLine();
+            }else {
+                System.out.println("could not load the saved files/there was a problem while saving them");
+                return false;
+            }
             String name = str.replace("\n", "").replace("\r", "");
 //            System.out.println("header"+2);
-            str = fileReader.nextLine();
+
+            if(fileReader.hasNext()) {
+                str = fileReader.nextLine();
+            }else {
+                System.out.println("could not load the saved files/there was a problem while saving them");
+                return false;
+            }
+
             String value = str.replace("\n", "").replace("\r", "");
 //            System.out.println("header"+3);
-            str = fileReader.nextLine();
+            if(fileReader.hasNext()) {
+                str = fileReader.nextLine();
+            }else {
+                System.out.println("could not load the saved files/there was a problem while saving them");
+                return false;
+            }
             String enabled = str.replace("\n", "").replace("\r", "");
 //            System.out.println("header"+4);
             String[] queryPair = {name, value, enabled};

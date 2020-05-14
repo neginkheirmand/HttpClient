@@ -105,6 +105,7 @@ public class SaveInfo {
                 System.out.println("was created");
             }else{
                 System.out.println("wasnt created");
+
             }
             //created or not what is important is that the file exists already
 
@@ -180,9 +181,13 @@ public class SaveInfo {
                 System.out.println("not able to save the file6");
                 return false;
             }
-        }catch (IOException exception) {
+        }catch (IOException exception ) {
             System.out.println("couldnt open the file7");
             return false;
+        }catch (NullPointerException exception){
+            System.out.println("couldnt open the file7");
+            return false;
+
         }
     }
 

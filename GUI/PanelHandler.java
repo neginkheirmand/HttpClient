@@ -21,7 +21,10 @@ public class PanelHandler {
 
     //the url and save and send button area of the request
     private JScrollPane ScroolPanelPointer;
+    /*
     private JPanel forthPanel;
+
+     */
     private GridBagConstraints forthPanelConstraints;
 
     //the url and save and send button area of the request
@@ -163,7 +166,7 @@ public class PanelHandler {
     public void setScroolPanelPointer(JScrollPane scroolPanelPointer) {
         ScroolPanelPointer = scroolPanelPointer;
     }
-
+/*
     public JPanel getForthPanel() {
         return forthPanel;
     }
@@ -171,6 +174,8 @@ public class PanelHandler {
     public void setForthPanel(JPanel forthPanel) {
         this.forthPanel = forthPanel;
     }
+
+ */
 
     public GridBagConstraints getForthPanelConstraints() {
         return forthPanelConstraints;

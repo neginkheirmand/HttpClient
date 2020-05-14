@@ -9,7 +9,7 @@ true
 bearer token
 prefix
 true
-0
+null
 1
 new header
 new value

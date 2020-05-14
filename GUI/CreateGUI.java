@@ -67,7 +67,17 @@ public class CreateGUI {
             System.out.println("nothing saved, the historial of the requests i empty");
         }else{
             savedRequests = loader.getSavedRequests();
+            if(savedRequests == null){
+                savedRequests = new ArrayList<>();
+            }
             ArrayList<String> preferences = loader.loadPreferences();
+            if(preferences == null){
+                preferences.add("true");
+                preferences.add("true");
+                preferences.add("purple");
+                preferences.add("dark");
+
+            }
             if(!loader.isCouldReadPreferencesWithOutProblems()){
                 System.out.println("could not load the preferences saved");
             }else {
@@ -791,7 +801,7 @@ public class CreateGUI {
 //        method.add(new JToolBar.Separator(),7);
         secondUpPart.add(method);
 
-        if(indexOfRequest!=-1){
+        if(indexOfRequest!=-1 && indexOfRequest<savedRequests.size()){
             method.setSelectedIndex(savedRequests.get(indexOfRequest).getTypeOfRequest().ordinal());
         }
 
@@ -804,7 +814,7 @@ public class CreateGUI {
             }
         });
 
-        if(indexOfRequest!=-1){
+        if(indexOfRequest!=-1 && indexOfRequest<savedRequests.size()){
             addressField.setText(savedRequests.get(indexOfRequest).getUrl());
         }
 
@@ -901,7 +911,7 @@ public class CreateGUI {
                 newRequest.setSaved(false);
                 savedRequests.add(newRequest);
                 //inja bayad update konim
-
+                updateFrame();
             }
         });
         JMenuItem newFolderItem = new JMenuItem("New Folder", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\newFolder-icon.png"));
@@ -2105,5 +2115,20 @@ public class CreateGUI {
         saveInfo.savePreferences(preferences);
     }
 
+    private void updateFrame(){
+        try {
+            mainFrame.remove(insomniaPanelHandler.getFirstPanel());
+            mainFrame.remove(insomniaPanelHandler.getSecondPanel());
+            mainFrame.remove(insomniaPanelHandler.getThirdPanel());
+//        mainFrame.remove(insomniaPanelHandler.getForthPanel());
+            mainFrame.remove(insomniaPanelHandler.getScroolPanelPointer());
+            mainFrame.remove(insomniaPanelHandler.getFifthPanel());
+            mainFrame.remove(insomniaPanelHandler.getSixthPanel());
+            mainFrame.revalidate();
+            mainFrame.repaint();
+        }catch(NullPointerException exception){
+            System.out.println("help me!");
+        }
+    }
 
 }
