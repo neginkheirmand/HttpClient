@@ -889,26 +889,12 @@ public class CreateGUI {
         infoCommand.anchor = GridBagConstraints.FIRST_LINE_START;
         infoCommand.fill = GridBagConstraints.BOTH;
 
-        //badan bayad time va hajmesh ro bedast biyari
+        //badan bayad time, hajmesh va code status esh ro bedast biyari
         //creating components of the JPanel
-        JLabel error = new StatusCodeButton("Error", true);
-//        JLabel error = new JLabel("Error", SwingConstants.CENTER);
-//        error.setPreferredSize(new Dimension(50, 35));
-//        error.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));
-//        error.setForeground(Color.white);
-//        error.setFont(new Font("Serif", Font.BOLD, 15));
-//        error.setBackground(new java.awt.Color(205, 71, 78));
-//        error.setOpaque(true);
+        JLabel error = new StatusCodeLabel("Error", true);
         thirdUpPart.add(error);
 
-        String time = "0ms";
-        JLabel timeTaken = new JLabel(time, SwingConstants.CENTER);
-        timeTaken.setPreferredSize(new Dimension(40, 30));
-        timeTaken.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));
-        timeTaken.setForeground(colorOfThemeBackground1);
-        timeTaken.setFont(new Font("Serif", Font.BOLD, 15));
-        timeTaken.setBackground(new java.awt.Color(166, 166, 166));
-        timeTaken.setOpaque(true);
+        JLabel timeTaken = new ResponseTimeInfo(0, colorOfThemeBackground1);
         thirdUpPart.add(timeTaken);
 
         String dataUsed = "0B";
