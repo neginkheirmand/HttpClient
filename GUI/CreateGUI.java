@@ -116,37 +116,6 @@ public class CreateGUI {
         }
 
         mainFrame = new JFrame("Insomnia");
-//        Image taskbarIcon = Toolkit.getDefaultToolkit().getImage((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\my-app-icon1.png");
-//
-//        mainFrame.setIconImage(taskbarIcon);
-//
-//        mainFrame.setMinimumSize(new Dimension(1500, 450));
-//        mainFrame.setMaximumSize(new Dimension(1520, 1080));
-//        mainFrame.setLocationRelativeTo(null);
-//        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        mainFrame.setVisible(true);
-//        mainFrame.setBackground(new java.awt.Color(128,128, 128));
-//        mainFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-//            @Override
-//            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-//                saveInfoOfthisRun();
-//                System.exit(0);
-//            }
-//        });
-//        createMenuBar();
-//
-//        //working with the layout -> layout choosen was GridBagLayout
-//        mainFrame.setLayout(new GridBagLayout());
-//
-//        createInsomniaDisplayArea();
-//        createRequestClasifier();
-//        createRequestInfoPanel();
-//        createHistorialRequest();
-//        createRequestInfo();
-//        createRequestHistoryPanel();
-//
-//        createSystemTray();
-
         paintFrame();
     }
 
@@ -671,14 +640,25 @@ public class CreateGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(createPanelBeforeClose()) {
+                    if(colorOfThemeForground.equals(purple)){
+                        //should update the option frame too
+                        optionFrame.setBackground(new java.awt.Color(151, 255, 250));
+                        general.setBackground(new java.awt.Color(151, 255, 250));
+                        preferences.setBackground(new java.awt.Color(151, 255, 250));
+                        Color borderColor;
+                        if(colorOfThemeForground.equals(purple)){
+                            borderColor = new java.awt.Color(67, 51, 146);
+                        }else{
+                            borderColor = new java.awt.Color(48, 116, 146);
+                        }
+                        followRedirect.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, borderColor));
+                        systemTray.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, borderColor));
+                    }
                     colorOfThemeForground = blue;
                     colorOfThemeBackground1 = dark1;
                     colorOfThemeBackground2 = dark2;
-                    System.out.println("color of for ground:"+colorOfThemeForground);
-                    System.out.println("background2:"+colorOfThemeBackground1);
-                    System.out.println("background2:"+colorOfThemeBackground2
-                    );
                     updateFrame();
+
                     /*
                     saveInfoOfthisRun();
                     mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
@@ -704,11 +684,28 @@ public class CreateGUI {
             public void actionPerformed(ActionEvent e) {
                 //but first an informating panel
                 if(createPanelBeforeClose()) {
+                    if(colorOfThemeForground.equals(purple)){
+                        //should update the option frame too
+                        optionFrame.setBackground(new java.awt.Color(151, 255, 250));
+                        general.setBackground(new java.awt.Color(151, 255, 250));
+                        preferences.setBackground(new java.awt.Color(151, 255, 250));
+                        Color borderColor;
+                        if(colorOfThemeForground.equals(purple)){
+                            borderColor = new java.awt.Color(67, 51, 146);
+                        }else{
+                            borderColor = new java.awt.Color(48, 116, 146);
+                        }
+                        followRedirect.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, borderColor));
+                        systemTray.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, borderColor));
+                    }
                     colorOfThemeForground = blue;
                     colorOfThemeBackground1 = light1;
                     colorOfThemeBackground2 = light2;
+                    updateFrame();
+                    /*
                     saveInfoOfthisRun();
                     mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+                    */
                 }else{
                     return;
                 }
@@ -729,11 +726,29 @@ public class CreateGUI {
             public void actionPerformed(ActionEvent e) {
                 //but first an informating panel
                 if(createPanelBeforeClose()) {
+                    if(colorOfThemeForground.equals(blue)){
+                        //should update the option frame too
+                        optionFrame.setBackground(new java.awt.Color(171, 145, 255));
+                        general.setBackground(new java.awt.Color(171, 145, 255));
+                        preferences.setBackground(new java.awt.Color(171, 145, 255));
+                        Color borderColor;
+                        if(colorOfThemeForground.equals(purple)){
+                            borderColor = new java.awt.Color(67, 51, 146);
+                        }else{
+                            borderColor = new java.awt.Color(48, 116, 146);
+                        }
+                        followRedirect.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, borderColor));
+                        systemTray.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, borderColor));
+                    }
                     colorOfThemeForground = purple;
                     colorOfThemeBackground1 = light1;
                     colorOfThemeBackground2 = light2;
+                    updateFrame();
+                    /*
                     saveInfoOfthisRun();
                     mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+
+                     */
                 }else{
                     return;
                 }
@@ -753,11 +768,30 @@ public class CreateGUI {
             public void actionPerformed(ActionEvent e) {
                 //but first an informating panel
                 if(createPanelBeforeClose()) {
+                    if(colorOfThemeForground.equals(blue)){
+                        //should update the option frame too
+                        optionFrame.setBackground(new java.awt.Color(171, 145, 255));
+                        general.setBackground(new java.awt.Color(171, 145, 255));
+                        preferences.setBackground(new java.awt.Color(171, 145, 255));
+                        Color borderColor;
+                        if(colorOfThemeForground.equals(purple)){
+                            borderColor = new java.awt.Color(67, 51, 146);
+                        }else{
+                            borderColor = new java.awt.Color(48, 116, 146);
+                        }
+                        followRedirect.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, borderColor));
+                        systemTray.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, borderColor));
+                    }
                     colorOfThemeForground = purple;
                     colorOfThemeBackground1 = dark1;
                     colorOfThemeBackground2 = dark2;
+                    updateFrame();
+
+                    /*
                     saveInfoOfthisRun();
                     mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+                    optionFrame.dispatchEvent(new WindowEvent(optionFrame, WindowEvent.WINDOW_CLOSING));
+                     */
                 }else{
                     return;
                 }
@@ -777,7 +811,7 @@ public class CreateGUI {
      * @return true if the user choose to close the app and false if the user did'nt choose to close the app
      */
     private boolean createPanelBeforeClose(){
-        String str = "if you want to change the theme of the app you should re-start the app\nif you press ok the Application will close, open it again and you have yout new Theme:)";
+        String str = "Do you actually want to change the theme of the application?";
         int warningDialog = JOptionPane.showConfirmDialog(mainFrame, str, "WARNING", JOptionPane.WARNING_MESSAGE);
 
         if(warningDialog== OK_OPTION){
@@ -874,6 +908,19 @@ public class CreateGUI {
         saveButton.setBackground(Color.white);
         saveButton.setPreferredSize(new Dimension(100, 48));
         saveButton.setForeground(new java.awt.Color(166, 166, 166));
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                savedRequests.get(indexOfRequest).setSaved(true);
+                savedRequests.get(indexOfRequest).setUrl(addressField.getText());
+                if( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)) .getSelectedIndex()==0 ){
+                savedRequests.get(indexOfRequest).setAuth(true);
+                }else{
+                    savedRequests.get(indexOfRequest).setAuth(false);
+                }
+
+            }
+        });
         secondUpPart.add(saveButton);
 
         insomniaPanelHandler.setSecondPanel(secondUpPart);
@@ -948,7 +995,11 @@ public class CreateGUI {
             public void actionPerformed(ActionEvent e) {
                 //create new Request and add it to the list
                 //this request is not automatically saved you have to press the save button
-                Request newRequest = new Request("", TYPE.GET, "https://api.myproduct.com/v1/users", FORM_DATA.FORM_URL);
+                createNewRequest();
+
+                /*
+                Request newRequest = new Request(nameNewRequest, TYPE.GET, "https://api.myproduct.com/v1/users", FORM_DATA.FORM_URL);
+                nameNewRequest="new Request";
                 newRequest.setSaved(false);
 
                 ArrayList<String[]> formDataInfo = new ArrayList<>();
@@ -971,6 +1022,8 @@ public class CreateGUI {
 
                 //inja bayad update konim
                 updateFrame();
+
+                 */
             }
         });
         JMenuItem newFolderItem = new JMenuItem("New Folder", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\newFolder-icon.png"));
@@ -1063,16 +1116,30 @@ public class CreateGUI {
                 constraints.weighty = 1;
             }
             historialOfRequest.setPreferredSize(new Dimension(112, 100 + numberOfButtons * 25));
-            JButton protoTypeButton = new JButton(savedRequests.get(i).getNameOfRequest(), new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\"+savedRequests.get(i).getTypeOfRequest()+".png"));
-            protoTypeButton.setMaximumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
-            protoTypeButton.setMinimumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
-            protoTypeButton.setPreferredSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
-            protoTypeButton.setSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
+            JButton protoTypeButton = new RequestButton(i, savedRequests.get(i).getNameOfRequest(), new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\"+savedRequests.get(i).getTypeOfRequest()+".png"),
+                    plusButton.getPreferredSize().height, colorOfThemeBackground2, colorOfThemeBackground1);
+
+//            JButton protoTypeButton = new JButton(savedRequests.get(i).getNameOfRequest(), new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\"+savedRequests.get(i).getTypeOfRequest()+".png"));
+//            protoTypeButton.setMaximumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
+//            protoTypeButton.setMinimumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
+//            protoTypeButton.setPreferredSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
+//            protoTypeButton.setSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
 //            protoTypeButton.setFont(new Font("SansSerif", Font.BOLD, 15));
-            protoTypeButton.setBackground(colorOfThemeBackground2);
-            protoTypeButton.setOpaque(true);
-            protoTypeButton.setForeground(colorOfThemeBackground1);
-            protoTypeButton.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground2));
+//            protoTypeButton.setBackground(colorOfThemeBackground2);
+//            protoTypeButton.setOpaque(true);
+//            protoTypeButton.setForeground(colorOfThemeBackground1);
+//            protoTypeButton.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground2));
+
+
+            protoTypeButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    indexOfRequest = ((RequestButton)protoTypeButton).getIndexOfRequest();
+                    updateFrame();
+                }
+            });
+
+
             historialOfRequest.add(protoTypeButton, constraints);
             constraints.gridy += 1.0;
             numberOfButtons++;
@@ -2152,6 +2219,81 @@ public class CreateGUI {
             }
         }
         return newString;
+    }
+
+    private void createNewRequest(){
+        JFrame newRequest = new JFrame("New Request");
+        newRequest.setLocation(800,500);
+        newRequest.setVisible(true);
+//        newRequest.setPreferredSize(new Dimension(300, 100));
+        newRequest.setBackground(colorOfThemeBackground2);
+        newRequest.setForeground(colorOfThemeBackground1);
+
+        JTextField nameTextField =  new JTextField("Enter the name of the Request");
+        nameTextField.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (nameTextField.getText().equals("Enter the name of the Request")) {
+                    nameTextField.setText("");
+                }
+            }
+        });
+        nameTextField.setPreferredSize(new Dimension(300,50));
+        nameTextField.setBackground(colorOfThemeBackground1);
+        nameTextField.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1, 1, true));
+        if(colorOfThemeBackground1.equals(dark1)){
+            nameTextField.setForeground(Color.WHITE);
+        }else{
+            nameTextField.setForeground(Color.BLACK);
+        }
+        nameTextField.setOpaque(true);
+        nameTextField.setVisible(true);
+
+        newRequest.add(nameTextField, BorderLayout.NORTH);
+
+        JButton create = new JButton("Create");
+        create.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nameNewRequest="new Request";
+                nameNewRequest = nameTextField.getText();
+                newRequest.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+
+                Request newRequest = new Request(nameNewRequest, TYPE.GET, "https://api.myproduct.com/v1/users", FORM_DATA.FORM_URL);
+                nameNewRequest="new Request";
+                newRequest.setSaved(false);
+
+                ArrayList<String[]> formDataInfo = new ArrayList<>();
+                String[] formDataPair ={"new name1","new value1","true"};
+                formDataInfo.add(formDataPair);
+                newRequest.setFormDataInfo(formDataInfo);
+
+                ArrayList<String[]> queryInfo = new ArrayList<>();
+                String[] queryPair = {"new name2", "new value2", "false"};
+                queryInfo.add(queryPair);
+                newRequest.setQueryInfo(queryInfo);
+
+                ArrayList<String[]> headerInfo = new ArrayList<>();
+                String[] headerPair = {"new header 3", "new value 3", "true"};
+                headerInfo.add(headerPair);
+                newRequest.setQueryInfo(headerInfo);
+                savedRequests.add(newRequest);
+
+                //inja bayad update konim
+                updateFrame();
+            }
+        });
+        create.setBackground(colorOfThemeBackground2);
+        create.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1, 1, true));
+        if(colorOfThemeBackground1.equals(dark1)){
+            create.setForeground(Color.WHITE);
+        }else{
+            create.setForeground(Color.BLACK);
+        }
+        create.setPreferredSize(new Dimension(300,50));
+        newRequest.add(create, BorderLayout.SOUTH);
+        newRequest.setVisible(true);
+        newRequest.pack();
     }
 
     private void saveInfoOfthisRun(){

@@ -1,4 +1,4 @@
-5
+3
 name Of request1
 GET
 www.google1.com
@@ -71,34 +71,4 @@ true
 new header4
 new value4
 true
-----
-
-GET
-https://api.myproduct.com/v1/users
-FORM_URL
-1
-new name1
-new value1
-true
-false
-1
-new header 3
-new value 3
-true
-0
-----
-
-GET
-https://api.myproduct.com/v1/users
-FORM_URL
-1
-new name1
-new value1
-true
-false
-1
-new header 3
-new value 3
-true
-0
 ----
