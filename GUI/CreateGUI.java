@@ -9,6 +9,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 
+import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
 import static javax.swing.JOptionPane.OK_OPTION;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
@@ -114,6 +115,7 @@ public class CreateGUI {
             }
             System.out.println("the historial of requests was updated");
         }
+        Request.setListOfrequests(savedRequests);
 
         mainFrame = new JFrame("Insomnia");
         paintFrame();
@@ -839,7 +841,7 @@ public class CreateGUI {
         //preparing the second head part as a panel
         JPanel secondUpPart = new JPanel(new FlowLayout(FlowLayout.CENTER));
         secondUpPart.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));
-//        secondUpPart.setBounds(new Rectangle(200,60));
+        //secondUpPart.setBounds(new Rectangle(200,60));
         secondUpPart.setSize(new Dimension(200, 60));
 
 
@@ -903,7 +905,32 @@ public class CreateGUI {
         sendButton.setForeground(new java.awt.Color(166, 166, 166));
         secondUpPart.add(sendButton);
 
+
+
         JButton saveButton = new JButton("Save");
+        Action action = new AbstractAction("Save") {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("saved");
+                savedRequests.get(indexOfRequest).setSaved(true);
+                savedRequests.get(indexOfRequest).setUrl(addressField.getText());
+                if( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)) .getSelectedIndex()==0 ){
+                    savedRequests.get(indexOfRequest).setAuth(true);
+                }else{
+                    savedRequests.get(indexOfRequest).setAuth(false);
+                }
+                savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
+                //format of body
+                savedRequests.get(indexOfRequest).setTypeOfData( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)) .getSelectedIndex() );
+
+                updateFrame();
+            }
+
+        };
+        action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control S"));
+        saveButton.setAction(action);
+        saveButton.getInputMap(WHEN_IN_FOCUSED_WINDOW).put( (KeyStroke)action.getValue(Action.ACCELERATOR_KEY),"myAction");
         saveButton.setBackground(Color.white);
         saveButton.setPreferredSize(new Dimension(100, 48));
         saveButton.setForeground(new java.awt.Color(166, 166, 166));
@@ -925,11 +952,27 @@ public class CreateGUI {
                 updateFrame();
             }
         });
+        saveButton.getActionMap().put("myAction", action);
         secondUpPart.add(saveButton);
+
+
+
+
+
 
         insomniaPanelHandler.setSecondPanel(secondUpPart);
         mainFrame.add(insomniaPanelHandler.getSecondPanel(), insomniaPanelHandler.getSecondPanelConstraints());
     }
+
+     public class LeftAction extends AbstractAction {
+         public LeftAction(String text, Integer mnemonic) {
+             super(text);
+             putValue(MNEMONIC_KEY, mnemonic);
+         }
+         public void actionPerformed(ActionEvent e) {
+
+         }
+     }
 
     /**
      * this method is called so that the third upper panel is called
@@ -1094,18 +1137,8 @@ public class CreateGUI {
             historialOfRequest.setPreferredSize(new Dimension(112, 100 + numberOfButtons * 25));
             JButton protoTypeButton = new RequestButton(i, savedRequests.get(i).getNameOfRequest(), new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\"+savedRequests.get(i).getTypeOfRequest()+".png"),
                     plusButton.getPreferredSize().height, colorOfThemeBackground2, colorOfThemeBackground1);
-
-//            JButton protoTypeButton = new JButton(savedRequests.get(i).getNameOfRequest(), new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\"+savedRequests.get(i).getTypeOfRequest()+".png"));
-//            protoTypeButton.setMaximumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
-//            protoTypeButton.setMinimumSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
-//            protoTypeButton.setPreferredSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
-//            protoTypeButton.setSize(new Dimension(protoTypeButton.getPreferredSize().width, plusButton.getPreferredSize().height));
-//            protoTypeButton.setFont(new Font("SansSerif", Font.BOLD, 15));
-//            protoTypeButton.setBackground(colorOfThemeBackground2);
-//            protoTypeButton.setOpaque(true);
-//            protoTypeButton.setForeground(colorOfThemeBackground1);
-//            protoTypeButton.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground2));
-
+            ((RequestButton)protoTypeButton).setRequest(savedRequests.get(i));
+            ((RequestButton)protoTypeButton).setGUI(this);
 
             protoTypeButton.addActionListener(new ActionListener() {
                 @Override
@@ -2297,7 +2330,7 @@ public class CreateGUI {
         saveInfo.savePreferences(preferences);
     }
 
-    private void updateFrame(){
+    public void updateFrame(){
         try {
 
             mainFrame.remove(insomniaPanelHandler.getFirstPanel());

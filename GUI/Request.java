@@ -32,6 +32,9 @@ public class Request {
     private ArrayList<String[]> headerInfo = null;
     //this if this request is saved or not
     private boolean saved;
+    //a pointer to the list of the Requests
+    private static ArrayList<Request> listOfrequests;
+
 
     /**
      * constructor of the class
@@ -236,5 +239,13 @@ public class Request {
         }
     }
 
+
+    public static void setListOfrequests(ArrayList<Request> list){
+        listOfrequests = list;
+    }
+
+    public static ArrayList<Request> getListOfrequests(){
+        return listOfrequests;
+    }
 
 }

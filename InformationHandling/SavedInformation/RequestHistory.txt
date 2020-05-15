@@ -1,75 +1,20 @@
-6
-name Of request1
-HEAD
-www.google1.com
-JSON
-0
-this text written as the code in Json 
-true
-null
-null
-null
-0
-1
-new header
-new value
-true
-----
-Enter the name of the Request
-OPTION
+2
+Enter the 
+PUT
 https://api.myproduct.com/v1/users
 FORM_URL
 1
 new name1
 new value1
 true
-true
-null
-null
-null
+false
 1
 new header 3
 new value 3
 true
 0
 ----
-Enter the name of the Request
-PATCH
-https://api.myproduct.com/v1/users
-FORM_URL
-1
-new name1
-new value1
-true
-true
-null
-null
-null
-1
-new header 3
-new value 3
-true
-0
-----
-Enter the name of the Request
-GET
-https://api.myproduct.com/v1/users
-FORM_URL
-1
-new name1
-new value1
-true
-true
-null
-null
-null
-1
-new header 3
-new value 3
-true
-0
-----
-Enter the name of the Request
+Enter the name of the 
 POST
 https://api.myproduct.com/v1/users
 FORM_URL
@@ -77,28 +22,7 @@ FORM_URL
 new name1
 new value1
 true
-true
-null
-null
-null
-1
-new header 3
-new value 3
-true
-0
-----
-Enter the name of the Request
-DELETE
-https://api.myproduct.com/v1/users
-FORM_URL
-1
-new name1
-new value1
-true
-true
-null
-null
-null
+false
 1
 new header 3
 new value 3
