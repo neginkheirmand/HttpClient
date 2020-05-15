@@ -21,8 +21,8 @@ public class Request {
     //the url passed to
     private String url="";
     //the first tab takes its info from here
-    private FORM_DATA typeOfData= FORM_DATA.FORM_URL;
-    private Object formDataInfo=null;
+    private FORM_DATA typeOfData = FORM_DATA.FORM_URL;
+    private Object formDataInfo = null;
     //is there an authentication
     private boolean auth=false;
     private String[] authInfo=null;
@@ -144,8 +144,8 @@ public class Request {
      * setter method
      * @return type of the request
      */
-    public void setTypeOfRequest(TYPE typeOfRequest) {
-        this.typeOfRequest = typeOfRequest;
+    public void setTypeOfRequest(int indexOfType) {
+        this.typeOfRequest = TYPE.getTypeByIndex(indexOfType);
     }
 
     /**
@@ -160,8 +160,8 @@ public class Request {
      * setter method
      * @return type of the request
      */
-    public void setTypeOfData(FORM_DATA typeOfData) {
-        this.typeOfData = typeOfData;
+    public void setTypeOfData(int indexOfFormat) {
+        this.typeOfData = FORM_DATA.getFormByIndex(indexOfFormat) ;
     }
 
     /**

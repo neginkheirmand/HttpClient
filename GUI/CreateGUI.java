@@ -853,8 +853,7 @@ public class CreateGUI {
                 {new Font("Serif", Font.BOLD, 15), new java.awt.Color(123, 104, 238), "GET"},
                 {new Font("Serif", Font.BOLD, 15), new java.awt.Color(82, 218, 233), "HEAD"},
                 {new Font("Serif", Font.BOLD, 15), new java.awt.Color(69, 162, 255), "OPTION"},
-                {new Font("Serif", Font.BOLD, 15), Color.BLACK, "SEPARATOR"},
-                {new Font("Serif", Font.BOLD, 15), Color.BLACK, "costume method"}
+                {new Font("Serif", Font.BOLD, 15), Color.BLACK, "SEPARATOR"}
 
         };
         //the costume renderer for the JcomboBox containing the methods for sending the data
@@ -913,12 +912,17 @@ public class CreateGUI {
             public void actionPerformed(ActionEvent e) {
                 savedRequests.get(indexOfRequest).setSaved(true);
                 savedRequests.get(indexOfRequest).setUrl(addressField.getText());
-                if( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)) .getSelectedIndex()==0 ){
-                savedRequests.get(indexOfRequest).setAuth(true);
+                if( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)) .getSelectedIndex()==0 ){
+                    savedRequests.get(indexOfRequest).setAuth(true);
                 }else{
                     savedRequests.get(indexOfRequest).setAuth(false);
                 }
+                savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
+                //format of body
+                savedRequests.get(indexOfRequest).setTypeOfData( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)) .getSelectedIndex() );
 
+
+                updateFrame();
             }
         });
         secondUpPart.add(saveButton);
@@ -996,34 +1000,6 @@ public class CreateGUI {
                 //create new Request and add it to the list
                 //this request is not automatically saved you have to press the save button
                 createNewRequest();
-
-                /*
-                Request newRequest = new Request(nameNewRequest, TYPE.GET, "https://api.myproduct.com/v1/users", FORM_DATA.FORM_URL);
-                nameNewRequest="new Request";
-                newRequest.setSaved(false);
-
-                ArrayList<String[]> formDataInfo = new ArrayList<>();
-                String[] formDataPair ={"new name1","new value1","true"};
-                formDataInfo.add(formDataPair);
-                newRequest.setFormDataInfo(formDataInfo);
-
-                ArrayList<String[]> queryInfo = new ArrayList<>();
-                String[] queryPair = {"new name2", "new value2", "false"};
-                queryInfo.add(queryPair);
-                newRequest.setQueryInfo(queryInfo);
-
-                ArrayList<String[]> headerInfo = new ArrayList<>();
-                String[] headerPair = {"new header 3", "new value 3", "true"};
-                headerInfo.add(headerPair);
-                newRequest.setQueryInfo(headerInfo);
-                savedRequests.add(newRequest);
-
-
-
-                //inja bayad update konim
-                updateFrame();
-
-                 */
             }
         });
         JMenuItem newFolderItem = new JMenuItem("New Folder", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\newFolder-icon.png"));
@@ -1166,15 +1142,12 @@ public class CreateGUI {
         body.setBackground(colorOfThemeBackground2);
         setRequestTabedPane.add("", new JScrollPane(body));
 
-        icons[9]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\url-icon.png");
-        icons[10]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\json-icon-1.png");
-        icons[11]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\binary-file-icon1.png");
         Object dataTypes[][] = {
         {
-            new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, icons[9], "Form Url Encoded"},
-            {new Font("Serif", Font.BOLD, 15), new java.awt.Color(255, 161, 20),icons[10] , "JSON"},
+            new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\url-icon.png"), "Form Url Encoded"},
+            {new Font("Serif", Font.BOLD, 15), new java.awt.Color(255, 161, 20),new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\json-icon-1.png") , "JSON"},
             {new Font("Serif", Font.BOLD, 15), Color.BLACK, null, "SEPARATOR"},
-            {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, icons[11], "Binary File"}
+            {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\binary-file-icon1.png"), "Binary File"}
 
         };
         //the costume renderer for the JcomboBox containing the methods for sending the data
@@ -1208,7 +1181,7 @@ public class CreateGUI {
         }
         dataType.setForeground(Color.WHITE);
         dataType.setRenderer(renderer);
-        setRequestTabedPane.setTabComponentAt(0, new JScrollPane(dataType));
+        setRequestTabedPane.setTabComponentAt(0, dataType);
         dataType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

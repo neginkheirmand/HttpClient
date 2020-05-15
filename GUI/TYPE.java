@@ -34,7 +34,27 @@ public enum TYPE{
         }
     }
 
-
+    public static TYPE getTypeByIndex(int index){
+        if(index==0){
+            return POST;
+        }else if(index==1){
+            return PATCH;
+        }else if(index==2){
+            return PUT;
+        }else if(index==3){
+            return DELETE;
+        }else if(index==4){
+            return GET;
+        }else if(index==5){
+            return HEAD;
+        }else if(index==6){
+            return OPTION;
+        }else if(index==7){
+            //the costume method
+            return null;
+        }
+        return null;
+    }
 
     /**
      * this method takes a TYPE as an string and return it in TYPE mode

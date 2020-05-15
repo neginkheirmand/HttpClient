@@ -42,6 +42,20 @@ public enum FORM_DATA{
         }
     }
 
+
+    public static FORM_DATA getFormByIndex(int index){
+        if(index==0){
+            return FORM_URL;
+        }else if(index == 1){
+            return JSON;
+        }else if(index == 2){
+            return BINARY;
+        }else{
+            return null;
+        }
+    }
+
+
     /**
      * this method takes a form data as an string and return it in FORM_DATA mode
      * @param formData the string passed to the function
