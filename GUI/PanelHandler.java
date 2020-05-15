@@ -23,7 +23,6 @@ public class PanelHandler {
     private JScrollPane ScroolPanelPointer;
     /*
     private JPanel forthPanel;
-
      */
     private GridBagConstraints forthPanelConstraints;
 

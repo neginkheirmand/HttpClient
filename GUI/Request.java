@@ -169,6 +169,11 @@ public class Request {
      * @return auth of the request
      */
     public void setAuth(boolean auth) {
+        if(auth) {
+            authInfo = new String[3];
+        }else{
+            authInfo=null;
+        }
         this.auth = auth;
     }
 

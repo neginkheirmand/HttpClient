@@ -115,12 +115,43 @@ public class CreateGUI {
             System.out.println("the historial of requests was updated");
         }
 
-        System.out.println("1- "+checkBoxFollowRedirect);
-        System.out.println("2- "+checkBoxSystemTray);
-        System.out.println("3- "+colorOfThemeForground);
-        System.out.println("4- "+colorOfThemeBackground2);
-
         mainFrame = new JFrame("Insomnia");
+//        Image taskbarIcon = Toolkit.getDefaultToolkit().getImage((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\my-app-icon1.png");
+//
+//        mainFrame.setIconImage(taskbarIcon);
+//
+//        mainFrame.setMinimumSize(new Dimension(1500, 450));
+//        mainFrame.setMaximumSize(new Dimension(1520, 1080));
+//        mainFrame.setLocationRelativeTo(null);
+//        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        mainFrame.setVisible(true);
+//        mainFrame.setBackground(new java.awt.Color(128,128, 128));
+//        mainFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+//            @Override
+//            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+//                saveInfoOfthisRun();
+//                System.exit(0);
+//            }
+//        });
+//        createMenuBar();
+//
+//        //working with the layout -> layout choosen was GridBagLayout
+//        mainFrame.setLayout(new GridBagLayout());
+//
+//        createInsomniaDisplayArea();
+//        createRequestClasifier();
+//        createRequestInfoPanel();
+//        createHistorialRequest();
+//        createRequestInfo();
+//        createRequestHistoryPanel();
+//
+//        createSystemTray();
+
+        paintFrame();
+    }
+
+
+    public void paintFrame(){
         Image taskbarIcon = Toolkit.getDefaultToolkit().getImage((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\my-app-icon1.png");
 
         mainFrame.setIconImage(taskbarIcon);
@@ -151,6 +182,7 @@ public class CreateGUI {
         createRequestHistoryPanel();
 
         createSystemTray();
+
 
     }
 
@@ -223,12 +255,12 @@ public class CreateGUI {
                 if(e.getNewState()==JFrame.MAXIMIZED_BOTH){
                     tray.remove(trayIcon);
                     mainFrame.setVisible(true);
-                    System.out.println("Tray icon removed");
+                    System.out.println("Tray icon removed1");
                 }
                 if(e.getNewState()==JFrame.NORMAL){
                     tray.remove(trayIcon);
                     mainFrame.setVisible(true);
-                    System.out.println("Tray icon removed");
+                    System.out.println("Tray icon removed2");
                 }
             }
         });
@@ -642,8 +674,17 @@ public class CreateGUI {
                     colorOfThemeForground = blue;
                     colorOfThemeBackground1 = dark1;
                     colorOfThemeBackground2 = dark2;
+                    System.out.println("color of for ground:"+colorOfThemeForground);
+                    System.out.println("background2:"+colorOfThemeBackground1);
+                    System.out.println("background2:"+colorOfThemeBackground2
+                    );
+                    updateFrame();
+                    /*
                     saveInfoOfthisRun();
                     mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+
+                     */
+                    return;
                 }else{
                     return;
                 }
@@ -909,7 +950,25 @@ public class CreateGUI {
                 //this request is not automatically saved you have to press the save button
                 Request newRequest = new Request("", TYPE.GET, "https://api.myproduct.com/v1/users", FORM_DATA.FORM_URL);
                 newRequest.setSaved(false);
+
+                ArrayList<String[]> formDataInfo = new ArrayList<>();
+                String[] formDataPair ={"new name1","new value1","true"};
+                formDataInfo.add(formDataPair);
+                newRequest.setFormDataInfo(formDataInfo);
+
+                ArrayList<String[]> queryInfo = new ArrayList<>();
+                String[] queryPair = {"new name2", "new value2", "false"};
+                queryInfo.add(queryPair);
+                newRequest.setQueryInfo(queryInfo);
+
+                ArrayList<String[]> headerInfo = new ArrayList<>();
+                String[] headerPair = {"new header 3", "new value 3", "true"};
+                headerInfo.add(headerPair);
+                newRequest.setQueryInfo(headerInfo);
                 savedRequests.add(newRequest);
+
+
+
                 //inja bayad update konim
                 updateFrame();
             }
@@ -2096,8 +2155,16 @@ public class CreateGUI {
     }
 
     private void saveInfoOfthisRun(){
-        //save the request:
-        SaveInfo saveInfo = new SaveInfo(savedRequests);
+
+        ArrayList<Request> savedRequests2 = new ArrayList<>();
+        for(int i=0 ; i<savedRequests.size(); i++){
+            if(savedRequests.get(i).isSaved()){
+                savedRequests2.add(savedRequests.get(i));
+            }
+        }
+
+        //save the requests:
+        SaveInfo saveInfo = new SaveInfo(savedRequests2);
         //save the preferences:
         ArrayList<String> preferences = new ArrayList<>();
         preferences.add(checkBoxFollowRedirect+"");
@@ -2117,6 +2184,7 @@ public class CreateGUI {
 
     private void updateFrame(){
         try {
+
             mainFrame.remove(insomniaPanelHandler.getFirstPanel());
             mainFrame.remove(insomniaPanelHandler.getSecondPanel());
             mainFrame.remove(insomniaPanelHandler.getThirdPanel());
@@ -2124,8 +2192,12 @@ public class CreateGUI {
             mainFrame.remove(insomniaPanelHandler.getScroolPanelPointer());
             mainFrame.remove(insomniaPanelHandler.getFifthPanel());
             mainFrame.remove(insomniaPanelHandler.getSixthPanel());
+
+            //the next one wont work
+//            mainFrame.removeAll();
             mainFrame.revalidate();
             mainFrame.repaint();
+            paintFrame();
         }catch(NullPointerException exception){
             System.out.println("help me!");
         }
