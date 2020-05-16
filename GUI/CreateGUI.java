@@ -939,11 +939,16 @@ public class CreateGUI {
             public void actionPerformed(ActionEvent e) {
                 savedRequests.get(indexOfRequest).setSaved(true);
                 savedRequests.get(indexOfRequest).setUrl(addressField.getText());
-                if( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)) .getSelectedIndex()==0 ){
+                if( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)).getSelectedIndex()==0 ){
                     savedRequests.get(indexOfRequest).setAuth(true);
                 }else{
                     savedRequests.get(indexOfRequest).setAuth(false);
                 }
+                System.out.println("the form data of this request is"+savedRequests.get(indexOfRequest).getTypeOfData());
+                System.out.println("the form data of the combo box is"+((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)).getSelectedIndex());
+                System.out.println("the auth of this request is"+savedRequests.get(indexOfRequest).getAuth());
+                System.out.println("get selected index of the auth combo box"+((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)).getSelectedIndex());
+
                 savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
                 //format of body
                 savedRequests.get(indexOfRequest).setTypeOfData( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)) .getSelectedIndex() );
@@ -963,16 +968,6 @@ public class CreateGUI {
         insomniaPanelHandler.setSecondPanel(secondUpPart);
         mainFrame.add(insomniaPanelHandler.getSecondPanel(), insomniaPanelHandler.getSecondPanelConstraints());
     }
-
-     public class LeftAction extends AbstractAction {
-         public LeftAction(String text, Integer mnemonic) {
-             super(text);
-             putValue(MNEMONIC_KEY, mnemonic);
-         }
-         public void actionPerformed(ActionEvent e) {
-
-         }
-     }
 
     /**
      * this method is called so that the third upper panel is called
@@ -1200,6 +1195,7 @@ public class CreateGUI {
             }
         });
 
+
         dataType.setPreferredSize(new Dimension(200, 48));
         dataType.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground2));
         if(colorOfThemeBackground1.equals(dark1)) {
@@ -1214,7 +1210,6 @@ public class CreateGUI {
         }
         dataType.setForeground(Color.WHITE);
         dataType.setRenderer(renderer);
-        setRequestTabedPane.setTabComponentAt(0, dataType);
         dataType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1225,6 +1220,17 @@ public class CreateGUI {
                 mainFrame.pack();
             }
         });
+        if( indexOfRequest>-1 && indexOfRequest<savedRequests.size() ) {
+            if (savedRequests.get(indexOfRequest).getTypeOfData().equals(FORM_DATA.FORM_URL)) {
+                dataType.setSelectedIndex(0);
+            }else if(savedRequests.get(indexOfRequest).getTypeOfData().equals(FORM_DATA.JSON)){
+                dataType.setSelectedIndex(1);
+            }else{
+                dataType.setSelectedIndex(3);
+            }
+        }
+        setRequestTabedPane.setTabComponentAt(0, dataType);
+
 
         JPanel auth = new JPanel();
         auth.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
@@ -1283,6 +1289,13 @@ public class CreateGUI {
                 mainFrame.pack();
             }
         });
+        if(indexOfRequest>-1&&indexOfRequest<savedRequests.size() ){
+            if(savedRequests.get(indexOfRequest).getAuth()){
+                authType.setSelectedIndex(0);
+            }else{
+                authType.setSelectedIndex(2);
+            }
+        }
         setRequestTabedPane.setTabComponentAt(1, authType);
 
 

@@ -1,20 +1,5 @@
-2
-Enter the 
-PUT
-https://api.myproduct.com/v1/users
-FORM_URL
-1
-new name1
-new value1
-true
-false
-1
-new header 3
-new value 3
-true
-0
-----
-Enter the name of the 
+7
+Enter the new name of the Request1
 POST
 https://api.myproduct.com/v1/users
 FORM_URL
@@ -29,3 +14,80 @@ new value 3
 true
 0
 ----
+Enter the name of the Request2
+PATCH
+https://api.myproduct.com/v1/users
+FORM_URL
+1
+new name1
+new value1
+true
+false
+1
+new header 3
+new value 3
+true
+0
+----
+Enter the name of the Request3
+DELETE
+https://api.myproduct.com/v1/users
+FORM_URL
+1
+new name1
+new value1
+true
+false
+1
+new header 3
+new value 3
+true
+0
+----
+Enter the name of the Request5
+HEAD
+https://api.myproduct.com/v1/users
+FORM_URL
+1
+new name1
+new value1
+true
+false
+1
+new header 3
+new value 3
+true
+0
+----
+Enter the name of the Request6
+OPTION
+https://api.myproduct.com/v1/users
+FORM_URL
+1
+new name1
+new value1
+true
+true
+null
+null
+null
+1
+new header 3
+new value 3
+true
+0
+----
+Enter the name of the Request4
+GET
+https://api.myproduct.com/v1/users
+FORM_URL
+1
+new name1
+new value1
+true
+false
+1
+new header 3
+new value 3
+true
+0

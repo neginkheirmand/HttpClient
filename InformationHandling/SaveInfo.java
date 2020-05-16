@@ -138,7 +138,8 @@ public class SaveInfo {
     private boolean writeTheFormDataInFile(File file, String typeOfFormat, Object format) {
         try {
             FileWriter fileWriter = new FileWriter(file, true);
-            if (FORM_DATA.getIndex(typeOfFormat) == 0) {
+//            if (FORM_DATA.getIndex(typeOfFormat) == 0) {
+            if (FORM_DATA.FORM_URL.toString().equals(typeOfFormat)) {
                 ArrayList<String[]> formURLEncoded = (ArrayList<String[]>) format;
                 try {
                     fileWriter.write(formURLEncoded.size() + "\n");
@@ -155,8 +156,9 @@ public class SaveInfo {
                     return false;
                 }
                 return true;
-            } else if (FORM_DATA.getIndex(typeOfFormat) == 1) {
-
+//            } else if (FORM_DATA.getIndex(typeOfFormat) == 1) {
+            } else if (FORM_DATA.JSON.toString().equals(typeOfFormat)) {
+                //its JSON
                 String JSON = (String) format;
                 try {
                     fileWriter.write(getNumOfLines(JSON) + "\n");
@@ -167,7 +169,9 @@ public class SaveInfo {
                     return false;
                 }
                 return true;
-            } else if (FORM_DATA.getIndex(typeOfFormat) == 2) {
+//            } else if (FORM_DATA.getIndex(typeOfFormat) == 3) {
+            } else if (FORM_DATA.BINARY.toString().equals(typeOfFormat)) {
+                //its BINARY
                 try {
                     String pathPfFile = (String) format;
                     fileWriter.write(pathPfFile + "\n");
