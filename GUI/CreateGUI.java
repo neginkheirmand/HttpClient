@@ -118,16 +118,12 @@ public class CreateGUI {
         Request.setListOfrequests(savedRequests);
 
         mainFrame = new JFrame("Insomnia");
-        paintFrame();
-    }
 
-
-    public void paintFrame(){
         Image taskbarIcon = Toolkit.getDefaultToolkit().getImage((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\my-app-icon1.png");
 
         mainFrame.setIconImage(taskbarIcon);
 
-        mainFrame.setMinimumSize(new Dimension(1500, 450));
+        mainFrame.setMinimumSize(new Dimension(1600, 650));
         mainFrame.setMaximumSize(new Dimension(1520, 1080));
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -145,6 +141,12 @@ public class CreateGUI {
         //working with the layout -> layout choosen was GridBagLayout
         mainFrame.setLayout(new GridBagLayout());
 
+
+        paintFrame();
+    }
+
+
+    public void paintFrame(){
         createInsomniaDisplayArea();
         createRequestClasifier();
         createRequestInfoPanel();
@@ -908,6 +910,7 @@ public class CreateGUI {
 
 
         JButton saveButton = new JButton("Save");
+        /*
         Action action = new AbstractAction("Save") {
 
             @Override
@@ -915,7 +918,7 @@ public class CreateGUI {
                 System.out.println("saved");
                 savedRequests.get(indexOfRequest).setSaved(true);
                 savedRequests.get(indexOfRequest).setUrl(addressField.getText());
-                if( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)) .getSelectedIndex()==0 ){
+                if( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)).getSelectedIndex()==0 ){
                     savedRequests.get(indexOfRequest).setAuth(true);
                 }else{
                     savedRequests.get(indexOfRequest).setAuth(false);
@@ -923,6 +926,8 @@ public class CreateGUI {
                 savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
                 //format of body
                 savedRequests.get(indexOfRequest).setTypeOfData( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)) .getSelectedIndex() );
+                System.out.println("3)the form data of this request is"+savedRequests.get(indexOfRequest).getTypeOfData());
+                System.out.println("4)the form data of the combo box is"+((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)).getSelectedIndex());
 
                 updateFrame();
             }
@@ -931,33 +936,35 @@ public class CreateGUI {
         action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control S"));
         saveButton.setAction(action);
         saveButton.getInputMap(WHEN_IN_FOCUSED_WINDOW).put( (KeyStroke)action.getValue(Action.ACCELERATOR_KEY),"myAction");
+        */
         saveButton.setBackground(Color.white);
         saveButton.setPreferredSize(new Dimension(100, 48));
         saveButton.setForeground(new java.awt.Color(166, 166, 166));
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                savedRequests.get(indexOfRequest).setSaved(true);
-                savedRequests.get(indexOfRequest).setUrl(addressField.getText());
-                if( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)).getSelectedIndex()==0 ){
-                    savedRequests.get(indexOfRequest).setAuth(true);
-                }else{
-                    savedRequests.get(indexOfRequest).setAuth(false);
+                if(indexOfRequest>=0&&indexOfRequest<savedRequests.size()) {
+                    savedRequests.get(indexOfRequest).setSaved(true);
+                    savedRequests.get(indexOfRequest).setUrl(addressField.getText());
+                    if (((JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)).getSelectedIndex() == 0) {
+                        savedRequests.get(indexOfRequest).setAuth(true);
+                    } else {
+                        savedRequests.get(indexOfRequest).setAuth(false);
+                    }
+                    savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
+                    //format of body
+                    savedRequests.get(indexOfRequest).setTypeOfData((  (JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(0) ).getSelectedIndex());
+                    System.out.println("1)the form data of this request is" + savedRequests.get(indexOfRequest).getTypeOfData());
+                    System.out.println("2)the form data of the combo box is" + (  (JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(0) ).getSelectedIndex());
+
                 }
-                System.out.println("the form data of this request is"+savedRequests.get(indexOfRequest).getTypeOfData());
-                System.out.println("the form data of the combo box is"+((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)).getSelectedIndex());
-                System.out.println("the auth of this request is"+savedRequests.get(indexOfRequest).getAuth());
-                System.out.println("get selected index of the auth combo box"+((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)).getSelectedIndex());
-
-                savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
-                //format of body
-                savedRequests.get(indexOfRequest).setTypeOfData( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)) .getSelectedIndex() );
-
-
                 updateFrame();
             }
         });
+        /*
         saveButton.getActionMap().put("myAction", action);
+
+         */
         secondUpPart.add(saveButton);
 
 
@@ -1156,7 +1163,6 @@ public class CreateGUI {
      */
     private void createRequestInfo() {
 
-
         //the second panel down the "Insomnia" label containig the command info of requests
         JTabbedPane setRequestTabedPane = new JTabbedPane();
         setRequestTabedPane.setPreferredSize(new Dimension(600, 500));
@@ -1183,6 +1189,9 @@ public class CreateGUI {
         JComboBox dataType = new JComboBox(dataTypes);
         dataType.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
+                if(dataType.getSelectedIndex()==2){
+                    dataType.setSelectedIndex(3);
+                }
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     if (setRequestTabedPane.getSelectedIndex() != 0) {
                         setRequestTabedPane.setSelectedIndex(0);
@@ -1221,11 +1230,12 @@ public class CreateGUI {
             }
         });
         if( indexOfRequest>-1 && indexOfRequest<savedRequests.size() ) {
+            System.out.println(savedRequests.get(indexOfRequest).getTypeOfData());
             if (savedRequests.get(indexOfRequest).getTypeOfData().equals(FORM_DATA.FORM_URL)) {
                 dataType.setSelectedIndex(0);
             }else if(savedRequests.get(indexOfRequest).getTypeOfData().equals(FORM_DATA.JSON)){
                 dataType.setSelectedIndex(1);
-            }else{
+            }else if(savedRequests.get(indexOfRequest).getTypeOfData().equals(FORM_DATA.BINARY)){
                 dataType.setSelectedIndex(3);
             }
         }
@@ -1720,99 +1730,100 @@ public class CreateGUI {
      * @param query panel to be added the components at
      * @param constraints the constraints in which should be added
      */
-    private void createQueryTab(JPanel query, GridBagConstraints constraints) {
+    public void createQueryTab(JPanel query, GridBagConstraints constraints) {
 
-        JPanel newNameValuePair = new JPanel();
-        newNameValuePair.setLayout(new GridBagLayout());
-        GridBagConstraints eachInfoConstraints = new GridBagConstraints();
-        eachInfoConstraints.gridy=0;
-        eachInfoConstraints.gridx=0;
-        eachInfoConstraints.weightx=1;
-        eachInfoConstraints.weighty=1;
-        eachInfoConstraints.insets=new Insets(0,2,0,2);
-        eachInfoConstraints.anchor=GridBagConstraints.FIRST_LINE_START;
-        eachInfoConstraints.fill=GridBagConstraints.BOTH;
-
-        newNameValuePair.setBackground(colorOfThemeBackground2);
-//        //first component the 3 lines
-        JLabel _3_lines = new JLabel(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\3-purple-lines-icon.png"));
-        newNameValuePair.add(_3_lines, eachInfoConstraints);
-        eachInfoConstraints.gridx++;
-        //then the JTextField for the name
-        JTextField nameTextField = new JTextField(" New Name");
-        nameTextField.setPreferredSize(new Dimension(150, 35));
-        nameTextField.setFont(new Font("Serif", Font.PLAIN, 15));
-        nameTextField.setForeground(colorOfThemeBackground1);
-        nameTextField.setBackground(colorOfThemeBackground2);
-        nameTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 3, 1, colorOfThemeBackground1));
-        nameTextField.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if(nameTextField.getText().equals(" New Name")) {
-                    nameTextField.setText(" ");
-                    System.out.println("clicked on the name");
-//                //and add a new Pair of name and values
-                    GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
-                    newGridConstraints.gridy = constraints.gridy + 1;
-                    createQueryTab(query, newGridConstraints);
-                    mainFrame.revalidate();
-                    mainFrame.repaint();
-                }
-            }
-        });
-        newNameValuePair.add(nameTextField, eachInfoConstraints);
-        eachInfoConstraints.gridx++;
-        //then the JTextField for the value
-        JTextField valueTextField = new JTextField("New Value");
-        valueTextField.setPreferredSize(new Dimension(150, 35));
-        valueTextField.setFont(new Font("Serif", Font.PLAIN, 15));
-        valueTextField.setForeground(colorOfThemeBackground1);
-        valueTextField.setBackground(colorOfThemeBackground2);
-        valueTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 3, 1, colorOfThemeBackground1));
-        valueTextField.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if(valueTextField.getText().equals("New Value")) {
-                    valueTextField.setText(" ");
-                    System.out.println("clicked on the value");
-                    //and add a new Pair of name and values
-                    GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
-                    newGridConstraints.gridy = constraints.gridy + 1;
-//                newGridConstraints.weightx=1;
-//                newGridConstraints.weighty=1;
-//                constraints.weightx=0;
-//                constraints.weighty=0;
-                    createQueryTab(query, newGridConstraints);
-                    mainFrame.revalidate();
-                    mainFrame.repaint();
-                }
-            }
-        });
-        newNameValuePair.add(valueTextField, eachInfoConstraints);
-        eachInfoConstraints.gridx++;
-        //now the JCheckBox
-        JCheckBox checkBox = new JCheckBox(" ", true);
-        checkBox.setBackground(colorOfThemeBackground2);
-        checkBox.setOpaque(false);
-        newNameValuePair.add(checkBox, eachInfoConstraints);
-        eachInfoConstraints.gridx++;
-        //now the trash icon Button
-        JButton trash = new JButton(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\delete-icon1.png"));
-        trash.setBackground(colorOfThemeBackground2);
-        trash.setOpaque(false);
-        trash.setPreferredSize(new Dimension(18, 18));
-        trash.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("user clicked on the trash JButton");
-                query.remove(newNameValuePair);
-                if (constraints.gridy == 0) {
-                    createQueryTab(query, constraints);
-                }
-                mainFrame.revalidate();
-                mainFrame.repaint();
-            }
-        });
-        newNameValuePair.add(trash, eachInfoConstraints);
+//        JPanel newNameValuePair = new JPanel();
+//        newNameValuePair.setLayout(new GridBagLayout());
+//        GridBagConstraints eachInfoConstraints = new GridBagConstraints();
+//        eachInfoConstraints.gridy=0;
+//        eachInfoConstraints.gridx=0;
+//        eachInfoConstraints.weightx=1;
+//        eachInfoConstraints.weighty=1;
+//        eachInfoConstraints.insets=new Insets(0,2,0,2);
+//        eachInfoConstraints.anchor=GridBagConstraints.FIRST_LINE_START;
+//        eachInfoConstraints.fill=GridBagConstraints.BOTH;
+//
+//        newNameValuePair.setBackground(colorOfThemeBackground2);
+////        //first component the 3 lines
+//        JLabel _3_lines = new JLabel(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\3-purple-lines-icon.png"));
+//        newNameValuePair.add(_3_lines, eachInfoConstraints);
+//        eachInfoConstraints.gridx++;
+//        //then the JTextField for the name
+//        JTextField nameTextField = new JTextField(" New Name");
+//        nameTextField.setPreferredSize(new Dimension(150, 35));
+//        nameTextField.setFont(new Font("Serif", Font.PLAIN, 15));
+//        nameTextField.setForeground(colorOfThemeBackground1);
+//        nameTextField.setBackground(colorOfThemeBackground2);
+//        nameTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 3, 1, colorOfThemeBackground1));
+//        nameTextField.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                if(nameTextField.getText().equals(" New Name")) {
+//                    nameTextField.setText(" ");
+//                    System.out.println("clicked on the name");
+////                //and add a new Pair of name and values
+//                    GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
+//                    newGridConstraints.gridy = constraints.gridy + 1;
+//                    createQueryTab(query, newGridConstraints);
+//                    mainFrame.revalidate();
+//                    mainFrame.repaint();
+//                }
+//            }
+//        });
+//        newNameValuePair.add(nameTextField, eachInfoConstraints);
+//        eachInfoConstraints.gridx++;
+//        //then the JTextField for the value
+//        JTextField valueTextField = new JTextField("New Value");
+//        valueTextField.setPreferredSize(new Dimension(150, 35));
+//        valueTextField.setFont(new Font("Serif", Font.PLAIN, 15));
+//        valueTextField.setForeground(colorOfThemeBackground1);
+//        valueTextField.setBackground(colorOfThemeBackground2);
+//        valueTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 3, 1, colorOfThemeBackground1));
+//        valueTextField.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                if(valueTextField.getText().equals("New Value")) {
+//                    valueTextField.setText(" ");
+//                    System.out.println("clicked on the value");
+//                    //and add a new Pair of name and values
+//                    GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
+//                    newGridConstraints.gridy = constraints.gridy + 1;
+////                newGridConstraints.weightx=1;
+////                newGridConstraints.weighty=1;
+////                constraints.weightx=0;
+////                constraints.weighty=0;
+//                    createQueryTab(query, newGridConstraints);
+//                    mainFrame.revalidate();
+//                    mainFrame.repaint();
+//                }
+//            }
+//        });
+//        newNameValuePair.add(valueTextField, eachInfoConstraints);
+//        eachInfoConstraints.gridx++;
+//        //now the JCheckBox
+//        JCheckBox checkBox = new JCheckBox(" ", true);
+//        checkBox.setBackground(colorOfThemeBackground2);
+//        checkBox.setOpaque(false);
+//        newNameValuePair.add(checkBox, eachInfoConstraints);
+//        eachInfoConstraints.gridx++;
+//        //now the trash icon Button
+//        JButton trash = new JButton(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\delete-icon1.png"));
+//        trash.setBackground(colorOfThemeBackground2);
+//        trash.setOpaque(false);
+//        trash.setPreferredSize(new Dimension(18, 18));
+//        trash.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println("user clicked on the trash JButton");
+//                query.remove(newNameValuePair);
+//                if (constraints.gridy == 0) {
+//                    createQueryTab(query, constraints);
+//                }
+//                mainFrame.revalidate();
+//                mainFrame.repaint();
+//            }
+//        });
+//        newNameValuePair.add(trash, eachInfoConstraints);
+        JPanel newNameValuePair = new KeyValuePair(this, query, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, constraints);
         query.add(newNameValuePair, constraints);
 
 
@@ -2343,25 +2354,27 @@ public class CreateGUI {
         saveInfo.savePreferences(preferences);
     }
 
+    public JFrame getMainFrame(){
+        return mainFrame;
+    }
+
     public void updateFrame(){
         try {
-
             mainFrame.remove(insomniaPanelHandler.getFirstPanel());
             mainFrame.remove(insomniaPanelHandler.getSecondPanel());
             mainFrame.remove(insomniaPanelHandler.getThirdPanel());
-//        mainFrame.remove(insomniaPanelHandler.getForthPanel());
             mainFrame.remove(insomniaPanelHandler.getScroolPanelPointer());
             mainFrame.remove(insomniaPanelHandler.getFifthPanel());
             mainFrame.remove(insomniaPanelHandler.getSixthPanel());
-
             //the next one wont work
 //            mainFrame.removeAll();
             mainFrame.revalidate();
             mainFrame.repaint();
             paintFrame();
-        }catch(NullPointerException exception){
-            System.out.println("help me!");
+        }catch (NullPointerException exception){
+            System.out.println("help me");
         }
+
     }
 
 }

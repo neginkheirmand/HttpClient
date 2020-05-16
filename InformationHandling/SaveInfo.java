@@ -159,6 +159,7 @@ public class SaveInfo {
 //            } else if (FORM_DATA.getIndex(typeOfFormat) == 1) {
             } else if (FORM_DATA.JSON.toString().equals(typeOfFormat)) {
                 //its JSON
+                System.out.println(format.getClass());
                 String JSON = (String) format;
                 try {
                     fileWriter.write(getNumOfLines(JSON) + "\n");

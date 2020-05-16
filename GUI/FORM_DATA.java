@@ -24,10 +24,8 @@ public enum FORM_DATA{
         }else if(formData.equals(BINARY)){
             System.out.println("its BINARY and we are tryng to save it");
             return "BINARY";
-        }else{
-            System.out.println("its null? and we are tryng to save it");
-            return null;
         }
+        return "BINARY";
     }
 
     /**
@@ -53,11 +51,10 @@ public enum FORM_DATA{
             return FORM_URL;
         }else if(index == 1){
             return JSON;
-        }else if(index == 2){
+        }else if(index == 3){
             return BINARY;
-        }else{
-            return null;
         }
+        return null;
     }
 
 
