@@ -1,10 +1,130 @@
-1
-Enter the name of the Request1
-DELETE
-https://api.myproduct.com/v1/users
+8
+GET
+GET
+www.google1.com
 JSON
 0
-enter JSON format
+this text written as the code in Json 
+true
+bearer token
+prefix
+true
+0
+1
+new header
+new value
+true
+----
+PATCH
+PATCH
+www.google2.com
+BINARY
+this is supposed to be the path of a file
+true
+bearer token
+prefix
+true
+1
+new name query2
+new value2
+true
+2
+new header1
+new value1
+true
+new header2
+new value2
+true
+----
+put
+PUT
+www.google3.com
+FORM_URL
+3
+new form url 1
+new value 1
+true
+new form url 2
+new value 2
+true
+new form url 3
+new value 3
+true
+false
+2
+new name query3 1
+new value3 1
+true
+new name query3 2
+new value3 2
+true
+4
+new header1
+new value1
+true
+new header2
+new value2
+true
+new header3
+new value3
+true
+new header4
+new value4
+true
+----
+DELETE
+DELETE
+https://api.myproduct.com/v1/users
+FORM_URL
+0
+false
+1
+new header 3
+new value 3
+true
+0
+----
+POST
+POST
+https://api.myproduct.com/v1/users
+FORM_URL
+0
+false
+1
+new header 3
+new value 3
+true
+0
+----
+OPTION
+OPTION
+https://api.myproduct.com/v1/users
+FORM_URL
+0
+false
+1
+new header 3
+new value 3
+true
+0
+----
+HEAD
+HEAD
+https://api.myproduct.com/v1/users
+FORM_URL
+0
+false
+1
+new header 3
+new value 3
+true
+0
+----
+Enter the name of the Request
+GET
+https://api.myproduct.com/v1/users
+FORM_URL
+0
 false
 1
 new header 3

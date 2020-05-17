@@ -204,7 +204,7 @@ public class LoadInfo {
                 return null;
             }
             str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
-            System.out.println("1-  *"+str+"*");
+//            System.out.println("1-  *"+str+"*");
             preferences.add(str);
 
             //then the hide in tray system
@@ -216,7 +216,7 @@ public class LoadInfo {
                 return null;
             }
             str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
-            System.out.println("2-  *"+str+"*");
+//            System.out.println("2-  *"+str+"*");
             preferences.add(str);
             if(fileReader.hasNext()) {
                 //then the forground color
@@ -226,7 +226,7 @@ public class LoadInfo {
                 return null;
             }
             str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
-            System.out.println("3-  *"+str+"*");
+//            System.out.println("3-  *"+str+"*");
             preferences.add(str);
 
             //then the forground color
@@ -238,7 +238,7 @@ public class LoadInfo {
                 return null;
             }
             str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
-            System.out.println("4-  *"+str+"*");
+//            System.out.println("4-  *"+str+"*");
             preferences.add(str);
 
             System.out.println("done");
@@ -288,7 +288,7 @@ public class LoadInfo {
                 System.out.println("cant transform "+str+" to int");
                 return false;
             }
-            System.out.println("has *"+numOfPairs+"* number of pairs");
+            System.out.println( index +"has *"+numOfPairs+"* number of pairs");
             for (int i = 0; i < numOfPairs; i++) {
                 if(fileReader.hasNext()) {
                     //then the forground color

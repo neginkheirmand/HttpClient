@@ -910,25 +910,25 @@ public class CreateGUI {
 
 
         JButton saveButton = new JButton("Save");
-        /*
+
         Action action = new AbstractAction("Save") {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("saved");
-                savedRequests.get(indexOfRequest).setSaved(true);
-                savedRequests.get(indexOfRequest).setUrl(addressField.getText());
-                if( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)).getSelectedIndex()==0 ){
-                    savedRequests.get(indexOfRequest).setAuth(true);
-                }else{
-                    savedRequests.get(indexOfRequest).setAuth(false);
-                }
-                savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
-                //format of body
-                savedRequests.get(indexOfRequest).setTypeOfData( ((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)) .getSelectedIndex() );
-                System.out.println("3)the form data of this request is"+savedRequests.get(indexOfRequest).getTypeOfData());
-                System.out.println("4)the form data of the combo box is"+((JComboBox)insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)).getSelectedIndex());
+                if(indexOfRequest>=0&&indexOfRequest<savedRequests.size()) {
 
+                    savedRequests.get(indexOfRequest).setSaved(true);
+                    savedRequests.get(indexOfRequest).setUrl(addressField.getText());
+                    if (((JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)).getSelectedIndex() == 0) {
+                        savedRequests.get(indexOfRequest).setAuth(true);
+                    } else {
+                        savedRequests.get(indexOfRequest).setAuth(false);
+                    }
+                    savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
+                    //format of body
+                    savedRequests.get(indexOfRequest).setTypeOfData(((JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)).getSelectedIndex());
+                }
                 updateFrame();
             }
 
@@ -936,7 +936,7 @@ public class CreateGUI {
         action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control S"));
         saveButton.setAction(action);
         saveButton.getInputMap(WHEN_IN_FOCUSED_WINDOW).put( (KeyStroke)action.getValue(Action.ACCELERATOR_KEY),"myAction");
-        */
+
         saveButton.setBackground(Color.white);
         saveButton.setPreferredSize(new Dimension(100, 48));
         saveButton.setForeground(new java.awt.Color(166, 166, 166));
@@ -953,19 +953,15 @@ public class CreateGUI {
                     }
                     savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
                     //format of body
-                    System.out.println("this is whe this thing should work");
                     savedRequests.get(indexOfRequest).setTypeOfData((  (JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(0) ).getSelectedIndex());
-                    System.out.println("since this request has body Format:"+savedRequests.get(indexOfRequest).getTypeOfData());
-                    System.out.println("then the FORM DATA type should be?  "+savedRequests.get(indexOfRequest).getFormDataInfo().getClass());
-//                    savedRequests.get(indexOfRequest).setFormDataInfo();
+
                 }
                 updateFrame();
             }
         });
-        /*
+
         saveButton.getActionMap().put("myAction", action);
 
-         */
         secondUpPart.add(saveButton);
 
 
@@ -2194,8 +2190,6 @@ public class CreateGUI {
         create.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("\033[0;31m"+"create button pressed"+"\033[0m");
-
                 String nameNewRequest="new Request";
                 nameNewRequest = nameTextField.getText();
                 newRequest.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
@@ -2223,6 +2217,51 @@ public class CreateGUI {
 
                 //inja bayad update konim
                 updateFrame();
+            }
+        });
+        create.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode()==KeyEvent.VK_ENTER){
+
+                    String nameNewRequest="new Request";
+                    nameNewRequest = nameTextField.getText();
+                    newRequest.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+
+                    Request newRequest = new Request(nameNewRequest, TYPE.GET, "https://api.myproduct.com/v1/users", FORM_DATA.FORM_URL);
+//                nameNewRequest="new Request";
+                    newRequest.setSaved(false);
+
+                    //since we are creating a new Request with the default format of FORM URL
+                    ArrayList<String[]> formDataInfo = new ArrayList<>();
+                    String[] formDataPair ={"new name1","new value1","true"};
+                    formDataInfo.add(formDataPair);
+                    newRequest.setFormDataInfo(formDataInfo);
+
+                    ArrayList<String[]> queryInfo = new ArrayList<>();
+                    String[] queryPair = {"new name2", "new value2", "false"};
+                    queryInfo.add(queryPair);
+                    newRequest.setQueryInfo(queryInfo);
+
+                    ArrayList<String[]> headerInfo = new ArrayList<>();
+                    String[] headerPair = {"new header 3", "new value 3", "true"};
+                    headerInfo.add(headerPair);
+                    newRequest.setQueryInfo(headerInfo);
+                    savedRequests.add(newRequest);
+
+                    //inja bayad update konim
+                    updateFrame();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
             }
         });
         create.setBackground(colorOfThemeBackground2);

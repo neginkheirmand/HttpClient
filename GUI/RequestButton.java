@@ -79,14 +79,37 @@ public class RequestButton extends JButton {
         }
         nameTextField.setOpaque(true);
         nameTextField.setVisible(true);
+        nameTextField.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
 
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    String newNameRequest = "new Request";
+                    newNameRequest = nameTextField.getText();
+                    newRequest.dispatchEvent(new WindowEvent(new JFrame(), WindowEvent.WINDOW_CLOSING));
+                    request.setNameOfRequest(newNameRequest);
+                    //inja bayad update konim
+                    GUI.updateFrame();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
         newRequest.add(nameTextField, BorderLayout.NORTH);
 
-        JButton create = new JButton("Change");
-        create.addActionListener(new ActionListener() {
+        JButton changeButton = new JButton("Change");
+
+        changeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String newNameRequest="new Request";
+                String newNameRequest = "new Request";
                 newNameRequest = nameTextField.getText();
                 newRequest.dispatchEvent(new WindowEvent(new JFrame(), WindowEvent.WINDOW_CLOSING));
                 request.setNameOfRequest(newNameRequest);
@@ -94,15 +117,15 @@ public class RequestButton extends JButton {
                 GUI.updateFrame();
             }
         });
-        create.setBackground(colorOfThemeBackground2);
-        create.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1, 1, true));
+        changeButton.setBackground(colorOfThemeBackground2);
+        changeButton.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1, 1, true));
         if(colorOfThemeBackground1.equals(dark1)){
-            create.setForeground(Color.WHITE);
+            changeButton.setForeground(Color.WHITE);
         }else{
-            create.setForeground(Color.BLACK);
+            changeButton.setForeground(Color.BLACK);
         }
-        create.setPreferredSize(new Dimension(300,50));
-        newRequest.add(create, BorderLayout.SOUTH);
+        changeButton.setPreferredSize(new Dimension(300,50));
+        newRequest.add(changeButton, BorderLayout.SOUTH);
         newRequest.setVisible(true);
         newRequest.pack();
     }
