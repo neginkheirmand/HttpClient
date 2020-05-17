@@ -81,7 +81,7 @@ public class LoadInfo {
                 if(fileReader.hasNext()) {
                     str = fileReader.nextLine();
                 }else{
-                    System.out.println("not able to load");
+                    System.out.println("not able to load1");
                     return;
                 }
                 String url = str.replace("\n", "").replace("\r", "");
@@ -92,7 +92,7 @@ public class LoadInfo {
                 if(fileReader.hasNext()) {
                     str = fileReader.nextLine();
                 }else{
-                    System.out.println("not able to load");
+                    System.out.println("not able to load4");
                     return;
                 }
 //                System.out.println(couldReadWithOutProblems+"8 i="+i);
@@ -118,7 +118,7 @@ public class LoadInfo {
                 if(fileReader.hasNext()) {
                     str = fileReader.nextLine();
                 }else{
-                    System.out.println("not able to load");
+                    System.out.println("not able to load3");
                     return;
                 }
                 str = str.replace("\n", "").replace("\r", "");
@@ -163,7 +163,7 @@ public class LoadInfo {
                 if(fileReader.hasNext()) {
                     fileReader.nextLine();
                 }else{
-                    System.out.println("not able to load");
+                    System.out.println("not able to load2");
                     return;
                 }
             }
@@ -200,7 +200,7 @@ public class LoadInfo {
             if(fileReader.hasNext()) {
                 str = fileReader.nextLine();
             }else{
-                System.out.println("not able to load");
+                System.out.println("not able to lo1ad");
                 return null;
             }
             str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
@@ -212,7 +212,7 @@ public class LoadInfo {
             if(fileReader.hasNext()) {
                 str = fileReader.nextLine();
             }else{
-                System.out.println("not able to load");
+                System.out.println("not able to43 load");
                 return null;
             }
             str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
@@ -222,7 +222,7 @@ public class LoadInfo {
                 //then the forground color
                 str = fileReader.nextLine();
             }else {
-                System.out.println("not able to load");
+                System.out.println("not abl22e to load");
                 return null;
             }
             str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
@@ -234,7 +234,7 @@ public class LoadInfo {
                 //then the forground color
                 str = fileReader.nextLine();
             }else {
-                System.out.println("not able to load");
+                System.out.println("not ab1le to load");
                 return null;
             }
             str = str.replace("\n", "").replace("\r", "").replaceAll("", "").trim();
@@ -277,7 +277,7 @@ public class LoadInfo {
                 //then the forground color
                 str = fileReader.nextLine();
             }else {
-                System.out.println("not able to load");
+                System.out.println("not able to 1load");
                 return false;
             }
             str = str.replace("\n", "").replace("\r", "");
@@ -294,7 +294,7 @@ public class LoadInfo {
                     //then the forground color
                     str = fileReader.nextLine();
                 }else {
-                    System.out.println("not able to load");
+                    System.out.println("not able 45to load");
                     return false;
                 }
                 String name = str.replace("\n", "").replace("\r", "");
@@ -304,7 +304,7 @@ public class LoadInfo {
                     //then the forground color
                     str = fileReader.nextLine();
                 }else {
-                    System.out.println("not able to load");
+                    System.out.println("not able to l6oad");
                     return false;
                 }
                 String value = str.replace("\n", "").replace("\r", "");
@@ -314,7 +314,7 @@ public class LoadInfo {
                     //then the forground color
                     str = fileReader.nextLine();
                 }else {
-                    System.out.println("not able to load");
+                    System.out.println("not able to l7oad");
                     return false;
                 }
 
@@ -327,7 +327,7 @@ public class LoadInfo {
 //                fileReader.close();
             return true;
         } else if (typeOfFormat.ordinal()==1) {
-            //its in JSON format
+            //its in JSON formatc
             String JSON ="";
             String str;
 
@@ -335,7 +335,7 @@ public class LoadInfo {
                 //then the forground color
                 str = fileReader.nextLine();
             }else {
-                System.out.println("not able to load");
+                System.out.println("not able 1to load");
                 return false;
             }
 
@@ -374,7 +374,7 @@ public class LoadInfo {
             return true;
         } else {
             couldReadWithOutProblems=false;
-            System.out.println("not able to load the file6");
+            System.out.println("not able 2to load the file6");
             return false;
         }
     }

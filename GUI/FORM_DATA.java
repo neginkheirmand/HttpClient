@@ -14,18 +14,14 @@ public enum FORM_DATA{
      * @return the string version of the form data
      */
     public static String getName(FORM_DATA formData){
-        System.out.println("got in");
         if(formData.equals(FORM_URL)){
-            System.out.println("its Form url and we are tryng to save it");
             return "FORM_URL";
         }else if(formData.equals(JSON)){
-            System.out.println("its Json and we are tryng to save it");
             return "JSON";
         }else if(formData.equals(BINARY)){
-            System.out.println("its BINARY and we are tryng to save it");
             return "BINARY";
         }
-        return "BINARY";
+        return "what the";
     }
 
     /**

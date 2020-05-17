@@ -1,1 +1,14 @@
+1
+Enter the name of the Request1
+DELETE
+https://api.myproduct.com/v1/users
+JSON
 0
+enter JSON format
+false
+1
+new header 3
+new value 3
+true
+0
+----

@@ -31,7 +31,7 @@ public class Request {
     //the header tab
     private ArrayList<String[]> headerInfo = null;
     //this if this request is saved or not
-    private boolean saved;
+    private boolean saved = false;
     //a pointer to the list of the Requests
     private static ArrayList<Request> listOfrequests;
 
@@ -51,6 +51,13 @@ public class Request {
         queryInfo=new ArrayList<>();
         headerInfo=new ArrayList<>();
         authInfo=new String[3];
+        if(typeOfData.equals(FORM_DATA.FORM_URL)){
+            this.formDataInfo = (ArrayList<String[]>) new ArrayList<String[]>();
+        }else if(typeOfData.equals(FORM_DATA.JSON)){
+            this.formDataInfo = (String) "enter JSON format";
+        }else if(typeOfData.equals(FORM_DATA.BINARY)){
+            this.formDataInfo = (String) "basically the path of the file";
+        }
     }
 
 
@@ -84,6 +91,8 @@ public class Request {
      * @return FORM DATA of the request
      */
     public FORM_DATA getTypeOfData() {
+        System.out.println("the get Form Data of request has been called and is"+ typeOfData);
+        System.out.println("and the object of FORM DATA type is" + formDataInfo.getClass());
         return typeOfData;
     }
 
@@ -92,6 +101,18 @@ public class Request {
      * @return info about form data of the request
      */
     public Object getFormDataInfo() {
+        if(typeOfData.equals(FORM_DATA.FORM_URL)){
+            System.out.println("its a FORM URL");
+            System.out.println(formDataInfo.getClass());
+
+        }else if(typeOfData.equals(FORM_DATA.JSON)){
+            System.out.println("ITS A JSON");
+            System.out.println(formDataInfo.getClass());
+
+        }else if(typeOfData.equals(FORM_DATA.BINARY)){
+            System.out.println("ITS A BINARY");
+            System.out.println(formDataInfo.getClass());
+        }
         return formDataInfo;
     }
 
@@ -164,7 +185,16 @@ public class Request {
      * @return type of the request
      */
     public void setTypeOfData(int indexOfFormat) {
+
         this.typeOfData = FORM_DATA.getFormByIndex(indexOfFormat) ;
+        System.out.println("the combo box of the FORM DATA has index selected "+indexOfFormat+" and that means its"+typeOfData);
+        if(typeOfData.equals(FORM_DATA.FORM_URL)){
+            formDataInfo = (ArrayList<String[]>)new ArrayList<String []>();
+        }else if(typeOfData.equals(FORM_DATA.JSON)){
+            formDataInfo = (String)"enter JSON format";
+        }else if(typeOfData.equals(FORM_DATA.BINARY)){
+            formDataInfo = (String)"basically the path of the file";
+        }
     }
 
     /**
@@ -215,7 +245,20 @@ public class Request {
         //if UrlEncoded : ArrayList<String[]>
         //if JSON : String
         //if Binary : File
-        this.formDataInfo = formDataInfo;
+        if(formDataInfo == null){
+            System.out.println("\033[0;34m"+"in line 244 of Request Class"+ "\033[0m");
+        }
+        if(typeOfData.equals(FORM_DATA.FORM_URL)){
+            System.out.println("\033[0;34m"+"should be Arraylist"+ "\033[0m");
+            this.formDataInfo = formDataInfo;
+        }else if(typeOfData.equals(FORM_DATA.JSON)){
+            System.out.println("\033[0;34m"+"should be String"+ "\033[0m");
+            this.formDataInfo = formDataInfo;
+        }else if(typeOfData.equals(FORM_DATA.BINARY)){
+            System.out.println("\033[0;34m"+ "should be String"+ "\033[0m");
+            this.formDataInfo = formDataInfo;
+        }
+//        this.formDataInfo = formDataInfo;
     }
 
 
@@ -248,4 +291,27 @@ public class Request {
         return listOfrequests;
     }
 
+
+    public static void main(String[] args) {
+        Request newRequest = new Request("nameNewRequest" , TYPE.GET, "https://api.myproduct.com/v1/users", FORM_DATA.FORM_URL);
+        newRequest.setSaved(false);
+
+        //since we are creating a new Request with the default format of FORM URL
+        ArrayList<String[]> formDataInfo = new ArrayList<>();
+        String[] formDataPair ={"new name1","new value1","true"};
+        formDataInfo.add(formDataPair);
+        newRequest.setFormDataInfo(formDataInfo);
+
+        ArrayList<String[]> queryInfo = new ArrayList<>();
+        String[] queryPair = {"new name2", "new value2", "false"};
+        queryInfo.add(queryPair);
+        newRequest.setQueryInfo(queryInfo);
+
+        ArrayList<String[]> headerInfo = new ArrayList<>();
+        String[] headerPair = {"new header 3", "new value 3", "true"};
+        headerInfo.add(headerPair);
+        newRequest.setQueryInfo(headerInfo);
+        System.out.println(newRequest.formDataInfo.getClass());
+
+    }
 }

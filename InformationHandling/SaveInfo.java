@@ -49,6 +49,7 @@ public class SaveInfo {
                 fileWriter.write(requestsInfo.get(i).getUrl()+"\n");
                 //now the type of FORM DATA and after it depending of this type, the Object is to be written in the file
                 String typeOfFormData = FORM_DATA.getName(requestsInfo.get(i).getTypeOfData());
+                System.out.println("*"+typeOfFormData);
                 fileWriter.write(typeOfFormData+"\n");
                 fileWriter.close();
                 if(!writeTheFormDataInFile(file, typeOfFormData, requestsInfo.get(i).getFormDataInfo())){
@@ -150,7 +151,7 @@ public class SaveInfo {
                         String enabled = (formURLEncoded.get(i))[2];
                         fileWriter.write(name + "\n" + value + "\n" + enabled + "\n");
                     }
-                fileWriter.close();
+                    fileWriter.close();
                 } catch (IOException exception) {
                     System.out.println("not able to save in the file3");
                     return false;
@@ -183,14 +184,14 @@ public class SaveInfo {
                 fileWriter.close();
                 return true;
             } else {
-                System.out.println("not able to save the file6");
+                System.out.println("compatible type passed to the write method");
                 return false;
             }
         }catch (IOException exception ) {
             System.out.println("couldnt open the file7");
             return false;
         }catch (NullPointerException exception){
-            System.out.println("couldnt open the file7");
+            System.out.println("couldnt open the file8");
             return false;
 
         }
@@ -234,6 +235,9 @@ public class SaveInfo {
     }
 
     private int getNumOfLines(String str){
+        if(str==null||str.equals("")){
+            return 0;
+        }
         int num=0;
         for(int i=0; i<str.length(); i++){
             if((str.charAt(i)+"").equals("\n")){
