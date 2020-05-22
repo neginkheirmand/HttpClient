@@ -2,13 +2,12 @@
 GET
 GET
 www.google1.com
-JSON
+FORM_URL
 0
-this text written as the code in Json 
 true
-bearer token
-prefix
-true
+null
+null
+null
 0
 1
 new header
