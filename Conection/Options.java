@@ -4,12 +4,15 @@ import jdk.jshell.execution.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public class Options {
     private static HashMap<String, Integer> requestOptions;
+    private ArrayList<Integer> requestNumberCommand;
+    private ArrayList<String> requestStringCommand;
+
 
     public Options(){
+        requestOptions = new HashMap<>();
         requestOptions.put("-M", 0);
         requestOptions.put("--method", 0);
 
@@ -47,20 +50,23 @@ public class Options {
 
         requestOptions.put("list", 10);
 
+        requestNumberCommand = new ArrayList<>();
+        requestStringCommand = new ArrayList<>();
     }
 
-    public boolean isOption(String inputOption){
+
+    private int getOptionNum(String inputOption){
         for(String str : requestOptions.keySet()){
             if(str.equals(inputOption)){
-                System.out.println("was able to recognize as an option \""+str+"\"");
-                return true;
+                System.out.println(requestOptions.get(str));
+                return requestOptions.get(str);
             }
         }
-        System.out.println("didnt recognize as an option \""+inputOption+"\"");
-        return false;
+        System.out.println("-1");
+        return -1;
     }
 
-    public static ArrayList<String> splitToOptions(String input){
+    private ArrayList<String> splitToOptions(String input){
         ArrayList<String> inputOptions = new ArrayList<>();
         String str = "";
         for(int i=0; i<input.length(); i++){
@@ -74,11 +80,30 @@ public class Options {
                 continue;
             }
             //a non ' ' char
-            if(str.length()>0) {
-                str += input.charAt(i);
+            str += input.charAt(i);
+        }
+        if(str.length()>0) {
+            inputOptions.add(str);
+        }
+        return inputOptions;
+    }
+
+    private void showWarnings(){
+        if(requestStringCommand.size()==0 &&requestNumberCommand.size()==0 ){
+            System.out.println("invalid input, try again");
+        }
+        for(int i=0 ; i<requestNumberCommand.size(); i++){
+            if(requestNumberCommand.get(i)==-1){
+                System.out.println("cannot recognize command \""+requestStringCommand.get(i));
             }
         }
-        inputOptions.add(str);
-        return inputOptions;
+    }
+
+    public void identifyRequestOptions(String inputCommand){
+        requestStringCommand = splitToOptions(inputCommand);
+        for(int i=0; i<requestStringCommand.size(); i++){
+            requestNumberCommand.add(i, getOptionNum(requestStringCommand.get(i)) );
+        }
+        showWarnings();
     }
 }
