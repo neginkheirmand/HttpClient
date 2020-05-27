@@ -1,13 +1,10 @@
 package GUI;
 
-import Conection.Options;
-import netscape.javascript.JSObject;
-
-import java.net.http.HttpClient;
-import java.util.ArrayList;
+import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("hello");
         new CreateGUI();
 
     }

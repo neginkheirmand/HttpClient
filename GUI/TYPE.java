@@ -1,5 +1,7 @@
 package GUI;
 
+import java.awt.*;
+
 public enum TYPE{
     POST,
     PATCH,
@@ -79,6 +81,25 @@ public enum TYPE{
         }else{
             return null;
         }
+    }
+
+    public static String getColor(TYPE method) {
+        if (method.equals(GET)) {
+            return "\033[1;35m";
+        } else if (method.equals(POST)) {
+            return "\033[1;32m";
+        } else if (method.equals(PATCH)) {
+            return "\033[1;33m";
+        } else if (method.equals(PUT)) {
+            return "\033[1;37m";
+        } else if (method.equals(DELETE)) {
+            return "\033[1;31m";
+        } else if (method.equals(OPTION)) {
+            return "\033[1;34m";
+        } else if (method.equals(HEAD)) {
+            return "\033[1;36m";
+        }
+        return "";
     }
 
 }

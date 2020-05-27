@@ -2,8 +2,9 @@
 GET
 GET
 www.google1.com
-FORM_URL
+JSON
 0
+
 true
 null
 null

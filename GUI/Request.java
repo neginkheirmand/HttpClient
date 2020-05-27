@@ -60,6 +60,12 @@ public class Request {
         }
     }
 
+    /**
+     * default constructor
+     */
+    public Request(){
+
+    }
 
     /**
      * getter method
@@ -156,6 +162,14 @@ public class Request {
      */
     public void setTypeOfRequest(int indexOfType) {
         this.typeOfRequest = TYPE.getTypeByIndex(indexOfType);
+    }
+
+    /**
+     * setter for the TYPE of method for the request field
+     * @param methodType
+     */
+    public void setType(TYPE methodType){
+        this.typeOfRequest = methodType;
     }
 
     /**

@@ -1,4 +1,4 @@
-package Conection;
+package Bash;
 
 import jdk.jshell.execution.Util;
 
@@ -6,49 +6,52 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Options {
-    private static HashMap<String, Integer> requestOptions;
+    private static HashMap<String, Integer> requestOptions = null;
     private ArrayList<Integer> requestNumberCommand;
     private ArrayList<String> requestStringCommand;
 
 
     public Options(){
-        requestOptions = new HashMap<>();
-        requestOptions.put("-M", 0);
-        requestOptions.put("--method", 0);
+        if(requestOptions == null) {
+            //should only be done the first time
+            requestOptions = new HashMap<>();
 
-        requestOptions.put("-H", 1);
-        requestOptions.put("--headers", 1);
+            requestOptions.put("-M", 0);
+            requestOptions.put("--method", 0);
 
-        //Include protocol response headers in the output
-        requestOptions.put("-i", 2);
-        requestOptions.put("--include", 2);
-        //
-        requestOptions.put("-h", 3);
-        requestOptions.put("--help", 3);
+            requestOptions.put("-H", 1);
+            requestOptions.put("--headers", 1);
 
-        requestOptions.put("-f", 4);
-        //Fail silently (no output at all) on HTTP errors
-        requestOptions.put("--fail", 4);
-        //Fail on first transfer error, do not continue
-        requestOptions.put("--fail-early", 4);
-        //Enable TLS False Start
-        requestOptions.put("--false-start", 4);
+            //Include protocol response headers in the output
+            requestOptions.put("-i", 2);
+            requestOptions.put("--include", 2);
+            //
+            requestOptions.put("-h", 3);
+            requestOptions.put("--help", 3);
 
-        requestOptions.put("-O", 5);
-        requestOptions.put("--output",5);
+            requestOptions.put("-f", 4);
 
-        requestOptions.put("-S", 6);
-        requestOptions.put("--save", 6);
+            requestOptions.put("-O", 5);
+            requestOptions.put("--output", 5);
 
-        requestOptions.put("-d", 7);
-        requestOptions.put("-data", 7);
+            requestOptions.put("-S", 6);
+            requestOptions.put("--save", 6);
 
-        requestOptions.put("-j", 8);
-        requestOptions.put("--json", 8);
+            requestOptions.put("-d", 7);
+            requestOptions.put("-data", 7);
 
-        requestOptions.put("--upload", 9);
+            requestOptions.put("-j", 8);
+            requestOptions.put("--json", 8);
 
-        requestOptions.put("list", 10);
+            requestOptions.put("--upload", 9);
+
+            requestOptions.put("list", 10);
+
+            requestOptions.put("curl", 11);
+
+            requestOptions.put("fire", 12);
+
+        }
 
         requestNumberCommand = new ArrayList<>();
         requestStringCommand = new ArrayList<>();
@@ -88,14 +91,13 @@ public class Options {
         return inputOptions;
     }
 
+    //first check here if everything is OK
     private void showWarnings(){
         if(requestStringCommand.size()==0 &&requestNumberCommand.size()==0 ){
             System.out.println("invalid input, try again");
         }
-        for(int i=0 ; i<requestNumberCommand.size(); i++){
-            if(requestNumberCommand.get(i)==-1){
-                System.out.println("cannot recognize command \""+requestStringCommand.get(i));
-            }
+        if(requestNumberCommand.get(0)!=11){
+            System.out.println("command should start with \"curl\"");
         }
     }
 
@@ -105,5 +107,13 @@ public class Options {
             requestNumberCommand.add(i, getOptionNum(requestStringCommand.get(i)) );
         }
         showWarnings();
+    }
+
+    public ArrayList<Integer> getRequestNumberCommand() {
+        return requestNumberCommand;
+    }
+
+    public ArrayList<String> getRequestStringCommand() {
+        return requestStringCommand;
     }
 }
