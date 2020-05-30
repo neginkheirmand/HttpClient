@@ -61,11 +61,31 @@ public class Options {
     private int getOptionNum(String inputOption){
         for(String str : requestOptions.keySet()){
             if(str.equals(inputOption)){
-                System.out.println(requestOptions.get(str));
+//                System.out.println(requestOptions.get(str));
                 return requestOptions.get(str);
             }
         }
-        System.out.println("-1");
+        if(inputOption.charAt(0)=='-'){
+            System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" option "+inputOption+" not supported. Enter -h/--help to see the options supported.");
+            if(inputOption.length()==2){
+                if(inputOption.charAt(1)=='m'){
+                    System.out.println("The most similar option is\n-M");
+                }else if(inputOption.charAt(1)=='I'){
+                    System.out.println("The most similar option is\n-i");
+                }else if(inputOption.charAt(1)=='D'){
+                    System.out.println("The most similar option is\n-d");
+                }else if(inputOption.charAt(1)=='s'){
+                    System.out.println("The most similar option is\n-S");
+                }else if(inputOption.charAt(1)=='o'){
+                    System.out.println("The most similar option is\n-O");
+                }else if(inputOption.charAt(1)=='J'){
+                    System.out.println("The most similar option is\n-j");
+                }else if(inputOption.charAt(1)=='F'){
+                    System.out.println("The most similar option is\n-f");
+                }
+            }
+        }
+//        System.out.println("-1");
         return -1;
     }
 

@@ -7,6 +7,7 @@ import GUI.TYPE;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
 
 public class Command {
     private ArrayList<Integer> numCommand;
@@ -34,7 +35,6 @@ public class Command {
         doCommand();
     }
 
-    public Command(){}
 
     public ArrayList<Integer> getNumCommand() {
         return numCommand;
@@ -284,8 +284,28 @@ public class Command {
                 //-d
                 //but what if the user triggers both the -d and -j method at the very same time??
                 //then this request cannot be done and we will just return
-                //still working in the above problem
 
+                //this is basically the multipart form data of the message body:
+                //checking if the -d is the last one then means the message body will come in the next line but if its not and the next
+                // string in the input is a String starting and ending with " means the message body came in the same line
+                //if after the option of -d comes another option means
+                String messageBody = "";
+                if(i==commandToDo.getNumCommand().size()-1){
+                    //its the last one so the body is in the next line
+                    System.out.printf("enter the message body:  ");
+                    messageBody = (new Scanner(System.in)).nextLine();
+                }else if(commandToDo.getNumCommand().get(i+1)==-1){
+                    //its the next String after this one
+                    messageBody = commandToDo.getStrCommand().get(i);
+                }else{
+                    System.out.println("wrong command, pay attention to the -d option");
+                }
+                ArrayList<String[]> formData = splitData(messageBody);
+                if(formData==null){
+                    return;
+                }
+                //so we are sure we actually have an valid message body in multipart format
+                System.out.println("valid message body");
 
             }
         }
@@ -353,7 +373,7 @@ public class Command {
                 //should enter this in state pairNum==1
                 //here we have to check if the temp is made only with spaces
                 //we are gonna take out the spaces
-                
+
                 if(pairNum==1 && temp.length()!=0) {
                     pair[1] = temp;
                     //gotta ad it to the arraylist
@@ -376,6 +396,10 @@ public class Command {
     }
 
     public ArrayList<String[]> splitData(String input){
+        if(input.length()==0){
+            System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" did not enter the message body but specified option -d");
+            return null;
+        }
         if(input.charAt(0)!='\"' || input.charAt(input.length()-1)!='\"'){
             System.out.println("invalid message body, should be in between \" \" separated by & with no spaces in between");
             return null;
