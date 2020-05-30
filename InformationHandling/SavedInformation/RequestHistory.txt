@@ -17,13 +17,13 @@ true
 ----
 PATCH
 PATCH
-www.google2.com
+www.google2.hellothere
 BINARY
-this is supposed to be the path of a file
+
 true
-bearer token
-prefix
-true
+null
+null
+null
 1
 new name query2
 new value2

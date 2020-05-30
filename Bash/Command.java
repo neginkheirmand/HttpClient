@@ -34,6 +34,8 @@ public class Command {
         doCommand();
     }
 
+    public Command(){}
+
     public ArrayList<Integer> getNumCommand() {
         return numCommand;
     }
@@ -270,11 +272,21 @@ public class Command {
                     nameOfOutputFile = commandToDo.getStrCommand().get(++i);
                 }
                 //put in output file with the specified name
-                System.out.println("-o option still not working");
+                System.out.println("-o option still not working but the name of the file has been chosen as"+ "\033[0;31m" +nameOfOutputFile+"\033[0m");
+                System.out.println("by the way i dont really know what to put in the end of the name (what kind of file ex: .txt)");
+                continue;
+                //?
             }else if(commandToDo.getNumCommand().get(i)==6){
                 //-s the save
                 save = true;
                 //remember to do the save in the end
+            }else if(commandToDo.getNumCommand().get(i)==7){
+                //-d
+                //but what if the user triggers both the -d and -j method at the very same time??
+                //then this request cannot be done and we will just return
+                //still working in the above problem
+
+
             }
         }
         if(save){
@@ -287,8 +299,10 @@ public class Command {
         System.out.println(commandToDo.getRequest());
     }
 
-    private ArrayList<String[]> splitHeader(String input){
-        if(input.charAt(0)=='\"' && input.charAt(input.length()-1)=='\"'){
+    public ArrayList<String[]> splitHeader(String input){
+//        System.out.println("[0]="+input.charAt(0));
+//        System.out.println("[n-1]="+input.charAt(input.length()-1));
+        if(input.charAt(0)!='\"' || input.charAt(input.length()-1)!='\"'){
             System.out.println("invalid header input, should be in between \" \" and each pair of" +
                     "\nheader and value separated with ; (semicolon) with no spaces in between");
             System.out.println("ex:\n\"header1=value1;header2=value2\"");
@@ -298,27 +312,136 @@ public class Command {
         String[] pair = new String[3];
         String temp = "";
         int pairNum=0;
-        for(int i=0; i<input.length()-1; i++){
-            //all the pairs are enabled
-            if(input.charAt(i)!='='&&input.charAt(i)!=';'){
+        for(int i=1; i<input.length()-1; i++){
+            //all the pairs are enabled so the pair[2] is "true"
+            if( input.charAt(i)!='=' && input.charAt(i)!=';' ){
                 temp+=input.charAt(i);
-            }else{
-                pair[pairNum] = temp;
-                temp="";
-                pairNum++;
-                if(pairNum==2){
+                if( i==input.length()-2){
+                    if(pairNum==1 && temp.length()!=0) {
+                        pair[1] = temp;
+                        //gotta ad it to the arraylist
+                        pair[2] = "true";
+                        headers.add(pair);
+                        pair = new String[3];
+                        temp = "";
+                        pairNum = 0;
+                    }else if(temp.length()==0){
+                        System.out.println("You cannot have an empty string as value");
+                        return null;
+                    }else{
+                        System.out.println("in between info and corresponding value there should be a = not a ; ");
+                        System.out.println("You cannot have an empty string as value");
+                        return null;
+                    }
+                }
+
+            }else if(input.charAt(i)=='=') {
+                //should enter this state at pairNum==0
+                if(pairNum==0 && temp.length()!=0) {
+                    pair[0] = temp;
+                    temp = "";
+                    pairNum++;
+                }else if(temp.length()==0){
+                    System.out.println("You cannot have an empty string as header name");
+                    return null;
+                }else{
+                    System.out.println("invalid pair of header name and value, each pair separated by ; not =");
+                    System.out.println("You cannot have an empty string as header name");
+                    return null;
+                }
+            }else if(input.charAt(i)==';' || i==input.length()-2){
+                //should enter this in state pairNum==1
+                //here we have to check if the temp is made only with spaces
+                //we are gonna take out the spaces
+                
+                if(pairNum==1 && temp.length()!=0) {
+                    pair[1] = temp;
                     //gotta ad it to the arraylist
-                    pair[2]="true";
+                    pair[2] = "true";
                     headers.add(pair);
                     pair = new String[3];
-                    pairNum=0;
+                    temp = "";
+                    pairNum = 0;
+                }else if(temp.length()==0){
+                    System.out.println("You cannot have an empty string as value");
+                    return null;
+                }else{
+                    System.out.println("in between info and corresponding value there should be a = not a ; ");
+                    System.out.println("You cannot have an empty string as value");
+                    return null;
                 }
             }
         }
-        headers.add(pair);
         return headers;
     }
 
-
+    public ArrayList<String[]> splitData(String input){
+        if(input.charAt(0)!='\"' || input.charAt(input.length()-1)!='\"'){
+            System.out.println("invalid message body, should be in between \" \" separated by & with no spaces in between");
+            return null;
+        }
+        //the form data (or the urlencoded
+        ArrayList<String[]> dataInfo = new ArrayList<>();
+        String[] pair = new String[3];
+        String temp = "";
+        int pairNum=0;
+        for(int i=1; i<input.length()-1; i++){
+            //all the pairs are enabled
+            if(input.charAt(i)!='='&&input.charAt(i)!='&'){
+                temp+=input.charAt(i);
+                if( i==input.length()-2){
+                    if(pairNum==1 && temp.length()!=0) {
+                        pair[1] = temp;
+                        //gotta ad it to the arraylist
+                        pair[2] = "true";
+                        dataInfo.add(pair);
+                        pair = new String[3];
+                        temp = "";
+                        pairNum = 0;
+                    }else if(temp.length()==0){
+                        System.out.println("You cannot have an empty string as value");
+                        return null;
+                    }else{
+                        System.out.println("in between info and corresponding value there should be a = not a & ");
+                        System.out.println("You cannot have an empty string as value");
+                        return null;
+                    }
+                }
+            }else if(input.charAt(i)=='=') {
+                //should enter this state at pairNum==0
+                if(pairNum==0 && temp.length()!=0) {
+                    pair[0] = temp;
+                    temp = "";
+                    pairNum++;
+                }else if(temp.length()==0){
+                    System.out.println("You cannot have an empty string as message body info");
+                    return null;
+                }else{
+                    System.out.println("invalid message body, each pair separated by & not =");
+                    System.out.println("You cannot have an empty string as message body info");
+                    return null;
+                }
+            }else if(input.charAt(i)=='&' ){
+                //should enter this in state pairNum==1
+                if(pairNum==1 && temp.length()!=0) {
+                    pair[1] = temp;
+                    //gotta ad it to the arraylist
+                    pair[2] = "true";
+                    dataInfo.add(pair);
+                    pair = new String[3];
+                    temp = "";
+                    pairNum = 0;
+                }else if(temp.length()==0){
+                    System.out.println("You cannot have an empty string as value");
+                    return null;
+                }else{
+                    System.out.println("in between info and corresponding value there should be a = not a & ");
+                    System.out.println("You cannot have an empty string as value");
+                    return null;
+                }
+            }
+        }
+        return dataInfo;
+    }
 
 }
