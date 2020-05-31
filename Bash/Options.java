@@ -83,6 +83,12 @@ public class Options {
                 }else if(inputOption.charAt(1)=='F'){
                     System.out.println("The most similar option is\n-f");
                 }
+            }else{
+                String temp = "-";
+                temp+=inputOption;
+                if(requestOptions.get(temp)!=null){
+                    System.out.println("The most similar option is\n"+temp);
+                }
             }
         }
 //        System.out.println("-1");

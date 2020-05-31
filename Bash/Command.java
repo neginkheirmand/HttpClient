@@ -3,6 +3,8 @@ package Bash;
 import GUI.FORM_DATA;
 import GUI.Request;
 import GUI.TYPE;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -296,7 +298,7 @@ public class Command {
                     messageBody = (new Scanner(System.in)).nextLine();
                 }else if(commandToDo.getNumCommand().get(i+1)==-1){
                     //its the next String after this one
-                    messageBody = commandToDo.getStrCommand().get(i);
+                    messageBody = commandToDo.getStrCommand().get(i+1);
                 }else{
                     System.out.println("wrong command, pay attention to the -d option");
                 }
@@ -305,7 +307,36 @@ public class Command {
                     return;
                 }
                 //so we are sure we actually have an valid message body in multipart format
-                System.out.println("valid message body");
+                System.out.println("valid message body\n NOW FOR GODS SAKE DO SOMETHING HERE");
+            }else if(commandToDo.getNumCommand().get(i)==8){
+                //-j
+                //we should take the input
+                String jsonMsBody = "";
+                if(commandToDo.getNumCommand().size()-1==i){
+                    //we are in the last word/option of the command
+                    //so the user has to enter the json body message in the next line
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" used -j/--json option but did not specified the message body, enter the message body in JSON format");
+                    jsonMsBody = (new Scanner(System.in)).nextLine();
+                }else if(commandToDo.getNumCommand().get(i+1)==-1){
+                    //the next string in the input is the json
+                    jsonMsBody = commandToDo.getStrCommand().get(i+1);
+                }
+
+                try {
+                    JSONObject jsonObject = new JSONObject(jsonMsBody);
+                    System.out.println(jsonObject.toString());
+                }catch (JSONException err){
+//                Log.d("Error", err.toString());
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" incorrect format of input.\nCorrect form example: \n" +
+                            "curl ... -j/--json {key1 : value1, key2 : value2}\nor \ncurl ... --json/-j {\"key1\":\"value1\", \"key2\":\"value2\"}");
+                    return;
+                }
+                //now we have the json object
+                System.out.println("here we have to do the request");
+            }else if(commandToDo.getNumCommand().get(i)==9){
+                //--upload
+                //in this part we wil be uploading a bin file
+                
 
             }
         }
@@ -322,6 +353,10 @@ public class Command {
     public ArrayList<String[]> splitHeader(String input){
 //        System.out.println("[0]="+input.charAt(0));
 //        System.out.println("[n-1]="+input.charAt(input.length()-1));
+        if(input.length()==0){
+            System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" did not enter headers but specified option -H/--headers");
+            return null;
+        }
         if(input.charAt(0)!='\"' || input.charAt(input.length()-1)!='\"'){
             System.out.println("invalid header input, should be in between \" \" and each pair of" +
                     "\nheader and value separated with ; (semicolon) with no spaces in between");
@@ -397,7 +432,7 @@ public class Command {
 
     public ArrayList<String[]> splitData(String input){
         if(input.length()==0){
-            System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" did not enter the message body but specified option -d");
+            System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" did not enter the message body but specified option -d/--data");
             return null;
         }
         if(input.charAt(0)!='\"' || input.charAt(input.length()-1)!='\"'){
