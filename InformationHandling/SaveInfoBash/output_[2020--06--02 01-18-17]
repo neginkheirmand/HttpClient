@@ -1,0 +1,10 @@
+{"success":"true"}Key : Date ,Value : Mon, 01 Jun 2020 20:48:18 GMT
+Key : Content-Type ,Value : application/json
+Key : Content-Length ,Value : 19
+Key : Connection ,Value : keep-alive
+Key : Set-Cookie ,Value : __cfduid=d6d7b6291b937b9327ad9539c6436febd1591044498; expires=Wed, 01-Jul-20 20:48:18 GMT; path=/; domain=.reqbin.com; HttpOnly; SameSite=Lax; Secure
+Key : CF-Cache-Status ,Value : DYNAMIC
+Key : cf-request-id ,Value : 03133d7c89000005bb8abcc200000001
+Key : Expect-CT ,Value : max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+Key : Server ,Value : cloudflare
+Key : CF-RAY ,Value : 59cbcb740c8505bb-FRA

@@ -6,6 +6,7 @@ import GUI.TYPE;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -265,7 +266,7 @@ public class Command {
                 if(i==commandToDo.getNumCommand().size()-1 || commandToDo.getNumCommand().get(i+1)!=-1){
                     //its the last one so the name of the file will be chosen automatically
 
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                    SimpleDateFormat formatter = new SimpleDateFormat("ss--MM--hh--dd-MM-yyyy");
                     Date date = new Date();
                     nameOfOutputFile="output_["+formatter.format(date)+"]";
 
@@ -333,11 +334,33 @@ public class Command {
                 }
                 //now we have the json object
                 System.out.println("here we have to do the request");
+
+
+
             }else if(commandToDo.getNumCommand().get(i)==9){
                 //--upload
                 //in this part we wil be uploading a bin file
-                
-
+                String pathOfFile = "";
+                if(commandToDo.getNumCommand().size()-1==i){
+                    //we are in the last word/option of the command
+                    //so the user has to enter the path of file in the next line
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" used --upload option but did not specified the path of file , Please enter the path");
+                    pathOfFile = (new Scanner(System.in)).nextLine();
+                }else if(commandToDo.getNumCommand().get(i+1)==-1){
+                    //the next string in the input is the json
+                    pathOfFile = commandToDo.getStrCommand().get(i+1);
+                }
+                File file = new File(pathOfFile);
+                if(file.exists() && file.isFile()){
+                    System.out.println("the file exist, HERE WE HAVE TO UPLOAD IT");
+                    request.setFormDataInfo(file.getAbsolutePath());
+                }else if(file.exists() && file.isDirectory()){
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" invalid path -pointing to directory-");
+                    return;
+                }else{
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"invalid path to file");
+                    return;
+                }
             }
         }
         if(save){
