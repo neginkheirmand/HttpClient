@@ -1,9 +1,9 @@
 package Conection;
 
-import GUI.FORM_DATA;
 import GUI.Request;
-import GUI.TYPE;
 
+
+import GUI.FORM_DATA;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,12 +12,14 @@ import java.util.Scanner;
 
 
 import java.io.*;
+
+import GUI.TYPE;
 import org.apache.http.Header;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
@@ -25,14 +27,17 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 
-public class PostMethod {
-    private Request postRequest;
+
+public class PutMethod {
+
+
+    private Request putRequest;
     //afterwards we can put an Array list of responses so that we have the history of the request
     //but for that definitly have in mind the edit action on the request
 
 
-    public PostMethod(Request postRequest) {
-        this.postRequest = postRequest;
+    public PutMethod(Request putRequest) {
+        this.putRequest = putRequest;
     }
 
     public void executePost(String outPutFile, boolean followRedirect, boolean showresponseHeaders){
@@ -40,91 +45,88 @@ public class PostMethod {
         //Create an HttpClient object
         CloseableHttpClient httpclient = HttpClients.createDefault();
 
-        if(postRequest==null) {
+        if(putRequest==null) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problems in setting the request");
             return;
         }
 
         try{
             //Create an HttpGet object
-            HttpPost httpPost;
-            if( postRequest.getUrl() != null && !postRequest.getUrl().equals("") ) {
-                httpPost = new HttpPost(postRequest.getUrl());
+            HttpPut httpPut;
+            if( putRequest.getUrl() != null && !putRequest.getUrl().equals("") ) {
+                httpPut = new HttpPut(putRequest.getUrl());
             }else{
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Invalid url");
                 return;
             }
 
-            //the headers:
-            if (postRequest.getHeaderInfo() != null) {
-                for (int i = 0; i < postRequest.getHeaderInfo().size(); i++) {
-                    if (postRequest.getHeaderInfo().get(i)[0] != null && postRequest.getHeaderInfo().get(i)[1] != null && postRequest.getHeaderInfo().get(i)[2].equals("true")) {
-                        httpPost.addHeader(postRequest.getHeaderInfo().get(i)[0], postRequest.getHeaderInfo().get(i)[1]);
+            //the headers of this put request:
+            if (putRequest.getHeaderInfo() != null) {
+                for (int i = 0; i < putRequest.getHeaderInfo().size(); i++) {
+                    if (putRequest.getHeaderInfo().get(i)[0] != null && putRequest.getHeaderInfo().get(i)[1] != null && putRequest.getHeaderInfo().get(i)[2].equals("true")) {
+                        httpPut.addHeader(putRequest.getHeaderInfo().get(i)[0], putRequest.getHeaderInfo().get(i)[1]);
                     }
                 }
             }
 
-
-
-
             //in case its form url encoded
-            if(postRequest.getTypeOfData().equals(FORM_DATA.FORM_URL)) {
+            if(putRequest.getTypeOfData().equals(FORM_DATA.FORM_URL)) {
+                System.out.println("its form url encoded");
+                httpPut.addHeader("Content-Type", "application/x-www-form-urlencoded");
                 List<NameValuePair> params = null;
-                if (postRequest.getFormDataInfo() != null) {
+                if (putRequest.getFormDataInfo() != null) {
+                    System.out.println(putRequest.getFormDataInfo().getClass());
                     params = new ArrayList<NameValuePair>();
-                    System.out.println(postRequest.getFormDataInfo().getClass());
-                    for (int i = 0; i < ((ArrayList<String[]>) postRequest.getFormDataInfo()).size(); i++) {
-                        if (((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[2].equals("true") &&
-                                ((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[0]!=null &&
-                                ((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[1] !=null ) {
-                            params.add(new BasicNameValuePair(((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[0],
-                                    ((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[1]));
+                    for (int i = 0; i < ((ArrayList<String[]>) putRequest.getFormDataInfo()).size(); i++) {
+                        if (((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[2].equals("true") &&
+                                ((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[0]!=null &&
+                                ((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[1] !=null ) {
+                            params.add(new BasicNameValuePair(((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[0],
+                                    ((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[1]));
                         }
                     }
                 }
                 if (params != null) {
-                    httpPost.setEntity(new UrlEncodedFormEntity(params));
+                    httpPut.setEntity(new UrlEncodedFormEntity(params));
                 }
-            }else if(postRequest.getTypeOfData().equals(FORM_DATA.JSON)) {
-                //in case is json we can use of .setHeader(HttpHeaders.CONTENT_TYPE, "application/json") in the HttpPost
-                if( postRequest.getFormDataInfo()!=null && !((String)postRequest.getFormDataInfo()).equals("") ){
-                    StringEntity entity = new StringEntity((String)postRequest.getFormDataInfo());
-//                    StringEntity entity = new StringEntity((String)postRequest.getFormDataInfo(), ContentType.APPLICATION_FORM_URLENCODED);
-                    httpPost.setEntity(entity);
-                    httpPost.setHeader("Accept", "application/json");
-                    httpPost.setHeader("Content-type", "application/json");
+            }else if(putRequest.getTypeOfData().equals(FORM_DATA.JSON)) {
+                //in case is json we can use of .setHeader(HttpHeaders.CONTENT_TYPE, "application/json") in the httpPut
+                if( putRequest.getFormDataInfo()!=null && !((String)putRequest.getFormDataInfo()).equals("") ){
+                    StringEntity entity = new StringEntity((String)putRequest.getFormDataInfo());
+//                    StringEntity entity = new StringEntity((String)putRequest.getFormDataInfo(), ContentType.APPLICATION_FORM_URLENCODED);
+                    httpPut.setEntity(entity);
+                    httpPut.setHeader("Accept", "application/json");
+                    httpPut.setHeader("Content-type", "application/json");
                 }
-            }else if(postRequest.getTypeOfData().equals(FORM_DATA.BINARY)){
+            }else if(putRequest.getTypeOfData().equals(FORM_DATA.BINARY)){
                 //this part is done with the multi part form data too
-                if(postRequest.getFormDataInfo()!=null) {
-                    File uploadFile = new File((String) postRequest.getFormDataInfo());
+                if(putRequest.getFormDataInfo()!=null) {
+                    File uploadFile = new File((String) putRequest.getFormDataInfo());
                     if(uploadFile.exists() && uploadFile.isFile()) {
                         FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.DEFAULT_BINARY);
 //                        FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.APPLICATION_OCTET_STREAM);
 //                        FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.MULTIPART_FORM_DATA);
-                        httpPost.setEntity(fileToUpload);
+                        httpPut.setEntity(fileToUpload);
                     }else{
                         System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "File not found");
                         return;
                     }
                 }else{
-                    System.out.println("\033[0;31m" + "Line 99 of class PostMethod" + "\033[0m" );
+                    System.out.println("\033[0;31m" + "Line 115 of class PostMethod" + "\033[0m" );
                     return;
                 }
             }
             //we have to add the option of form data/multipart form
+//.addHeader("Content-type", "multipart/form-data");
+
 
 
             //Execute the Post request
-            CloseableHttpResponse httpResponse= httpclient.execute(httpPost);
-            System.out.println("POST Response Status:: "
+            CloseableHttpResponse httpResponse= httpclient.execute(httpPut);
+            System.out.println("PUT Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
 
-
 //            /*
-
-
-
 
             try{
 
@@ -188,10 +190,12 @@ public class PostMethod {
                         fileWriter.close();
                     }
                 }
-
-
             }finally{
-                httpResponse.close();
+                try {
+                    httpResponse.close();
+                }catch (IOException ioexception){
+                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problem with closing the reponse");
+                }
             }
         } catch (java.lang.IllegalArgumentException exception) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Invalid URL, check the spacing");
@@ -200,7 +204,7 @@ public class PostMethod {
         } catch (java.net.UnknownHostException exception) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in finding available Port, Please check Your internet connection");
         } catch (IOException exception) {
-            //the methods: execute/ getContent / readLine / close
+//            the methods: execute/ getContent / readLine / close
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file ");
         }catch (NullPointerException exception){
             System.out.println("\033[0;31m" + "Error" + "\033[0m" );
@@ -215,28 +219,32 @@ public class PostMethod {
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in finding available Port, Please check Your internet connection");
             } catch (IOException exception) {
                 //the methods: execute/ getContent / readLine / close
-                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file ");
+                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with closing the client");
             }catch (NullPointerException exception){
                 System.out.println("\033[0;31m" + "Error" + "\033[0m" );
             }
         }
     }
 
-    public static void main(String[] args) {
 
+
+    public static void main(String[] args) {
         String url = ""+(new Scanner(System.in)).nextLine();
-        Request postRequest = new Request("nameOfRequest", TYPE.POST, url , FORM_DATA.FORM_URL);
+        Request putRequest = new Request("nameOfRequest", TYPE.POST, url , FORM_DATA.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
-        String[] header1 = {"Header1", "Value1", "false"};
-        String[] header2 = {"Header2", "Value2", "true"};
+        String[] header1 = {"Header1", "Value1", "true"};
+        String[] header2 = {"Header2", "Value2", "false"};
         String[] header3 = {"Header3", "Value3", "true"};
         headers.add(header1);
         headers.add(header2);
         headers.add(header3);
-        postRequest.setHeaderInfo(headers);
-        PostMethod postCommand = new PostMethod(postRequest);
+        putRequest.setHeaderInfo(headers);
+        PutMethod putCommand = new PutMethod(putRequest);
 //        postCommand.executePost("", true, true);
-        postCommand.executePost("", true, true);
+        putCommand.executePost("put.txt", true, true);
     }
+
+
+
 
 }
