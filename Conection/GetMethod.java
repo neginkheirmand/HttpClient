@@ -71,6 +71,7 @@ public class GetMethod {
             System.out.println("GET Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
 
+
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                     httpResponse.getEntity().getContent()));
 
@@ -93,15 +94,15 @@ public class GetMethod {
                 }
             }
 
-            System.out.println("\033[0;31m"+" What does the next code? " + "\033[0m");
-            System.out.println("\nGet Response Header By Key ...\n");
-            String server = httpResponse.getFirstHeader("Server").getValue();
-
-            if (server == null) {
-                System.out.println("Key 'Server' is not found!");
-            } else {
-                System.out.println("Server - " + server);
-            }
+//            System.out.println("\033[0;31m"+" What does the next code? " + "\033[0m");
+//            System.out.println("\nGet Response Header By Key ...\n");
+//            String server = httpResponse.getFirstHeader("Server").getValue();
+//
+//            if (server == null) {
+//                System.out.println("Key 'Server' is not found!");
+//            } else {
+//                System.out.println("Server - " + server);
+//            }
 
             if (outPutFile == null || outPutFile.length() == 0) {
                 System.out.println(response.toString());
@@ -163,8 +164,12 @@ public class GetMethod {
         String nameOfOutputFile="output_["+formatter.format(date)+"].txt";
         Request testGetRequest = new Request("nameOfRequest" , TYPE.GET, url, FORM_DATA.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
-        String[] header1 = {"Accept:", "application/json", "true"};
+        String[] header1 = {"Header1", "Value1", "true"};
+        String[] header2 = {"Header2", "Value2", "true"};
+        String[] header3 = {"Header3", "Value3", "true"};
         headers.add(header1);
+        headers.add(header2);
+        headers.add(header3);
         testGetRequest.setHeaderInfo(headers);
         GetMethod testgetMethod = new GetMethod(testGetRequest);
         testgetMethod.executeGet(nameOfOutputFile, true, true);

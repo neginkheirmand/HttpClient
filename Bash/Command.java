@@ -272,10 +272,17 @@ public class Command {
 
                 }else{
                     //the chosen name by the user
-                    nameOfOutputFile = commandToDo.getStrCommand().get(++i);
+                    i++;
+                    for(int j=0; j<commandToDo.getStrCommand().get(i).length(); j++){
+                        if( (j==0||j==commandToDo.getStrCommand().get(i).length()-1) && commandToDo.getStrCommand().get(i).charAt(j)=='\"' ){
+                            continue;
+                        }
+                        nameOfOutputFile+=commandToDo.getStrCommand().get(i).charAt(j);
+                    }
                 }
+
                 //put in output file with the specified name
-                System.out.println("-o option still not working but the name of the file has been chosen as"+ "\033[0;31m" +nameOfOutputFile+"\033[0m");
+                System.out.println("-O option still not working but the name of the file has been chosen as"+ "\033[0;31m " +nameOfOutputFile+"\033[0m");
                 System.out.println("by the way i dont really know what to put in the end of the name (what kind of file ex: .txt)");
                 continue;
                 //?

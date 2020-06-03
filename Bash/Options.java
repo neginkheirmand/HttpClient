@@ -99,17 +99,45 @@ public class Options {
         ArrayList<String> inputOptions = new ArrayList<>();
         String str = "";
         for(int i=0; i<input.length(); i++){
-            if (input.charAt(i)==' '){
-                //the last word ended
-                if(str.length()>0){
-                    //add as a part of the input
-                    inputOptions.add(str);
-                    str="";
+            if(str.length()==0){
+                if (input.charAt(i) == ' ') {
+                    //the last word ended
+                    if (str.length() > 0) {
+                        //add as a part of the input
+                        inputOptions.add(str);
+                        str = "";
+                    }
+                    continue;
                 }
-                continue;
+                //a non ' ' char
+                str += input.charAt(i);
+            }else {
+                if(str.charAt(0)=='\"'){
+                    if (input.charAt(i) == '\"') {
+                        //the last word ended
+                        if (str.length() > 0) {
+                            //add as a part of the input
+                            inputOptions.add(str+"\"");
+                            str = "";
+                        }
+                        continue;
+                    }
+                    //a non ' ' char
+                    str += input.charAt(i);
+                }else{
+                    if (input.charAt(i) == ' ') {
+                        //the last word ended
+                        if (str.length() > 0) {
+                            //add as a part of the input
+                            inputOptions.add(str);
+                            str = "";
+                        }
+                        continue;
+                    }
+                    //a non ' ' char
+                    str += input.charAt(i);
+                }
             }
-            //a non ' ' char
-            str += input.charAt(i);
         }
         if(str.length()>0) {
             inputOptions.add(str);

@@ -1,11 +1,5 @@
 package Bash;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 
@@ -15,14 +9,15 @@ public class Test {
         Options newOptionIdentifier = new Options();
 
         while (true) {
-            String input = (new Scanner(System.in)).nextLine();
+            String input="";
+            try {
+                input = (new Scanner(System.in)).nextLine();
+            }catch (java.lang.IndexOutOfBoundsException exception){
+                System.out.println("Please enter valid input");
+            }
             new Command(input);
         }
 
-
-//        while (true) {
-//
-//        }
 
 
     }
