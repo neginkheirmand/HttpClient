@@ -97,7 +97,6 @@ public class GetMethod {
             if(showresponseHeaders) {
                 for (Header header : headers) {
                     responseHeaders += "Key : " + header.getName() + " ,Value : " + header.getValue() + "\n";
-                    System.out.println("Key : " + header.getName() + " ,Value : " + header.getValue());
                 }
             }
 
@@ -116,7 +115,16 @@ public class GetMethod {
                 System.out.println(responseHeaders);
             } else {
                 //if the -O option is used
-                File outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile);
+                String posFix = getContentType(headers);
+                System.out.println(posFix);
+                FileOutputStream fos = new FileOutputStream(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile + posFix);
+                int byte_;
+                HttpEntity entity = response.getEntity();
+                InputStream inputStream = entity.getContent();
+                while((byte_ = inputStream.read()) != -1) {
+                    fos.write(byte);
+                }
+                File outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile + posFix);
                 //the next method sees if the parenrs of the file exist if not creates it and returnts true if already existed and false if created it
                 outputContainer.getParentFile().mkdirs();
                 if (!outputContainer.createNewFile()) {
@@ -165,6 +173,20 @@ public class GetMethod {
             }
         }catch (NullPointerException exception){
             System.out.println("here");
+        }
+    }
+
+    private String getContentType(Header[] headers){
+        String value = "";
+        for(Header header : headers){
+            if(header.getName().equals("Content-Type")){
+                value= header.getValue();
+            }
+        }
+        if(value.equals("image/png")) {
+            return ".png";
+        }else{
+            return ".txt";
         }
     }
 
