@@ -40,7 +40,7 @@ public class PutMethod {
         this.putRequest = putRequest;
     }
 
-    public void executePost(String outPutFile, boolean followRedirect, boolean showresponseHeaders){
+    public void executePut(String outPutFile, boolean followRedirect, boolean showresponseHeaders){
 
         //Create an HttpClient object
         CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -112,7 +112,7 @@ public class PutMethod {
                         return;
                     }
                 }else{
-                    System.out.println("\033[0;31m" + "Line 115 of class PostMethod" + "\033[0m" );
+                    System.out.println("\033[0;31m" + "Line 115 of class PutMethod" + "\033[0m" );
                     return;
                 }
             }
@@ -121,7 +121,7 @@ public class PutMethod {
 
 
 
-            //Execute the Post request
+            //Execute the put request
             CloseableHttpResponse httpResponse= httpclient.execute(httpPut);
             System.out.println("PUT Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
@@ -131,8 +131,14 @@ public class PutMethod {
             try{
 
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(
-                        httpResponse.getEntity().getContent()));
+                BufferedReader reader ;
+                try {
+                    reader = new BufferedReader(new InputStreamReader(
+                            httpResponse.getEntity().getContent()));
+                }catch (NullPointerException nullPointerException){
+                    System.out.println("empty Response");
+                    return;
+                }
 
                 String inputLine;
                 StringBuffer response = new StringBuffer();
@@ -230,7 +236,7 @@ public class PutMethod {
 
     public static void main(String[] args) {
         String url = ""+(new Scanner(System.in)).nextLine();
-        Request putRequest = new Request("nameOfRequest", TYPE.POST, url , FORM_DATA.FORM_URL);
+        Request putRequest = new Request("nameOfRequest", TYPE.PUT, url , FORM_DATA.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
         String[] header1 = {"Header1", "Value1", "true"};
         String[] header2 = {"Header2", "Value2", "false"};
@@ -240,8 +246,7 @@ public class PutMethod {
         headers.add(header3);
         putRequest.setHeaderInfo(headers);
         PutMethod putCommand = new PutMethod(putRequest);
-//        postCommand.executePost("", true, true);
-        putCommand.executePost("put.txt", true, true);
+        putCommand.executePut("put.txt", true, true);
     }
 
 

@@ -34,9 +34,9 @@ public class DeleteMethod {
 
     public void executeDelete(String outPutFile, boolean followRedirect, boolean showresponseHeaders){
 
-        //first make sure the getRequest ahs been created
+        //first make sure the deleteRequest ahs been created
         if (deleteRequest == null) {
-            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Cannot execute the Get Request");
+            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Cannot execute the DELETE Request");
             return;
         }
 
@@ -64,8 +64,15 @@ public class DeleteMethod {
                     + httpResponse.getStatusLine().getStatusCode());
 
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    httpResponse.getEntity().getContent()));
+            BufferedReader reader ;
+            try {
+                reader = new BufferedReader(new InputStreamReader(
+                        httpResponse.getEntity().getContent()));
+            }catch (NullPointerException nullPointerException){
+                System.out.println("empty Response");
+                return;
+            }
+
 
             String inputLine;
             StringBuffer response = new StringBuffer();
@@ -146,7 +153,7 @@ public class DeleteMethod {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy--MM--dd hh-mm-ss");
         Date date = new Date();
         String nameOfOutputFile="output_["+formatter.format(date)+"].txt";
-        Request testDeleteRequest = new Request("nameOfRequest" , TYPE.GET, url, FORM_DATA.FORM_URL);
+        Request testDeleteRequest = new Request("nameOfRequest" , TYPE.DELETE, url, FORM_DATA.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
         String[] header1 = {"Header1", "Value1", "true"};
         String[] header2 = {"Header2", "Value2", "false"};

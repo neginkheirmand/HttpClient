@@ -3,21 +3,11 @@ package Conection;
 import GUI.FORM_DATA;
 import GUI.Request;
 import GUI.TYPE;
-
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-
-import java.io.*;
 import org.apache.http.Header;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
@@ -25,41 +15,46 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 
-public class PostMethod {
-    private Request postRequest;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class PatchMethod {
+    private Request patchRequest;
     //afterwards we can put an Array list of responses so that we have the history of the request
     //but for that definitely have in mind the edit action on the request
 
 
-    public PostMethod(Request postRequest) {
-        this.postRequest = postRequest;
+    public PatchMethod(Request patchRequest) {
+        this.patchRequest = patchRequest;
     }
 
-    public void executePost(String outPutFile, boolean followRedirect, boolean showresponseHeaders){
+    public void executePatch(String outPutFile, boolean followRedirect, boolean showresponseHeaders){
 
         //Create an HttpClient object
         CloseableHttpClient httpclient = HttpClients.createDefault();
 
-        if(postRequest==null) {
+        if(patchRequest==null) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problems in setting the request");
             return;
         }
 
         try{
             //Create an HttpGet object
-            HttpPost httpPost;
-            if( postRequest.getUrl() != null && !postRequest.getUrl().equals("") ) {
-                httpPost = new HttpPost(postRequest.getUrl());
+            HttpPatch httpPatch;
+            if( patchRequest.getUrl() != null && !patchRequest.getUrl().equals("") ) {
+                httpPatch = new HttpPatch(patchRequest.getUrl());
             }else{
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Invalid url");
                 return;
             }
 
             //the headers:
-            if (postRequest.getHeaderInfo() != null) {
-                for (int i = 0; i < postRequest.getHeaderInfo().size(); i++) {
-                    if (postRequest.getHeaderInfo().get(i)[0] != null && postRequest.getHeaderInfo().get(i)[1] != null && postRequest.getHeaderInfo().get(i)[2].equals("true")) {
-                        httpPost.addHeader(postRequest.getHeaderInfo().get(i)[0], postRequest.getHeaderInfo().get(i)[1]);
+            if (patchRequest.getHeaderInfo() != null) {
+                for (int i = 0; i < patchRequest.getHeaderInfo().size(); i++) {
+                    if (patchRequest.getHeaderInfo().get(i)[0] != null && patchRequest.getHeaderInfo().get(i)[1] != null && patchRequest.getHeaderInfo().get(i)[2].equals("true")) {
+                        httpPatch.addHeader(patchRequest.getHeaderInfo().get(i)[0], patchRequest.getHeaderInfo().get(i)[1]);
                     }
                 }
             }
@@ -68,56 +63,56 @@ public class PostMethod {
 
 
             //in case its form url encoded
-            if(postRequest.getTypeOfData().equals(FORM_DATA.FORM_URL)) {
+            if(patchRequest.getTypeOfData().equals(FORM_DATA.FORM_URL)) {
                 List<NameValuePair> params = null;
-                if (postRequest.getFormDataInfo() != null) {
+                if (patchRequest.getFormDataInfo() != null) {
                     params = new ArrayList<NameValuePair>();
-                    System.out.println(postRequest.getFormDataInfo().getClass());
-                    for (int i = 0; i < ((ArrayList<String[]>) postRequest.getFormDataInfo()).size(); i++) {
-                        if (((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[2].equals("true") &&
-                                ((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[0]!=null &&
-                                ((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[1] !=null ) {
-                            params.add(new BasicNameValuePair(((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[0],
-                                    ((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[1]));
+                    System.out.println(patchRequest.getFormDataInfo().getClass());
+                    for (int i = 0; i < ((ArrayList<String[]>) patchRequest.getFormDataInfo()).size(); i++) {
+                        if (((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[2].equals("true") &&
+                                ((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[0]!=null &&
+                                ((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[1] !=null ) {
+                            params.add(new BasicNameValuePair(((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[0],
+                                    ((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[1]));
                         }
                     }
                 }
                 if (params != null) {
-                    httpPost.setEntity(new UrlEncodedFormEntity(params));
+                    httpPatch.setEntity(new UrlEncodedFormEntity(params));
                 }
-            }else if(postRequest.getTypeOfData().equals(FORM_DATA.JSON)) {
-                //in case is json we can use of .setHeader(HttpHeaders.CONTENT_TYPE, "application/json") in the HttpPost
-                if( postRequest.getFormDataInfo()!=null && !((String)postRequest.getFormDataInfo()).equals("") ){
-                    StringEntity entity = new StringEntity((String)postRequest.getFormDataInfo());
-//                    StringEntity entity = new StringEntity((String)postRequest.getFormDataInfo(), ContentType.APPLICATION_FORM_URLENCODED);
-                    httpPost.setEntity(entity);
-                    httpPost.setHeader("Accept", "application/json");
-                    httpPost.setHeader("Content-type", "application/json");
+            }else if(patchRequest.getTypeOfData().equals(FORM_DATA.JSON)) {
+                //in case is json we can use of .setHeader(HttpHeaders.CONTENT_TYPE, "application/json") in the HttpPatch
+                if( patchRequest.getFormDataInfo()!=null && !((String)patchRequest.getFormDataInfo()).equals("") ){
+                    StringEntity entity = new StringEntity((String)patchRequest.getFormDataInfo());
+//                    StringEntity entity = new StringEntity((String)patchRequest.getFormDataInfo(), ContentType.APPLICATION_FORM_URLENCODED);
+                    httpPatch.setEntity(entity);
+                    httpPatch.setHeader("Accept", "application/json");
+                    httpPatch.setHeader("Content-type", "application/json");
                 }
-            }else if(postRequest.getTypeOfData().equals(FORM_DATA.BINARY)){
+            }else if(patchRequest.getTypeOfData().equals(FORM_DATA.BINARY)){
                 //this part is done with the multi part form data too
-                if(postRequest.getFormDataInfo()!=null) {
-                    File uploadFile = new File((String) postRequest.getFormDataInfo());
+                if(patchRequest.getFormDataInfo()!=null) {
+                    File uploadFile = new File((String) patchRequest.getFormDataInfo());
                     if(uploadFile.exists() && uploadFile.isFile()) {
                         FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.DEFAULT_BINARY);
 //                        FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.APPLICATION_OCTET_STREAM);
 //                        FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.MULTIPART_FORM_DATA);
-                        httpPost.setEntity(fileToUpload);
+                        httpPatch.setEntity(fileToUpload);
                     }else{
                         System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "File not found");
                         return;
                     }
                 }else{
-                    System.out.println("\033[0;31m" + "Line 99 of class PostMethod" + "\033[0m" );
+                    System.out.println("\033[0;31m" + "Line 99 of class PatchMethod" + "\033[0m" );
                     return;
                 }
             }
             //we have to add the option of form data/multipart form
 
 
-            //Execute the Post request
-            CloseableHttpResponse httpResponse= httpclient.execute(httpPost);
-            System.out.println("POST Response Status:: "
+            //Execute the patch request
+            CloseableHttpResponse httpResponse= httpclient.execute(httpPatch);
+            System.out.println("PATCH Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
 
 
@@ -128,6 +123,7 @@ public class PostMethod {
 
             try{
 
+
                 BufferedReader reader ;
                 try {
                     reader = new BufferedReader(new InputStreamReader(
@@ -136,6 +132,7 @@ public class PostMethod {
                     System.out.println("empty Response");
                     return;
                 }
+
 
                 String inputLine;
                 StringBuffer response = new StringBuffer();
@@ -230,18 +227,18 @@ public class PostMethod {
     public static void main(String[] args) {
 
         String url = ""+(new Scanner(System.in)).nextLine();
-        Request postRequest = new Request("nameOfRequest", TYPE.POST, url , FORM_DATA.FORM_URL);
+        Request patchRequest = new Request("nameOfRequest", TYPE.PATCH, url , FORM_DATA.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
         String[] header1 = {"Header1", "Value1", "false"};
         String[] header2 = {"Header2", "Value2", "true"};
-        String[] header3 = {"Header3", "Value3", "true"};
+        String[] header3 = {"Header3", "Value3", "false"};
         headers.add(header1);
         headers.add(header2);
         headers.add(header3);
-        postRequest.setHeaderInfo(headers);
-        PostMethod postCommand = new PostMethod(postRequest);
+        patchRequest.setHeaderInfo(headers);
+        PatchMethod postCommand = new PatchMethod(patchRequest);
 //        postCommand.executePost("", true, true);
-        postCommand.executePost("", true, true);
+        postCommand.executePatch("", true, true);
     }
 
 }

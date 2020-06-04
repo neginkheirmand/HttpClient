@@ -2,73 +2,58 @@ package Conection;
 
 import GUI.FORM_DATA;
 import GUI.Request;
-
+import GUI.TYPE;
+import org.apache.http.Header;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 import java.util.Scanner;
 
-import java.util.Date;
+public class HeadMethod {
 
-import GUI.TYPE;
-import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
-
-
-
-
-public class GetMethod {
-    private Request getRequest;
+    private Request headRequest;
     //afterwards we can put an Array list of responses so that we have the history of the request
     //but for that definitely have in mind the edit action on the request
 
 
-    public GetMethod(Request getRequest) {
-        this.getRequest = getRequest;
+    public HeadMethod(Request headRequest) {
+        this.headRequest = headRequest;
     }
 
-    public void executeGet(String outPutFile, boolean followRedirect, boolean showresponseHeaders) {
-        //first make sure the getRequest ahs been created
-        if (getRequest == null) {
-            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Cannot execute the Get Request");
+    public void executeHead(String outPutFile, boolean followRedirect, boolean showresponseHeaders) {
+        //first make sure the headRequest has been created
+        if (headRequest == null) {
+            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Cannot execute the Head Request");
             return;
         }
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         //we make sure the user has given a url
-        if (getRequest.getUrl()==null || getRequest.getUrl().length() == 0) {
+        if (headRequest.getUrl()==null || headRequest.getUrl().length() == 0) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " The url field is empty");
             return;
         }
         try {
             //-H and --headers option handled
-            HttpGet httpGet = new HttpGet(getRequest.getUrl());
+            HttpHead httpHead = new HttpHead(headRequest.getUrl());
 
-            if (getRequest.getHeaderInfo() != null) {
-                for (int i = 0; i < getRequest.getHeaderInfo().size(); i++) {
-                    if (getRequest.getHeaderInfo().get(i)[0] != null && getRequest.getHeaderInfo().get(i)[1] != null && getRequest.getHeaderInfo().get(i)[2].equals("true")) {
-                        httpGet.addHeader(getRequest.getHeaderInfo().get(i)[0], getRequest.getHeaderInfo().get(i)[1]);
+            if (headRequest.getHeaderInfo() != null) {
+                for (int i = 0; i < headRequest.getHeaderInfo().size(); i++) {
+                    if (headRequest.getHeaderInfo().get(i)[0] != null && headRequest.getHeaderInfo().get(i)[1] != null && headRequest.getHeaderInfo().get(i)[2].equals("true")) {
+                        httpHead.addHeader(headRequest.getHeaderInfo().get(i)[0], headRequest.getHeaderInfo().get(i)[1]);
                     }
                 }
             }
 
-            CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
+            CloseableHttpResponse httpResponse = httpClient.execute(httpHead);
 
-            System.out.println("GET Response Status:: "
+            System.out.println("HEAD Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
 
 
@@ -80,7 +65,6 @@ public class GetMethod {
                 System.out.println("empty Response");
                 return;
             }
-
             String inputLine;
             StringBuffer response = new StringBuffer();
 
@@ -158,8 +142,8 @@ public class GetMethod {
         } catch (IOException exception) {
             //the methods: execute/ getContent / readLine / close
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file ");
-        }catch (NullPointerException exception){
-            System.out.println("here");
+//        }catch (NullPointerException exception){
+//            System.out.println("here");
         }
     }
 
@@ -168,7 +152,7 @@ public class GetMethod {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy--MM--dd hh-mm-ss");
         Date date = new Date();
         String nameOfOutputFile="output_["+formatter.format(date)+"].txt";
-        Request testGetRequest = new Request("nameOfRequest" , TYPE.GET, url, FORM_DATA.FORM_URL);
+        Request testheadRequest = new Request("nameOfRequest" , TYPE.HEAD, url, FORM_DATA.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
         String[] header1 = {"Header1", "Value1", "true"};
         String[] header2 = {"Header2", "Value2", "true"};
@@ -176,10 +160,9 @@ public class GetMethod {
         headers.add(header1);
         headers.add(header2);
         headers.add(header3);
-        testGetRequest.setHeaderInfo(headers);
-        GetMethod testgetMethod = new GetMethod(testGetRequest);
-        testgetMethod.executeGet(nameOfOutputFile, true, true);
+        testheadRequest.setHeaderInfo(headers);
+        HeadMethod testheadMethod = new HeadMethod(testheadRequest);
+        testheadMethod.executeHead(nameOfOutputFile, true, true);
     }
-
 
 }
