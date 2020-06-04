@@ -1,74 +1,66 @@
 package Conection;
 
-import GUI.FORM_DATA;
-import GUI.Request;
-
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 import java.util.Scanner;
 
-import java.util.Date;
-
+import GUI.FORM_DATA;
+import GUI.Request;
 import GUI.TYPE;
-import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 
 
+public class DeleteMethod {
 
 
-public class GetMethod {
-    private Request getRequest;
+    private Request deleteRequest = null ;
     //afterwards we can put an Array list of responses so that we have the history of the request
     //but for that definitely have in mind the edit action on the request
 
 
-    public GetMethod(Request getRequest) {
-        this.getRequest = getRequest;
+    public DeleteMethod(Request deleteRequest) {
+        this.deleteRequest = deleteRequest ;
     }
 
-    public void executeGet(String outPutFile, boolean followRedirect, boolean showresponseHeaders) {
+    public void executeDelete(String outPutFile, boolean followRedirect, boolean showresponseHeaders){
+
         //first make sure the getRequest ahs been created
-        if (getRequest == null) {
+        if (deleteRequest == null) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Cannot execute the Get Request");
             return;
         }
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         //we make sure the user has given a url
-        if (getRequest.getUrl()==null || getRequest.getUrl().length() == 0) {
+        if (deleteRequest.getUrl()==null || deleteRequest.getUrl().length() == 0) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " The url field is empty");
             return;
         }
         try {
             //-H and --headers option handled
-            HttpGet httpGet = new HttpGet(getRequest.getUrl());
+            HttpDelete httpGet = new HttpDelete(deleteRequest.getUrl());
 
-            if (getRequest.getHeaderInfo() != null) {
-                for (int i = 0; i < getRequest.getHeaderInfo().size(); i++) {
-                    if (getRequest.getHeaderInfo().get(i)[0] != null && getRequest.getHeaderInfo().get(i)[1] != null && getRequest.getHeaderInfo().get(i)[2].equals("true")) {
-                        httpGet.addHeader(getRequest.getHeaderInfo().get(i)[0], getRequest.getHeaderInfo().get(i)[1]);
+            if (deleteRequest.getHeaderInfo() != null) {
+                for (int i = 0; i < deleteRequest.getHeaderInfo().size(); i++) {
+                    if (deleteRequest.getHeaderInfo().get(i)[0] != null && deleteRequest.getHeaderInfo().get(i)[1] != null && deleteRequest.getHeaderInfo().get(i)[2].equals("true")) {
+                        httpGet.addHeader(deleteRequest.getHeaderInfo().get(i)[0], deleteRequest.getHeaderInfo().get(i)[1]);
                     }
                 }
             }
 
             CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
 
-            System.out.println("GET Response Status:: "
+            System.out.println("DELETE Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
 
 
@@ -79,7 +71,7 @@ public class GetMethod {
             StringBuffer response = new StringBuffer();
 
             while ((inputLine = reader.readLine()) != null) {
-                response.append(inputLine);
+                response.append(inputLine+"\n");
             }
             reader.close();
 
@@ -93,16 +85,6 @@ public class GetMethod {
                     System.out.println("Key : " + header.getName() + " ,Value : " + header.getValue());
                 }
             }
-
-//            System.out.println("\033[0;31m"+" What does the next code? " + "\033[0m");
-//            System.out.println("\nGet Response Header By Key ...\n");
-//            String server = httpResponse.getFirstHeader("Server").getValue();
-//
-//            if (server == null) {
-//                System.out.println("Key 'Server' is not found!");
-//            } else {
-//                System.out.println("Server - " + server);
-//            }
 
             if (outPutFile == null || outPutFile.length() == 0) {
                 System.out.println(response.toString());
@@ -157,23 +139,25 @@ public class GetMethod {
         }
     }
 
+
     public static void main(String[] args) {
+
         String url = "" + (new Scanner(System.in)).nextLine();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy--MM--dd hh-mm-ss");
         Date date = new Date();
         String nameOfOutputFile="output_["+formatter.format(date)+"].txt";
-        Request testGetRequest = new Request("nameOfRequest" , TYPE.GET, url, FORM_DATA.FORM_URL);
+        Request testDeleteRequest = new Request("nameOfRequest" , TYPE.GET, url, FORM_DATA.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
         String[] header1 = {"Header1", "Value1", "true"};
-        String[] header2 = {"Header2", "Value2", "true"};
+        String[] header2 = {"Header2", "Value2", "false"};
         String[] header3 = {"Header3", "Value3", "true"};
         headers.add(header1);
         headers.add(header2);
         headers.add(header3);
-        testGetRequest.setHeaderInfo(headers);
-        GetMethod testgetMethod = new GetMethod(testGetRequest);
-        testgetMethod.executeGet(nameOfOutputFile, true, true);
-    }
+        testDeleteRequest.setHeaderInfo(headers);
+        DeleteMethod testDeleteMethod = new DeleteMethod(testDeleteRequest);
+        testDeleteMethod .executeDelete(nameOfOutputFile, true, true);
 
+    }
 
 }

@@ -33,7 +33,7 @@ public class PutMethod {
 
     private Request putRequest;
     //afterwards we can put an Array list of responses so that we have the history of the request
-    //but for that definitly have in mind the edit action on the request
+    //but for that definitely have in mind the edit action on the request
 
 
     public PutMethod(Request putRequest) {
