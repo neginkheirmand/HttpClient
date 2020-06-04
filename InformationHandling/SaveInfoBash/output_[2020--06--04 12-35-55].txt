@@ -1,0 +1,9 @@
+Key : Server ,Value : nginx/1.14.2
+Key : Content-Type ,Value : text/plain; charset=UTF-8
+Key : Transfer-Encoding ,Value : chunked
+Key : Vary ,Value : Accept-Encoding
+Key : X-Request-Id ,Value : c6c90c11-699c-4e21-b786-c17c5cbb85d2
+Key : X-Token-Id ,Value : d476bb71-fb13-4ceb-ab31-7923e71d3b18
+Key : Cache-Control ,Value : no-cache, private
+Key : Date ,Value : Thu, 04 Jun 2020 08:05:57 GMT
+Key : Set-Cookie ,Value : laravel_session=rgHJsJWf3VOt7lkxaceimigYIFYecbytvpwk4afM; expires=Thu, 04-Jun-2020 10:05:57 GMT; Max-Age=7200; path=/; httponly
