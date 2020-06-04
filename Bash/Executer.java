@@ -1,61 +1,79 @@
 package Bash;
 
+import Conection.*;
 import GUI.Request;
-
-import java.io.File;
-import java.util.ArrayList;
+import GUI.TYPE;
 
 public class Executer {
 
+    public Executer(Request request, Command command){
+
+        if(request==null||command==null){
+            System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Problem with the request, try again");
+            return;
+        }else if(request.getTypeOfRequest().equals(TYPE.GET)){
+            executerGet(request, command);
+        }else if(request.getTypeOfRequest().equals(TYPE.POST)){
+            executerPost(request, command);
+        }else if(request.getTypeOfRequest().equals(TYPE.PUT)){
+            executerPut(request, command);
+        }else if(request.getTypeOfRequest().equals(TYPE.PATCH)){
+            executerPatch(request, command);
+        }else if(request.getTypeOfRequest().equals(TYPE.OPTION)){
+            executerOption(request, command);
+        }else if(request.getTypeOfRequest().equals(TYPE.DELETE)){
+            executerDelete(request, command);
+        }else if(request.getTypeOfRequest().equals(TYPE.HEAD)){
+            executerHead(request, command);
+        }else{
+            System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Problem with the request, try again");
+            return;
+        }
+
+    }
+
 
     /**
-     * this method is for command like "curl -o "nameOfOutPutFile" -M GET -d "some valid message body here"
-     * @param request
-     * @param nameOutPut
-     * @param messageBody
+     * this method executes the get requests
+     * @param request the request to be done
+     * @param command the command containing more info about the request
      */
-    public void executerGet(Request request, String nameOutPut, ArrayList<String[]> messageBody){
-
-    }
-
-    /**
-     * this method is for get requests with the command "curl -M GET -j "some valid json message body" -o "OutPutFileName" "
-     * @param request
-     * @param nameOutPut
-     * @param jsonBody
-     */
-    public void executerGet(Request request, String nameOutPut, String jsonBody){
-
+    private void executerGet(Request request, Command command){
+        GetMethod newGetMethod = new GetMethod(request);
+        newGetMethod.executeGet(request.getNameOutPutContainer(), request.getFollowRedirect(), command.getShowHeaders());
     }
 
 
-    /**
-     * this me
-     * @param request
-     * @param nameOutPut
-     * @param uploadFile
-     */
-    public void executerGet(Request request, String nameOutPut, File uploadFile){
-
+    private void executerPost(Request request, Command command){
+        PostMethod newPostMethod = new PostMethod(request);
+        newPostMethod.executePost(request.getNameOutPutContainer(), request.getFollowRedirect(), command.getShowHeaders());
     }
 
 
-    public void executerPost(){
-
+    private void executerPut(Request request, Command command){
+        PutMethod newPostMethod = new PutMethod(request);
+        newPostMethod.executePut(request.getNameOutPutContainer(), request.getFollowRedirect(), command.getShowHeaders());
     }
 
 
-    public void executerPut(){
-
+    private void executerPatch(Request request, Command command){
+        PatchMethod newPostMethod = new PatchMethod(request);
+        newPostMethod.executePatch(request.getNameOutPutContainer(), request.getFollowRedirect(), command.getShowHeaders());
     }
 
-
-    public void executerPatch(){
-
+    private void executerOption(Request request, Command command){
+        OptionMethod newPostMethod = new OptionMethod(request);
+        newPostMethod.executeOption(request.getNameOutPutContainer(), request.getFollowRedirect(), command.getShowHeaders());
     }
 
-    public void executerDelete(){
+    private void executerDelete(Request request, Command command){
+        DeleteMethod newPostMethod = new DeleteMethod(request);
+        newPostMethod.executeDelete(request.getNameOutPutContainer(), request.getFollowRedirect(), command.getShowHeaders());
+    }
 
+    private void executerHead(Request request, Command command){
+        HeadMethod newPostMethod = new HeadMethod(request);
+        newPostMethod.executeHead(request.getNameOutPutContainer(), request.getFollowRedirect(), command.getShowHeaders());
     }
 
 }

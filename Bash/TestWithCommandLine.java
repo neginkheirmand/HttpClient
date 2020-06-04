@@ -12,7 +12,7 @@ public class TestWithCommandLine {
             input += args[i] + " ";
         }
         System.out.println(input);
-        new Command(input);
+        new Command(input, true);
 
 
     }

@@ -32,6 +32,13 @@ public class Request {
     private ArrayList<String[]> headerInfo = null;
     //this if this request is saved or not
     private boolean saved = false;
+
+    //the outputFile if any, if not will remain as ""
+    private String nameOutPutContainer = "";
+    //the follow redirect
+    private boolean followRedirect = false;
+
+
     //a pointer to the list of the Requests
     private static ArrayList<Request> listOfrequests;
 
@@ -275,6 +282,21 @@ public class Request {
         }
     }
 
+    public void setFollowRedirect(boolean followRedirect) {
+        this.followRedirect = followRedirect;
+    }
+
+    public boolean getFollowRedirect() {
+        return followRedirect;
+    }
+
+    public void setNameOutPutContainer(String nameOutPutContainer) {
+        this.nameOutPutContainer = nameOutPutContainer;
+    }
+
+    public String getNameOutPutContainer() {
+        return nameOutPutContainer;
+    }
 
     public static void setListOfrequests(ArrayList<Request> list){
         listOfrequests = list;
@@ -283,6 +305,7 @@ public class Request {
     public static ArrayList<Request> getListOfrequests(){
         return listOfrequests;
     }
+
 
 
     public static void main(String[] args) {

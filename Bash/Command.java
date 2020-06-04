@@ -17,6 +17,7 @@ public class Command {
     private static ArrayList<Command> savedRequests = new ArrayList<>();
     private Request request;
     private boolean showHeaders =false;
+    private boolean commandLine = true;
 
     //the last command was a list command
     private static boolean list = false;
@@ -25,8 +26,7 @@ public class Command {
     public Command(String input, boolean commandLine) {
         //must set Request field later in the do command method
         request = new Request();
-        //INO BADAN BARDAR
-        savedRequests.add(this);
+        this.commandLine = commandLine;
 
 //        this.numCommand = numCommand;
 //        this.strCommand = strCommand;
@@ -152,41 +152,45 @@ public class Command {
             try {
                 int numCommand = Integer.parseInt(strCommand.get(i));
                 if (numCommand > savedRequests.size() || numCommand <= 0) {
-                    System.out.println("enter a valid command number, the list of requests has only " + savedRequests.size() + " requests");
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"enter a valid command number, the list of requests has only " + savedRequests.size() + " requests");
                     list = true;
                     return;
                 }
                 doMethod(savedRequests.get(numCommand - 1));
             } catch (NumberFormatException exception) {
-                System.out.println("after the fire word the Command-Number should be written");
+                System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" After the fire word the Command-Number should be written");
                 list = true;
                 return;
             }
         }
     }
 
-    private void doMethod(Command commandToDo) {
-
-        boolean save = false;
+    private static void doMethod(Command commandToDo) {
 
         //the first word in the command was curl
         //the second one should be the url
         //get the url
-        String urlAddress = "";
-        for(int i =1; i<commandToDo.getNumCommand().size(); i++){
+        if(commandToDo.numBodyType()>1){
+            System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Cannot have more than 1 type of message body");
+            return;
+        }
+
+        for(int i = 1; i<commandToDo.getNumCommand().size(); i++){
             if(commandToDo.getNumCommand().get(i)==-1){
+                String urlAddress = "";
                 if(urlAddress.length()==0){
                     //the url was not defined this is the url
                     urlAddress = commandToDo.getStrCommand().get(i);
-                }else{
-                    System.out.println("too many arguments for the specified options, try again.");
-                    return;
+                    commandToDo.getRequest().setUrl(urlAddress);
+//                }else{
+//                    System.out.println("too many arguments for the specified options, try again.");
+//                    return;
                 }
             }else if(commandToDo.getNumCommand().get(i)==0) {
                 //specify the method -M and --method
                 //this option takes the next word too so we have to make sure there actually is a next word
-                if (i == commandToDo.getNumCommand().size()-1) {
-                    System.out.println("after -M/--method comes the type of method");
+                if (i == commandToDo.getNumCommand().size()-1 || commandToDo.getNumCommand().get(i+1)!=-1) {
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"after -M/--method comes the type of method");
                     System.out.println("methods supported:");
                     System.out.println("POST\nPATCH\nPUT\nDELETE\nGET\nHEAD\nOPTION");
                     System.out.println("try again!");
@@ -196,47 +200,47 @@ public class Command {
                     TYPE methodOfRequest = TYPE.getTYPE(commandToDo.getStrCommand().get(i));
                     if(methodOfRequest == null){
                         //invalid method name
-                        System.out.println("invalid method name");
+                        System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"invalid method name");
                         System.out.println("methods supported:");
                         System.out.println("POST\nPATCH\nPUT\nDELETE\nGET\nHEAD\nOPTION");
                         System.out.println("try again!");
                         return;
                     }
                     //here we are sure the user entered a valid method so we set the method
-                    request.setType(methodOfRequest);
+                    commandToDo.getRequest().setType(methodOfRequest);
                     //the method was set
                 }
             }else if(commandToDo.getNumCommand().get(i)==1){
                 //its the headers : -H / --headers
                 //this input option comes and after it the name o header and value come as an string
                 //so we make sure actually is a next word in the String of the input
-                if(i==commandToDo.getNumCommand().size()-1){
-                    System.out.println("no headers specified\nPlease try again!");
+                if(i==commandToDo.getNumCommand().size()-1 || commandToDo.getNumCommand().get(i+1)!=-1){
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"no headers specified\nPlease try again!");
                     return;
                 }
                 //in between " " (double quotation) and separated with ; (semicolon)
                 i++;
-                ArrayList<String[]> headerOfrequest = splitHeader(commandToDo.getStrCommand().get(i));
+                ArrayList<String[]> headerOfrequest = commandToDo.splitHeader(commandToDo.getStrCommand().get(i));
                 //now to make sure the input is as expected:
                 if(headerOfrequest==null){
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"Invalid headers");
                     return;
                 }
-                request.setHeaderInfo(headerOfrequest);
+                commandToDo.getRequest().setHeaderInfo(headerOfrequest);
 
                 //the header was specified
             }else if(commandToDo.getNumCommand().get(i)==2){
                 //the -i/--include option
                 //when this option is in the request command the response of this request must show
-                showHeaders=true;
+                commandToDo.showHeaders=true;
             }else if(commandToDo.getNumCommand().get(i)==3){
                 //the -h/-help command
                 System.out.println("\033[0;32m"+"Usage: curl [options...] <url>\n"+"\033[0m");
 
                 // -d
-                System.out.println("\033[0;32m"+"-d"+"\033[0m"+", --data <data>   HTTP POST data\n" +
-                        "\033[0;32m"+"no support for this"+"\033[0m"+
+                System.out.println("\033[0;32m"+"-d, --data"+"\033[0m"+" <data>   HTTP POST data\n" +
                         "     --data-binary <data> HTTP POST binary data\n" +
-                        "     --data-urlencode <data> HTTP POST data url encoded\n");
+                        "     --data-urlencoded <data> HTTP POST data url encoded\n");
                 //-f
                 System.out.println("-f, --follow        follow redirection");
                 //fire
@@ -260,15 +264,16 @@ public class Command {
                 //--upload
                 System.out.println("--upload  <absolute path>          upload existing file using its absolute path");
             }else if(commandToDo.getNumCommand().get(i)==4){
+                commandToDo.getRequest().setFollowRedirect(true);
                 System.out.println("follow redirect still not working");
             }else if(commandToDo.getNumCommand().get(i)==5){
+                //-O
                 //put the response of the request in a file
                 //in this case we have to check if the next word in the command is the name of the file or the next option to imply
                 //first we see if there is any other word in the command after this one
                 String nameOfOutputFile = "";
                 if(i==commandToDo.getNumCommand().size()-1 || commandToDo.getNumCommand().get(i+1)!=-1){
                     //its the last one so the name of the file will be chosen automatically
-
                     SimpleDateFormat formatter = new SimpleDateFormat("ss--MM--hh--dd-MM-yyyy");
                     Date date = new Date();
                     nameOfOutputFile="output_["+formatter.format(date)+"]";
@@ -284,14 +289,14 @@ public class Command {
                     }
                 }
 
+                commandToDo.getRequest().setNameOutPutContainer(nameOfOutputFile);
+
                 //put in output file with the specified name
-                System.out.println("-O option still not working but the name of the file has been chosen as"+ "\033[0;31m " +nameOfOutputFile+"\033[0m");
+                System.out.println("the name of the file has been chosen as"+ "\033[0;31m " +nameOfOutputFile+"\033[0m");
                 System.out.println("by the way i dont really know what to put in the end of the name (what kind of file ex: .txt)");
-                continue;
-                //?
             }else if(commandToDo.getNumCommand().get(i)==6){
                 //-s the save
-                save = true;
+                commandToDo.getRequest().setSaved(true);
                 //remember to do the save in the end
             }else if(commandToDo.getNumCommand().get(i)==7){
                 //-d
@@ -312,12 +317,14 @@ public class Command {
                 }else{
                     System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"wrong command, pay attention to the -d option");
                 }
-                ArrayList<String[]> formData = splitData(messageBody);
+                ArrayList<String[]> formData = commandToDo.splitData(messageBody);
                 if(formData==null){
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Invalid body");
                     return;
                 }
                 //so we are sure we actually have an valid message body in multipart format
-                System.out.println("valid message body\n NOW FOR GODS SAKE DO SOMETHING HERE");
+                System.out.println("valid message body");
+                commandToDo.getRequest().setFormDataInfo(formData);
             }else if(commandToDo.getNumCommand().get(i)==8){
                 //-j
                 //we should take the input
@@ -341,10 +348,7 @@ public class Command {
                     return;
                 }
                 //now we have the json object
-                System.out.println("here we have to do the request");
-
-
-
+                commandToDo.getRequest().setFormDataInfo(jsonMsBody);
             }else if(commandToDo.getNumCommand().get(i)==9){
                 //--upload
                 //in this part we wil be uploading a bin file
@@ -352,15 +356,17 @@ public class Command {
                 if(commandToDo.getNumCommand().size()-1==i){
                     //we are in the last word/option of the command
                     //so the user has to enter the path of file in the next line
-                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" used --upload option but did not specified the path of file.");
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Used --upload option but did not specified the path of file.");
                 }else if(commandToDo.getNumCommand().get(i+1)==-1){
                     //the next string in the input is the json
                     pathOfFile = commandToDo.getStrCommand().get(i+1);
+                }else{
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Used --upload option but did not specified the path of file.");
                 }
                 File file = new File(pathOfFile);
                 if(file.exists() && file.isFile()){
                     System.out.println("the file exist, HERE WE HAVE TO UPLOAD IT");
-                    request.setFormDataInfo(file.getAbsolutePath());
+                    commandToDo.getRequest().setFormDataInfo(file.getAbsolutePath());
                 }else if(file.exists() && file.isDirectory()){
                     System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" invalid path -pointing to directory-");
                     return;
@@ -370,39 +376,89 @@ public class Command {
                 }
             }
         }
-        if(save){
+        if(commandToDo.getRequest().isSaved()){
             //gotta save the file
-            savedRequests.add(this);
+            savedRequests.add(commandToDo);
         }
-        System.out.println("this command should be done:");
-        System.out.println(commandToDo.getNumCommand());
-        System.out.println(commandToDo.getStrCommand());
-        System.out.println(commandToDo.getRequest());
+        new Executer(commandToDo.getRequest(), commandToDo);
     }
 
-    public ArrayList<String[]> splitHeader(String input){
+    private int numBodyType(){
+        int num=0;
+        for(int i=0; i<numCommand.size(); i++){
+            if(numCommand.get(i)==7 || numCommand.get(i)==8 || numCommand.get(i)==9 ){
+                num++;
+            }
+        }
+        return num;
+    }
+
+    public boolean getShowHeaders() {
+        return showHeaders;
+    }
+
+    //stil not sure if it actually works
+    private ArrayList<String[]> splitHeader(String input){
 //        System.out.println("[0]="+input.charAt(0));
 //        System.out.println("[n-1]="+input.charAt(input.length()-1));
-        if(input.length()==0){
-            System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" did not enter headers but specified option -H/--headers");
-            return null;
-        }
-        if(input.charAt(0)!='\"' || input.charAt(input.length()-1)!='\"'){
-            System.out.println("invalid header input, should be in between \" \" and each pair of" +
-                    "\nheader and value separated with ; (semicolon) with no spaces in between");
-            System.out.println("ex:\n\"header1=value1;header2=value2\"");
-            return null;
-        }
         ArrayList<String[]> headers = new ArrayList<>();
-        String[] pair = new String[3];
-        String temp = "";
-        int pairNum=0;
-        for(int i=1; i<input.length()-1; i++){
-            //all the pairs are enabled so the pair[2] is "true"
-            if( input.charAt(i)!='=' && input.charAt(i)!=';' ){
-                temp+=input.charAt(i);
-                if( i==input.length()-2){
-                    if(pairNum==1 && temp.length()!=0) {
+        if(!commandLine) {
+            if (input.length() == 0) {
+                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " did not enter headers but specified option -H/--headers");
+                return null;
+            }
+            if (input.charAt(0) != '\"' || input.charAt(input.length() - 1) != '\"') {
+                System.out.println("invalid header input, should be in between \" \" and each pair of" +
+                        "\nheader and value separated with ; (semicolon) with no spaces in between");
+                System.out.println("ex:\n\"header1=value1;header2=value2\"");
+                return null;
+            }
+            String[] pair = new String[3];
+            String temp = "";
+            int pairNum = 0;
+            for (int i = 1; i < input.length() - 1; i++) {
+                //all the pairs are enabled so the pair[2] is "true"
+                if (input.charAt(i) != '=' && input.charAt(i) != ';') {
+                    temp += input.charAt(i);
+                    if (i == input.length() - 2) {
+                        if (pairNum == 1 && temp.length() != 0) {
+                            pair[1] = temp;
+                            //gotta ad it to the arraylist
+                            pair[2] = "true";
+                            headers.add(pair);
+                            pair = new String[3];
+                            temp = "";
+                            pairNum = 0;
+                        } else if (temp.length() == 0) {
+                            System.out.println("You cannot have an empty string as value");
+                            return null;
+                        } else {
+                            System.out.println("in between info and corresponding value there should be a = not a ; ");
+                            System.out.println("You cannot have an empty string as value");
+                            return null;
+                        }
+                    }
+
+                } else if (input.charAt(i) == '=') {
+                    //should enter this state at pairNum==0
+                    if (pairNum == 0 && temp.length() != 0) {
+                        pair[0] = temp;
+                        temp = "";
+                        pairNum++;
+                    } else if (temp.length() == 0) {
+                        System.out.println("You cannot have an empty string as header name");
+                        return null;
+                    } else {
+                        System.out.println("invalid pair of header name and value, each pair separated by ; not =");
+                        System.out.println("You cannot have an empty string as header name");
+                        return null;
+                    }
+                } else if (input.charAt(i) == ';' || i == input.length() - 2) {
+                    //should enter this in state pairNum==1
+                    //here we have to check if the temp is made only with spaces
+                    //we are gonna take out the spaces
+
+                    if (pairNum == 1 && temp.length() != 0) {
                         pair[1] = temp;
                         //gotta ad it to the arraylist
                         pair[2] = "true";
@@ -410,76 +466,147 @@ public class Command {
                         pair = new String[3];
                         temp = "";
                         pairNum = 0;
-                    }else if(temp.length()==0){
+                    } else if (temp.length() == 0) {
                         System.out.println("You cannot have an empty string as value");
                         return null;
-                    }else{
+                    } else {
                         System.out.println("in between info and corresponding value there should be a = not a ; ");
                         System.out.println("You cannot have an empty string as value");
                         return null;
                     }
                 }
+            }
+        }else{
 
-            }else if(input.charAt(i)=='=') {
-                //should enter this state at pairNum==0
-                if(pairNum==0 && temp.length()!=0) {
-                    pair[0] = temp;
-                    temp = "";
-                    pairNum++;
-                }else if(temp.length()==0){
-                    System.out.println("You cannot have an empty string as header name");
-                    return null;
-                }else{
-                    System.out.println("invalid pair of header name and value, each pair separated by ; not =");
-                    System.out.println("You cannot have an empty string as header name");
-                    return null;
-                }
-            }else if(input.charAt(i)==';' || i==input.length()-2){
-                //should enter this in state pairNum==1
-                //here we have to check if the temp is made only with spaces
-                //we are gonna take out the spaces
+            if (input.length() == 0) {
+                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " did not enter headers but specified option -H/--headers");
+                return null;
+            }
+            String[] pair = new String[3];
+            String temp = "";
+            int pairNum = 0;
+            for (int i = 0 ; i < input.length() ; i++) {
+                //all the pairs are enabled so the pair[2] is "true"
+                if (input.charAt(i) != '=' && input.charAt(i) != ';') {
+                    temp += input.charAt(i);
+                    if (i == input.length() - 2) {
+                        if (pairNum == 1 && temp.length() != 0) {
+                            pair[1] = temp;
+                            //gotta ad it to the arraylist
+                            pair[2] = "true";
+                            headers.add(pair);
+                            pair = new String[3];
+                            temp = "";
+                            pairNum = 0;
+                        } else if (temp.length() == 0) {
+                            System.out.println("You cannot have an empty string as value");
+                            return null;
+                        } else {
+                            System.out.println("in between info and corresponding value there should be a = not a ;");
+                            System.out.println("You cannot have an empty string as value");
+                            return null;
+                        }
+                    }
 
-                if(pairNum==1 && temp.length()!=0) {
-                    pair[1] = temp;
-                    //gotta ad it to the arraylist
-                    pair[2] = "true";
-                    headers.add(pair);
-                    pair = new String[3];
-                    temp = "";
-                    pairNum = 0;
-                }else if(temp.length()==0){
-                    System.out.println("You cannot have an empty string as value");
-                    return null;
-                }else{
-                    System.out.println("in between info and corresponding value there should be a = not a ; ");
-                    System.out.println("You cannot have an empty string as value");
-                    return null;
+                } else if (input.charAt(i) == '=') {
+                    //should enter this state at pairNum==0
+                    if (pairNum == 0 && temp.length() != 0) {
+                        pair[0] = temp;
+                        temp = "";
+                        pairNum++;
+                    } else if (temp.length() == 0) {
+                        System.out.println("You cannot have an empty string as header name");
+                        return null;
+                    } else {
+                        System.out.println("invalid pair of header name and value, each pair separated by ; not = ");
+                        System.out.println("You cannot have an empty string as header name");
+                        return null;
+                    }
+                } else if (input.charAt(i) == ';' || i == input.length() - 2) {
+                    //should enter this in state pairNum==1
+                    //here we have to check if the temp is made only with spaces
+                    //we are gonna take out the spaces
+
+                    if (pairNum == 1 && temp.length() != 0) {
+                        pair[1] = temp;
+                        //gotta ad it to the arraylist
+                        pair[2] = "true";
+                        headers.add(pair);
+                        pair = new String[3];
+                        temp = "";
+                        pairNum = 0;
+                    } else if (temp.length() == 0) {
+                        System.out.println("You cannot have an empty string as value ");
+                        return null;
+                    } else {
+                        System.out.println("in between info and corresponding value there should be a = not a ;");
+                        System.out.println("You cannot have an empty string as value");
+                        return null;
+                    }
                 }
             }
+
         }
+
+
         return headers;
     }
 
-    public ArrayList<String[]> splitData(String input){
-        if(input.length()==0){
-            System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" did not enter the message body but specified option -d/--data");
-            return null;
-        }
-        if(input.charAt(0)!='\"' || input.charAt(input.length()-1)!='\"'){
-            System.out.println("invalid message body, should be in between \" \" separated by & with no spaces in between");
-            return null;
-        }
-        //the form data (or the urlencoded
+    //still not sure if it actually works
+    private ArrayList<String[]> splitData(String input){
         ArrayList<String[]> dataInfo = new ArrayList<>();
-        String[] pair = new String[3];
-        String temp = "";
-        int pairNum=0;
-        for(int i=1; i<input.length()-1; i++){
-            //all the pairs are enabled
-            if(input.charAt(i)!='='&&input.charAt(i)!='&'){
-                temp+=input.charAt(i);
-                if( i==input.length()-2){
-                    if(pairNum==1 && temp.length()!=0) {
+        if(!commandLine) {
+            if (input.length() == 0) {
+                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " did not enter the message body but specified option -d/--data");
+                return null;
+            }
+            if (input.charAt(0) != '\"' || input.charAt(input.length() - 1) != '\"') {
+                System.out.println("invalid message body, should be in between \" \" separated by & with no spaces in between");
+                return null;
+            }
+            //the form data (or the urlencoded
+            String[] pair = new String[3];
+            String temp = "";
+            int pairNum = 0;
+            for (int i = 1; i < input.length() - 1; i++) {
+                //all the pairs are enabled
+                if (input.charAt(i) != '=' && input.charAt(i) != '&') {
+                    temp += input.charAt(i);
+                    if (i == input.length() - 2) {
+                        if (pairNum == 1 && temp.length() != 0) {
+                            pair[1] = temp;
+                            //gotta ad it to the arraylist
+                            pair[2] = "true";
+                            dataInfo.add(pair);
+                            pair = new String[3];
+                            temp = "";
+                            pairNum = 0;
+                        } else if (temp.length() == 0) {
+                            System.out.println("You cannot have an empty string as value");
+                            return null;
+                        } else {
+                            System.out.println("in between info and corresponding value there should be a = not a & ");
+                            System.out.println("You cannot have an empty string as value");
+                            return null;
+                        }
+                    }
+                } else if (input.charAt(i) == '=') {
+                    //should enter this state at pairNum==0
+                    if (pairNum == 0 && temp.length() != 0) {
+                        pair[0] = temp;
+                        temp = "";
+                        pairNum++;
+                    } else if (temp.length() == 0) {
+                        System.out.println("You cannot have an empty string as message body info");
+                        return null;
+                    } else {
+                        System.out.println("invalid message body, each pair separated by & not =");
+                        System.out.println("You cannot have an empty string as message body info");
+                        return null;
+                    }
+                } else if (input.charAt(i) == '&') {
+                    //should enter this in state pairNum==1
+                    if (pairNum == 1 && temp.length() != 0) {
                         pair[1] = temp;
                         //gotta ad it to the arraylist
                         pair[2] = "true";
@@ -487,46 +614,79 @@ public class Command {
                         pair = new String[3];
                         temp = "";
                         pairNum = 0;
-                    }else if(temp.length()==0){
+                    } else if (temp.length() == 0) {
                         System.out.println("You cannot have an empty string as value");
                         return null;
-                    }else{
+                    } else {
                         System.out.println("in between info and corresponding value there should be a = not a & ");
                         System.out.println("You cannot have an empty string as value");
                         return null;
                     }
                 }
-            }else if(input.charAt(i)=='=') {
-                //should enter this state at pairNum==0
-                if(pairNum==0 && temp.length()!=0) {
-                    pair[0] = temp;
-                    temp = "";
-                    pairNum++;
-                }else if(temp.length()==0){
-                    System.out.println("You cannot have an empty string as message body info");
-                    return null;
-                }else{
-                    System.out.println("invalid message body, each pair separated by & not =");
-                    System.out.println("You cannot have an empty string as message body info");
-                    return null;
-                }
-            }else if(input.charAt(i)=='&' ){
-                //should enter this in state pairNum==1
-                if(pairNum==1 && temp.length()!=0) {
-                    pair[1] = temp;
-                    //gotta ad it to the arraylist
-                    pair[2] = "true";
-                    dataInfo.add(pair);
-                    pair = new String[3];
-                    temp = "";
-                    pairNum = 0;
-                }else if(temp.length()==0){
-                    System.out.println("You cannot have an empty string as value");
-                    return null;
-                }else{
-                    System.out.println("in between info and corresponding value there should be a = not a & ");
-                    System.out.println("You cannot have an empty string as value");
-                    return null;
+            }
+        }else{
+            if (input.length() == 0) {
+                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " did not enter the message body but specified option -d/--data");
+                return null;
+            }
+            //the form data (or the urlencoded
+            String[] pair = new String[3];
+            String temp = "";
+            int pairNum = 0;
+            for (int i = 1; i < input.length() - 1; i++) {
+                //all the pairs are enabled
+                if (input.charAt(i) != '=' && input.charAt(i) != '&') {
+                    temp += input.charAt(i);
+                    if (i == input.length() - 2) {
+                        if (pairNum == 1 && temp.length() != 0) {
+                            pair[1] = temp;
+                            //gotta ad it to the arraylist
+                            pair[2] = "true";
+                            dataInfo.add(pair);
+                            pair = new String[3];
+                            temp = "";
+                            pairNum = 0;
+                        } else if (temp.length() == 0) {
+                            System.out.println(" You cannot have an empty string as value");
+                            return null;
+                        } else {
+                            System.out.println("in between info and corresponding value there should be a = not a & ");
+                            System.out.println("You cannot have an empty string as value");
+                            return null;
+                        }
+                    }
+                } else if (input.charAt(i) == '=') {
+                    //should enter this state at pairNum==0
+                    if (pairNum == 0 && temp.length() != 0) {
+                        pair[0] = temp;
+                        temp = "";
+                        pairNum++;
+                    } else if (temp.length() == 0) {
+                        System.out.println("You cannot have an empty string as message body info ");
+                        return null;
+                    } else {
+                        System.out.println("invalid message body, each pair separated by & not =");
+                        System.out.println("You cannot have an empty string as message body info");
+                        return null;
+                    }
+                } else if (input.charAt(i) == '&') {
+                    //should enter this in state pairNum==1
+                    if (pairNum == 1 && temp.length() != 0) {
+                        pair[1] = temp;
+                        //gotta ad it to the arraylist
+                        pair[2] = "true";
+                        dataInfo.add(pair);
+                        pair = new String[3];
+                        temp = "";
+                        pairNum = 0;
+                    } else if (temp.length() == 0) {
+                        System.out.println("You cannot have an empty string as value");
+                        return null;
+                    } else {
+                        System.out.println("in between info and corresponding value there should be a = not a &");
+                        System.out.println("You cannot have an empty string as value");
+                        return null;
+                    }
                 }
             }
         }

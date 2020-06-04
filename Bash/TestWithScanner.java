@@ -15,7 +15,7 @@ public class TestWithScanner {
             }catch (java.lang.IndexOutOfBoundsException exception){
                 System.out.println("Please enter valid input");
             }
-            new Command(input);
+            new Command(input, false);
         }
 
 

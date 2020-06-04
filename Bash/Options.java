@@ -145,11 +145,14 @@ public class Options {
 
     //first check here if everything is OK
     private void showWarnings(){
-        if(requestStringCommand.size()==0 &&requestNumberCommand.size()==0 ){
+        if(requestStringCommand.size()==0 && requestNumberCommand.size()==0 ){
             System.out.println("invalid input, try again");
         }
         if(requestNumberCommand.get(0)!=11){
             System.out.println("command should start with \"curl\"");
+        }
+        if(requestNumberCommand.get(1)!=-1){
+            System.out.println("enter url after curl");
         }
     }
 
