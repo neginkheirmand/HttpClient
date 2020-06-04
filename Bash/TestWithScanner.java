@@ -3,7 +3,7 @@ package Bash;
 import java.util.Scanner;
 
 
-public class Test {
+public class TestWithScanner {
 
     public static void main(String[] args) {
         Options newOptionIdentifier = new Options();

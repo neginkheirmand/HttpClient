@@ -10,7 +10,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Scanner;
 
 public class Command {
     private ArrayList<Integer> numCommand;
@@ -23,7 +22,7 @@ public class Command {
     private static boolean list = false;
 
 
-    public Command(String input) {
+    public Command(String input, boolean commandLine) {
         //must set Request field later in the do command method
         request = new Request();
         //INO BADAN BARDAR
@@ -33,6 +32,10 @@ public class Command {
 //        this.strCommand = strCommand;
         Options option =new Options();
         option.identifyRequestOptions(input);
+        if(commandLine){
+            //using the command line
+            System.out.println("\033[0;31m"+"Warning:"+"\033[0m"+"This version doesnt support output files with names containing the space char");
+        }
         numCommand = (option).getRequestNumberCommand();
         strCommand = (option).getRequestStringCommand();
         doCommand();
@@ -302,13 +305,12 @@ public class Command {
                 String messageBody = "";
                 if(i==commandToDo.getNumCommand().size()-1){
                     //its the last one so the body is in the next line
-                    System.out.printf("enter the message body:  ");
-                    messageBody = (new Scanner(System.in)).nextLine();
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"Used -d option but did not specify the message body");
                 }else if(commandToDo.getNumCommand().get(i+1)==-1){
                     //its the next String after this one
                     messageBody = commandToDo.getStrCommand().get(i+1);
                 }else{
-                    System.out.println("wrong command, pay attention to the -d option");
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"wrong command, pay attention to the -d option");
                 }
                 ArrayList<String[]> formData = splitData(messageBody);
                 if(formData==null){
@@ -320,11 +322,10 @@ public class Command {
                 //-j
                 //we should take the input
                 String jsonMsBody = "";
-                if(commandToDo.getNumCommand().size()-1==i){
+                if(commandToDo.getNumCommand().size()-1==i || commandToDo.getNumCommand().get(i+1)!=-1){
                     //we are in the last word/option of the command
                     //so the user has to enter the json body message in the next line
-                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" used -j/--json option but did not specified the message body, enter the message body in JSON format");
-                    jsonMsBody = (new Scanner(System.in)).nextLine();
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" used -j/--json option but did not specified the message body.");
                 }else if(commandToDo.getNumCommand().get(i+1)==-1){
                     //the next string in the input is the json
                     jsonMsBody = commandToDo.getStrCommand().get(i+1);
@@ -351,8 +352,7 @@ public class Command {
                 if(commandToDo.getNumCommand().size()-1==i){
                     //we are in the last word/option of the command
                     //so the user has to enter the path of file in the next line
-                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" used --upload option but did not specified the path of file , Please enter the path");
-                    pathOfFile = (new Scanner(System.in)).nextLine();
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" used --upload option but did not specified the path of file.");
                 }else if(commandToDo.getNumCommand().get(i+1)==-1){
                     //the next string in the input is the json
                     pathOfFile = commandToDo.getStrCommand().get(i+1);
