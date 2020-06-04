@@ -8,10 +8,11 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
+import GUI.TYPE;
 
 import java.util.Date;
 
-import GUI.TYPE;
+import org.apache.http.impl.client.*;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -36,8 +37,18 @@ public class GetMethod {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Cannot execute the Get Request");
             return;
         }
-
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpClient httpClient;
+        if(followRedirect) {
+            //method 1:
+            //the next code does show you that you are being redirected
+            httpClient = HttpClients.createDefault();
+            //method 2:
+            //the next code doesnt show you that you are being redirected
+//        httpClient =  HttpClientBuilder.create()
+//                .setRedirectStrategy(new LaxRedirectStrategy()).build();
+        }else {
+            httpClient = HttpClientBuilder.create().disableRedirectHandling().build();
+        }
         //we make sure the user has given a url
         if (getRequest.getUrl()==null || getRequest.getUrl().length() == 0) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " The url field is empty");
@@ -46,6 +57,7 @@ public class GetMethod {
         try {
             //-H and --headers option handled
             HttpGet httpGet = new HttpGet(getRequest.getUrl());
+
 
             if (getRequest.getHeaderInfo() != null) {
                 for (int i = 0; i < getRequest.getHeaderInfo().size(); i++) {
@@ -108,8 +120,8 @@ public class GetMethod {
                 //the next method sees if the parenrs of the file exist if not creates it and returnts true if already existed and false if created it
                 outputContainer.getParentFile().mkdirs();
                 if (!outputContainer.createNewFile()) {
-                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "unable to create output file");
-                    System.out.println("A file with this name already exist, do you want to over-write on it? <Y/n>");
+                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "unable to create output container file");
+                    System.out.println("A file with this name already exist, do you want to over-write it? <Y/n>");
                     String overWrite = "" +(new Scanner(System.in)).nextLine();
 
                     while( !overWrite.equals("Y") && !overWrite.equals("n") ){
@@ -146,7 +158,11 @@ public class GetMethod {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in finding available Port, Please check Your internet connection");
         } catch (IOException exception) {
             //the methods: execute/ getContent / readLine / close
-            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file ");
+            if(outPutFile==null || outPutFile.length()==0) {
+                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file ");
+            }else{
+                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Time out problem: please try again");
+            }
         }catch (NullPointerException exception){
             System.out.println("here");
         }

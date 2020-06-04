@@ -7,6 +7,7 @@ import GUI.TYPE;
 public class Executer {
 
     public Executer(Request request, Command command){
+        System.out.println("url"+request.getUrl());
 
         if(request==null||command==null){
             System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Problem with the request, try again");

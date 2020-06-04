@@ -265,7 +265,6 @@ public class Command {
                 System.out.println("--upload  <absolute path>          upload existing file using its absolute path");
             }else if(commandToDo.getNumCommand().get(i)==4){
                 commandToDo.getRequest().setFollowRedirect(true);
-                System.out.println("follow redirect still not working");
             }else if(commandToDo.getNumCommand().get(i)==5){
                 //-O
                 //put the response of the request in a file

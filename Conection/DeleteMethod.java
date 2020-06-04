@@ -17,6 +17,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 
 
@@ -40,7 +41,21 @@ public class DeleteMethod {
             return;
         }
 
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+
+
+        CloseableHttpClient httpClient;
+        if(followRedirect) {
+            //method 1:
+            //the next code does show you that you are being redirected
+            httpClient = HttpClients.createDefault();
+            //method 2:
+            //the next code doesnt show you that you are being redirected
+//        httpClient =  HttpClientBuilder.create()
+//                .setRedirectStrategy(new LaxRedirectStrategy()).build();
+        }else {
+            httpClient = HttpClientBuilder.create().disableRedirectHandling().build();
+        }
+
         //we make sure the user has given a url
         if (deleteRequest.getUrl()==null || deleteRequest.getUrl().length() == 0) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " The url field is empty");

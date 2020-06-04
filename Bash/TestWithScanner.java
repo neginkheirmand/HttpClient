@@ -12,10 +12,10 @@ public class TestWithScanner {
             String input="";
             try {
                 input = (new Scanner(System.in)).nextLine();
+                new Command(input, false);
             }catch (java.lang.IndexOutOfBoundsException exception){
                 System.out.println("Please enter valid input");
             }
-            new Command(input, false);
         }
 
 
