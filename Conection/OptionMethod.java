@@ -69,7 +69,7 @@ public class OptionMethod {
 
             CloseableHttpResponse httpResponse = httpClient.execute(httpOption);
 
-            System.out.println("GET Response Status:: "
+            System.out.println("OPTION Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
 
 
