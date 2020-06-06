@@ -245,6 +245,8 @@ public class GetMethod {
                 return ".png";
             } else if (value.contains("text/html")) {
                 return ".html";
+            } else if (value.contains("application/json")) {
+                return ".json";
             } else {
                 return ".txt";
             }
@@ -262,7 +264,9 @@ public class GetMethod {
             return ".png";
         } else if (("" + outputName.charAt(n - 5) + outputName.charAt(n - 4) + outputName.charAt(n - 3) + outputName.charAt(n - 2) + outputName.charAt(n - 1)).equals(".html")) {
             return ".html";
-        } else {
+        } else if (("" + outputName.charAt(n - 5) + outputName.charAt(n - 4) + outputName.charAt(n - 3) + outputName.charAt(n - 2) + outputName.charAt(n - 1)).equals(".json")) {
+            return ".json";
+        }else {
             return "";
         }
     }
