@@ -49,6 +49,13 @@ public class Options {
 
             requestOptions.put("fire", 12);
 
+            requestOptions.put("-a", 13);
+            requestOptions.put("--auth", 13);
+
+            requestOptions.put("-q", 14);
+            requestOptions.put("--query", 14);
+
+
         }
 
         requestNumberCommand = new ArrayList<>();
@@ -80,6 +87,8 @@ public class Options {
                     System.out.println("The most similar option is\n-j");
                 }else if(inputOption.charAt(1)=='F'){
                     System.out.println("The most similar option is\n-f");
+                }else if(inputOption.charAt(1)=='A'){
+                    System.out.println("The most similar option is\n-a");
                 }
             }else{
                 String temp = "-";

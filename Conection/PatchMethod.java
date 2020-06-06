@@ -8,6 +8,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
@@ -16,6 +17,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -44,7 +46,17 @@ public class PatchMethod {
             //Create an HttpGet object
             HttpPatch httpPatch;
             if( patchRequest.getUrl() != null && !patchRequest.getUrl().equals("") ) {
-                httpPatch = new HttpPatch(patchRequest.getUrl());
+                //creating the query parameters
+                URIBuilder builder = new URIBuilder(patchRequest.getUrl());
+
+                if(patchRequest.getQueryInfo()!=null) {
+                    for(int i=0; i<patchRequest.getQueryInfo().size(); i++){
+                        if((patchRequest.getQueryInfo().get(i)[2]).equals("true")) {
+                            builder.addParameter(patchRequest.getQueryInfo().get(i)[0], patchRequest.getQueryInfo().get(i)[1]);
+                        }
+                    }
+                }
+                httpPatch = new HttpPatch(builder.build());
             }else{
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Invalid url");
                 return;
@@ -59,8 +71,10 @@ public class PatchMethod {
                 }
             }
 
-
-
+            //--auth
+            if(patchRequest.getAuth() && patchRequest.getAuthInfo()!=null && (patchRequest.getAuthInfo()[2]).equals("true")) {
+                httpPatch.addHeader(patchRequest.getAuthInfo()[0], patchRequest.getAuthInfo()[1]);
+            }
 
             //in case its form url encoded
             if(patchRequest.getTypeOfData().equals(FORM_DATA.FORM_URL)) {
@@ -229,7 +243,9 @@ public class PatchMethod {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file ");
         }catch (NullPointerException exception){
             System.out.println("\033[0;31m" + "Error" + "\033[0m" );
-        }finally{
+        } catch (URISyntaxException e) {
+            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with the query params");
+        } finally{
             try {
                 httpclient.close();
             } catch (java.lang.IllegalArgumentException exception) {

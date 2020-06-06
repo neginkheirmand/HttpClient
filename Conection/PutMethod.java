@@ -6,6 +6,7 @@ import GUI.Request;
 import GUI.FORM_DATA;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -20,6 +21,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
@@ -54,7 +56,17 @@ public class PutMethod {
             //Create an HttpGet object
             HttpPut httpPut;
             if( putRequest.getUrl() != null && !putRequest.getUrl().equals("") ) {
-                httpPut = new HttpPut(putRequest.getUrl());
+                //creating the query parameters
+                URIBuilder builder = new URIBuilder(putRequest.getUrl());
+
+                if(putRequest.getQueryInfo()!=null) {
+                    for(int i=0; i<putRequest.getQueryInfo().size(); i++){
+                        if((putRequest.getQueryInfo().get(i)[2]).equals("true")) {
+                            builder.addParameter(putRequest.getQueryInfo().get(i)[0], putRequest.getQueryInfo().get(i)[1]);
+                        }
+                    }
+                }
+                httpPut = new HttpPut(builder.build());
             }else{
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Invalid url");
                 return;
@@ -67,6 +79,12 @@ public class PutMethod {
                         httpPut.addHeader(putRequest.getHeaderInfo().get(i)[0], putRequest.getHeaderInfo().get(i)[1]);
                     }
                 }
+            }
+
+
+            //--auth
+            if(putRequest.getAuth() && putRequest.getAuthInfo()!=null && (putRequest.getAuthInfo()[2]).equals("true")) {
+                httpPut.addHeader(putRequest.getAuthInfo()[0], putRequest.getAuthInfo()[1]);
             }
 
             //in case its form url encoded
@@ -247,7 +265,9 @@ public class PutMethod {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file ");
         }catch (NullPointerException exception){
             System.out.println("\033[0;31m" + "Error" + "\033[0m" );
-        }finally{
+        } catch (URISyntaxException e) {
+            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in setting the query params ");
+        } finally{
             try {
                 httpclient.close();
             } catch (java.lang.IllegalArgumentException exception) {

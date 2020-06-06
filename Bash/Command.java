@@ -177,11 +177,13 @@ public class Command {
 
         for(int i = 1; i<commandToDo.getNumCommand().size(); i++){
             if(commandToDo.getNumCommand().get(i)==-1){
-                String urlAddress = "";
-                if(urlAddress.length()==0){
+                if(commandToDo==null || commandToDo.getRequest()==null ){
+                    System.out.println("Problems with the request");
+                    return;
+                }
+                if( commandToDo.getRequest().getUrl()==null || commandToDo.getRequest().getUrl().length()==0 ){
                     //the url was not defined this is the url
-                    urlAddress = commandToDo.getStrCommand().get(i);
-                    commandToDo.getRequest().setUrl(urlAddress);
+                    commandToDo.getRequest().setUrl(commandToDo.getStrCommand().get(i));
 //                }else{
 //                    System.out.println("too many arguments for the specified options, try again.");
 //                    return;
@@ -351,10 +353,9 @@ public class Command {
                 String pathOfFile = "";
                 if(commandToDo.getNumCommand().size()-1==i){
                     //we are in the last word/option of the command
-                    //so the user has to enter the path of file in the next line
                     System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Used --upload option but did not specified the path of file.");
                 }else if(commandToDo.getNumCommand().get(i+1)==-1){
-                    //the next string in the input is the json
+                    //the next string in the input is the path of file
                     pathOfFile = commandToDo.getStrCommand().get(i+1);
                 }else{
                     System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Used --upload option but did not specified the path of file.");
@@ -370,6 +371,25 @@ public class Command {
                     System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"invalid path to file");
                     return;
                 }
+            }else if(commandToDo.getNumCommand().get(i)==13){
+                //-a/--auth
+                String auth = "";
+                if(commandToDo.getNumCommand().size()-1==i){
+                    //we are in the last word/option of the command
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Used -a/--auth option but did not specified the token");
+                }else if(commandToDo.getNumCommand().get(i+1)==-1){
+                    //the next string in the input is bearer token
+                    auth = commandToDo.getStrCommand().get(i+1);
+                }else{
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Used -a/--auth option but did not specified the bearer token");
+                }
+                commandToDo.getRequest().setAuth(true);
+                String[] authArray = getAuthInfo(auth, commandToDo);
+                if(authArray!=null) {
+                    commandToDo.getRequest().setAuthInfo(authArray);
+                }else{
+                    return;
+                }
             }
         }
         if(commandToDo.getRequest().isSaved()){
@@ -377,6 +397,29 @@ public class Command {
             savedRequests.add(commandToDo);
         }
         new Executer(commandToDo.getRequest(), commandToDo);
+    }
+
+    private static String[] getAuthInfo(String auth, Command commandToDo){
+        String[] authInfo= new String[3];
+        authInfo[0] = "Authorization";
+        authInfo[1]="";
+        if(auth.charAt(0)!='\"' && auth.charAt(auth.length()-1)!='\"') {
+            authInfo[1] = auth;
+        }else{
+            for(int i=1; i<auth.length()-1; i++){
+                authInfo[1]+=auth.charAt(i);
+            }
+        }
+        authInfo[2] = "true";
+        System.out.println(authInfo[1]);
+        if(authInfo[1].length()==0){
+            return null;
+        }
+        return authInfo;
+    }
+
+    private boolean getCommand(){
+        return commandLine;
     }
 
     private int numBodyType(){

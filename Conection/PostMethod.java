@@ -6,6 +6,7 @@ import GUI.TYPE;
 
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -18,12 +19,15 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
 
 public class PostMethod {
     private Request postRequest;
@@ -47,9 +51,33 @@ public class PostMethod {
 
         try{
             //Create an HttpGet object
+            //creating the query parameters
+            HttpParams queryParams = null;
+            if(postRequest.getQueryInfo()!=null) {
+                queryParams = new BasicHttpParams();
+                for(int i=0; i<postRequest.getQueryInfo().size(); i++){
+                    if((postRequest.getQueryInfo().get(i)[2]).equals("true")) {
+                        queryParams.setParameter(postRequest.getQueryInfo().get(i)[0], postRequest.getQueryInfo().get(i)[1]);
+                    }
+                }
+            }
             HttpPost httpPost;
             if( postRequest.getUrl() != null && !postRequest.getUrl().equals("") ) {
-                httpPost = new HttpPost(postRequest.getUrl());
+                //creating the query parameters
+                URIBuilder builder = new URIBuilder(postRequest.getUrl());
+
+                if(postRequest.getQueryInfo()!=null) {
+                    for(int i=0; i<postRequest.getQueryInfo().size(); i++){
+                        if((postRequest.getQueryInfo().get(i)[2]).equals("true")) {
+                            builder.addParameter(postRequest.getQueryInfo().get(i)[0], postRequest.getQueryInfo().get(i)[1]);
+                        }
+                    }
+                }
+                httpPost = new HttpPost(builder.build()) ;
+                if(queryParams!=null){
+                    System.out.println("setting params");
+                    httpPost.setParams(queryParams);
+                }
             }else{
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Invalid url");
                 return;
@@ -65,6 +93,10 @@ public class PostMethod {
             }
 
 
+            //--auth
+            if(postRequest.getAuth() && postRequest.getAuthInfo()!=null && (postRequest.getAuthInfo()[2]).equals("true")) {
+                httpPost.addHeader(postRequest.getAuthInfo()[0], postRequest.getAuthInfo()[1]);
+            }
 
 
             //in case its form url encoded
@@ -72,7 +104,6 @@ public class PostMethod {
                 List<NameValuePair> params = null;
                 if (postRequest.getFormDataInfo() != null) {
                     params = new ArrayList<NameValuePair>();
-                    System.out.println(postRequest.getFormDataInfo().getClass());
                     for (int i = 0; i < ((ArrayList<String[]>) postRequest.getFormDataInfo()).size(); i++) {
                         if (((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[2].equals("true") &&
                                 ((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[0]!=null &&
@@ -235,7 +266,9 @@ public class PostMethod {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file ");
         }catch (NullPointerException exception){
             System.out.println("\033[0;31m" + "Error" + "\033[0m" );
-        }finally{
+        } catch (URISyntaxException e) {
+            System.out.println("\033[0;31m" + "Error" + "\033[0m" + " Problems in setting the query ");
+        } finally{
             try {
                 httpclient.close();
             } catch (java.lang.IllegalArgumentException exception) {
@@ -258,16 +291,22 @@ public class PostMethod {
         String url = ""+(new Scanner(System.in)).nextLine();
         Request postRequest = new Request("nameOfRequest", TYPE.POST, url , FORM_DATA.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
-        String[] header1 = {"Header1", "Value1", "false"};
-        String[] header2 = {"Header2", "Value2", "true"};
         String[] header3 = {"Header3", "Value3", "true"};
-        headers.add(header1);
-        headers.add(header2);
         headers.add(header3);
         postRequest.setHeaderInfo(headers);
+        ArrayList<String[]> queryPatams = new ArrayList<>();
+        String[] param1 = {"bgcolor","rgb(0,0,0)", "true"};
+        String[] param2 = {"width","150", "true"};
+        String[] param3 = {"height","150", "true"};
+        String[] param4 = {"text","hello", "true"};
+        queryPatams.add(param1);
+        queryPatams.add(param2);
+        queryPatams.add(param3);
+        queryPatams.add(param4);
+        postRequest.setQueryInfo(queryPatams);
         PostMethod postCommand = new PostMethod(postRequest);
 //        postCommand.executePost("", true, true);
-        postCommand.executePost("", true, true);
+        postCommand.executePost("picture.png", true, true);
     }
 
 }

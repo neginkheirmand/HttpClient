@@ -6,11 +6,13 @@ import GUI.TYPE;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpOptions;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,7 +59,20 @@ public class OptionMethod {
         }
         try {
             //-H and --headers option handled
-            HttpOptions httpOption = new HttpOptions(optionRequest.getUrl());
+
+            //--query
+            //creating the query parameters
+            URIBuilder builder = new URIBuilder(optionRequest.getUrl());
+
+            if(optionRequest.getQueryInfo()!=null) {
+                for(int i=0; i<optionRequest.getQueryInfo().size(); i++){
+                    if((optionRequest.getQueryInfo().get(i)[2]).equals("true")) {
+                        builder.addParameter(optionRequest.getQueryInfo().get(i)[0], optionRequest.getQueryInfo().get(i)[1]);
+                    }
+                }
+            }
+
+            HttpOptions httpOption = new HttpOptions(builder.build());
 
             if (optionRequest.getHeaderInfo() != null) {
                 for (int i = 0; i < optionRequest.getHeaderInfo().size(); i++) {
@@ -66,6 +81,12 @@ public class OptionMethod {
                     }
                 }
             }
+
+            //--auth
+            if(optionRequest.getAuth() && optionRequest.getAuthInfo()!=null && (optionRequest.getAuthInfo()[2]).equals("true")) {
+                httpOption.addHeader(optionRequest.getAuthInfo()[0], optionRequest.getAuthInfo()[1]);
+            }
+
 
             CloseableHttpResponse httpResponse = httpClient.execute(httpOption);
 
@@ -191,6 +212,8 @@ public class OptionMethod {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file ");
         }catch (NullPointerException exception){
             System.out.println("here");
+        } catch (URISyntaxException e) {
+            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problems setting the query params ");
         }
     }
 

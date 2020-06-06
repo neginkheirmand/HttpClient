@@ -6,11 +6,13 @@ import GUI.TYPE;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,14 +58,33 @@ public class HeadMethod {
         }
         try {
             //-H and --headers option handled
-            HttpHead httpHead = new HttpHead(headRequest.getUrl());
 
-            if (headRequest.getHeaderInfo() != null) {
+            //creating the query parameters
+            URIBuilder builder = new URIBuilder(headRequest.getUrl());
+
+            //--query
+            if(headRequest.getQueryInfo()!=null) {
+                for(int i=0; i<headRequest.getQueryInfo().size(); i++){
+                    if((headRequest.getQueryInfo().get(i)[2]).equals("true")) {
+                        builder.addParameter(headRequest.getQueryInfo().get(i)[0], headRequest.getQueryInfo().get(i)[1]);
+                    }
+                }
+            }
+
+            HttpHead httpHead = new HttpHead(builder.build());
+
+            //--headers
+            if (headRequest.getHeaderInfo() != null ) {
                 for (int i = 0; i < headRequest.getHeaderInfo().size(); i++) {
                     if (headRequest.getHeaderInfo().get(i)[0] != null && headRequest.getHeaderInfo().get(i)[1] != null && headRequest.getHeaderInfo().get(i)[2].equals("true")) {
                         httpHead.addHeader(headRequest.getHeaderInfo().get(i)[0], headRequest.getHeaderInfo().get(i)[1]);
                     }
                 }
+            }
+
+            //--auth
+            if(headRequest.getAuth() && headRequest.getAuthInfo()!=null && (headRequest.getAuthInfo()[2]).equals("true")) {
+                httpHead.addHeader(headRequest.getAuthInfo()[0], headRequest.getAuthInfo()[1]);
             }
 
             CloseableHttpResponse httpResponse = httpClient.execute(httpHead);
@@ -180,6 +201,8 @@ public class HeadMethod {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file ");
 //        }catch (NullPointerException exception){
 //            System.out.println("here");
+        } catch (URISyntaxException e) {
+            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "Problem with the query params");
         }
     }
 

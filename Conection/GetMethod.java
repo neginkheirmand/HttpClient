@@ -5,6 +5,7 @@ import GUI.Request;
 
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -14,13 +15,15 @@ import GUI.TYPE;
 
 import java.util.Date;
 
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.*;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.Header;
-
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
 
 
 public class GetMethod {
@@ -58,16 +61,33 @@ public class GetMethod {
         }
         try {
             //-H and --headers option handled
-            HttpGet httpGet = new HttpGet(getRequest.getUrl());
+
+            //creating the query parameters
+            URIBuilder builder = new URIBuilder(getRequest.getUrl());
+
+            if(getRequest.getQueryInfo()!=null) {
+                for(int i=0; i<getRequest.getQueryInfo().size(); i++){
+                    if((getRequest.getQueryInfo().get(i)[2]).equals("true")) {
+                        builder.addParameter(getRequest.getQueryInfo().get(i)[0], getRequest.getQueryInfo().get(i)[1]);
+                    }
+                }
+            }
+
+            HttpGet httpGet = new HttpGet(builder.build());
 
 
-            if (getRequest.getHeaderInfo() != null) {
+            if (getRequest.getHeaderInfo() != null ) {
                 for (int i = 0; i < getRequest.getHeaderInfo().size(); i++) {
                     if (getRequest.getHeaderInfo().get(i)[0] != null && getRequest.getHeaderInfo().get(i)[1] != null && getRequest.getHeaderInfo().get(i)[2].equals("true")) {
                         httpGet.addHeader(getRequest.getHeaderInfo().get(i)[0], getRequest.getHeaderInfo().get(i)[1]);
                     }
                 }
+
             }
+            if(getRequest.getAuth() && getRequest.getAuthInfo()!=null && (getRequest.getAuthInfo()[2]).equals("true")) {
+                httpGet.addHeader(getRequest.getAuthInfo()[0], getRequest.getAuthInfo()[1]);
+            }
+
 
             CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
 
@@ -228,6 +248,8 @@ public class GetMethod {
             }
         }catch (NullPointerException exception){
             System.out.println("here");
+        } catch (URISyntaxException e) {
+            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " url problem");
         }
     }
 
@@ -295,15 +317,21 @@ public class GetMethod {
         String url = "" + (new Scanner(System.in)).nextLine();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy--MM--dd hh-mm-ss");
         Date date = new Date();
-        String nameOfOutputFile="output_["+formatter.format(date)+"].txt";
-        Request testGetRequest = new Request("nameOfRequest" , TYPE.GET, url, FORM_DATA.FORM_URL);
+        String nameOfOutputFile="output_["+formatter.format(date)+"]";
+        Request testGetRequest = new Request("nameOfGETRequest" , TYPE.GET, url, FORM_DATA.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
         String[] header1 = {"Header1", "Value1", "true"};
-        String[] header2 = {"Header2", "Value2", "true"};
-        String[] header3 = {"Header3", "Value3", "true"};
         headers.add(header1);
-        headers.add(header2);
-        headers.add(header3);
+        ArrayList<String[]> queryPatams = new ArrayList<>();
+        String[] param1 = {"bgcolor","rgb(0,0,255)", "true"};
+        String[] param2 = {"width","150", "true"};
+        String[] param3 = {"height","150", "true"};
+        String[] param4 = {"text","hello", "true"};
+        queryPatams.add(param1);
+        queryPatams.add(param2);
+        queryPatams.add(param3);
+        queryPatams.add(param4);
+        testGetRequest.setQueryInfo(queryPatams);
         testGetRequest.setHeaderInfo(headers);
         GetMethod testgetMethod = new GetMethod(testGetRequest);
         testgetMethod.executeGet(nameOfOutputFile, true, true);

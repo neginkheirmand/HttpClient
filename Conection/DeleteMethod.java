@@ -2,6 +2,7 @@ package Conection;
 
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +17,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
@@ -63,17 +65,35 @@ public class DeleteMethod {
         }
         try {
             //-H and --headers option handled
-            HttpDelete httpGet = new HttpDelete(deleteRequest.getUrl());
 
-            if (deleteRequest.getHeaderInfo() != null) {
-                for (int i = 0; i < deleteRequest.getHeaderInfo().size(); i++) {
-                    if (deleteRequest.getHeaderInfo().get(i)[0] != null && deleteRequest.getHeaderInfo().get(i)[1] != null && deleteRequest.getHeaderInfo().get(i)[2].equals("true")) {
-                        httpGet.addHeader(deleteRequest.getHeaderInfo().get(i)[0], deleteRequest.getHeaderInfo().get(i)[1]);
+            //creating the query parameters
+            URIBuilder builder = new URIBuilder(deleteRequest.getUrl());
+
+            if(deleteRequest.getQueryInfo()!=null) {
+                for(int i=0; i<deleteRequest.getQueryInfo().size(); i++){
+                    if((deleteRequest.getQueryInfo().get(i)[2]).equals("true")) {
+                        builder.addParameter(deleteRequest.getQueryInfo().get(i)[0], deleteRequest.getQueryInfo().get(i)[1]);
                     }
                 }
             }
 
-            CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
+            HttpDelete httpDelete = new HttpDelete(builder.build());
+
+            //--headers
+            if (deleteRequest.getHeaderInfo() != null) {
+                for (int i = 0; i < deleteRequest.getHeaderInfo().size(); i++) {
+                    if (deleteRequest.getHeaderInfo().get(i)[0] != null && deleteRequest.getHeaderInfo().get(i)[1] != null && deleteRequest.getHeaderInfo().get(i)[2].equals("true")) {
+                        httpDelete.addHeader(deleteRequest.getHeaderInfo().get(i)[0], deleteRequest.getHeaderInfo().get(i)[1]);
+                    }
+                }
+            }
+
+            //--auth
+            if(deleteRequest.getAuth() && deleteRequest.getAuthInfo()!=null && (deleteRequest.getAuthInfo()[2]).equals("true")) {
+                httpDelete.addHeader(deleteRequest.getAuthInfo()[0], deleteRequest.getAuthInfo()[1]);
+            }
+
+            CloseableHttpResponse httpResponse = httpClient.execute(httpDelete);
 
             System.out.println("DELETE Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
@@ -196,6 +216,8 @@ public class DeleteMethod {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file ");
         }catch (NullPointerException exception){
             System.out.println("here");
+        } catch (URISyntaxException e) {
+            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with the query params");
         }
     }
 
