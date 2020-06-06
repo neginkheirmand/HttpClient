@@ -231,7 +231,7 @@ public class GetMethod {
         }
     }
 
-    private String getContentType(Header[] headers, String outputName){
+    public static String getContentType(Header[] headers, String outputName){
         if(getPosFix(outputName).length()!=0){
             return getPosFix(outputName);
         }else {
@@ -251,7 +251,7 @@ public class GetMethod {
         }
     }
 
-    private String getPosFix(String outputName) {
+    public static String getPosFix(String outputName) {
         int n = outputName.length();
         if (n < 5) {
             return "";
