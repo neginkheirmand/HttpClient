@@ -5,6 +5,8 @@ import GUI.Request;
 
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -31,7 +33,7 @@ public class GetMethod {
         this.getRequest = getRequest;
     }
 
-    public void executeGet(String outPutFile, boolean followRedirect, boolean showresponseHeaders) {
+    public void executeGet(String outPutFile, boolean followRedirect, boolean showResponseHeaders) {
         //first make sure the getRequest ahs been created
         if (getRequest == null) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Cannot execute the Get Request");
@@ -73,58 +75,51 @@ public class GetMethod {
                     + httpResponse.getStatusLine().getStatusCode());
 
 
-            BufferedReader reader ;
-            try {
-                reader = new BufferedReader(new InputStreamReader(
-                        httpResponse.getEntity().getContent()));
-            }catch (NullPointerException nullPointerException){
-                System.out.println("empty Response");
-                return;
-            }
 
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-
-            while ((inputLine = reader.readLine()) != null) {
-                response.append(inputLine+"\n");
-            }
-            reader.close();
+            //but did not close the reader container
 
             // print result
             //-O --output option handled
             Header[] headers = httpResponse.getAllHeaders();
-            String responseHeaders = "";
-            if(showresponseHeaders) {
+            if(showResponseHeaders) {
+                System.out.println("Response Headers");
                 for (Header header : headers) {
-                    responseHeaders += "Key : " + header.getName() + " ,Value : " + header.getValue() + "\n";
+                    System.out.println("Key : " + header.getName() + " ,Value : " + header.getValue() + "\n");
                 }
             }
 
-//            System.out.println("\033[0;31m"+" What does the next code? " + "\033[0m");
-//            System.out.println("\nGet Response Header By Key ...\n");
-//            String server = httpResponse.getFirstHeader("Server").getValue();
-//
-//            if (server == null) {
-//                System.out.println("Key 'Server' is not found!");
-//            } else {
-//                System.out.println("Server - " + server);
-//            }
+
 
             if (outPutFile == null || outPutFile.length() == 0) {
+
+                BufferedReader reader ;
+                try {
+                    reader = new BufferedReader(new InputStreamReader(
+                            httpResponse.getEntity().getContent()));
+                }catch (NullPointerException nullPointerException){
+                    System.out.println("empty Response");
+                    return;
+                }
+
+
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = reader.readLine()) != null) {
+                    response.append(inputLine+"\n");
+                }
+                reader.close();
+
                 System.out.println(response.toString());
-                System.out.println(responseHeaders);
             } else {
                 //if the -O option is used
-                String posFix = getContentType(headers);
-                System.out.println(posFix);
-                FileOutputStream fos = new FileOutputStream(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile + posFix);
-                int byte_;
-                HttpEntity entity = response.getEntity();
-                InputStream inputStream = entity.getContent();
-                while((byte_ = inputStream.read()) != -1) {
-                    fos.write(byte);
+                String posFix = getContentType(headers, outPutFile);
+                File outputContainer;
+                if(getPosFix(outPutFile).length()==0) {
+                    outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile + posFix);
+                }else{
+                    outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile);
                 }
-                File outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile + posFix);
                 //the next method sees if the parenrs of the file exist if not creates it and returnts true if already existed and false if created it
                 outputContainer.getParentFile().mkdirs();
                 if (!outputContainer.createNewFile()) {
@@ -138,22 +133,82 @@ public class GetMethod {
 
                     if(overWrite.equals("Y")){
 
-                        FileWriter fileWriter = new FileWriter(outputContainer);
-                        fileWriter.write(response.toString());
-                        if (showresponseHeaders) {
-                            fileWriter.append(responseHeaders);
+                        if(posFix.equals(".png") || posFix.equals(".html")){
+                            BufferedInputStream readerStream;
+                            try {
+                                readerStream = new BufferedInputStream(
+                                        httpResponse.getEntity().getContent()) ;
+
+                            }catch (NullPointerException nullPointerException){
+                                System.out.println("empty Response ");
+                                return;
+                            }
+                            writePngFile(readerStream, outputContainer.getAbsolutePath());
+                            readerStream.close();
+                        }else {
+
+                            BufferedReader reader ;
+                            try {
+                                reader = new BufferedReader(new InputStreamReader(
+                                        httpResponse.getEntity().getContent()));
+                            }catch (NullPointerException nullPointerException){
+                                System.out.println(" empty Response");
+                                return;
+                            }
+
+
+                            String inputLine;
+                            StringBuffer response = new StringBuffer();
+
+                            while ((inputLine = reader.readLine()) != null) {
+                                response.append(inputLine+"\n");
+                            }
+                            reader.close();
+
+                            FileWriter fileWriter = new FileWriter(outputContainer);
+                            fileWriter.write(response.toString());
+                            fileWriter.close();
                         }
-                        fileWriter.close();
                     }else {
                         System.out.println("retry again with a new name");
                     }
                 }else {
-                    FileWriter fileWriter = new FileWriter(outputContainer);
-                    fileWriter.write(response.toString());
-                    if (showresponseHeaders) {
-                        fileWriter.append(responseHeaders);
+                    if(posFix.equals(".png") || posFix.equals(".html")){
+                        BufferedInputStream readerStream;
+                        try {
+                            readerStream = new BufferedInputStream(
+                                    httpResponse.getEntity().getContent()) ;
+                        }catch (NullPointerException nullPointerException){
+                            System.out.println("empty Response");
+                            return;
+                        }
+                        writePngFile(readerStream, outputContainer.getAbsolutePath());
+                        readerStream.close();
+                    }else {
+                        //the default .txt will be
+
+                        BufferedReader reader ;
+                        try {
+                            reader = new BufferedReader(new InputStreamReader(
+                                    httpResponse.getEntity().getContent()));
+
+                        }catch (NullPointerException nullPointerException){
+                            System.out.println("empty Response");
+                            return;
+                        }
+
+
+                        String inputLine;
+                        StringBuffer response = new StringBuffer();
+
+                        while ((inputLine = reader.readLine()) != null) {
+                            response.append(inputLine+"\n");
+                        }
+                        reader.close();
+                        FileWriter fileWriter = new FileWriter(outputContainer);
+                        fileWriter.write(response.toString());
+                        fileWriter.close();
                     }
-                    fileWriter.close();
                 }
             }
             httpResponse.close();
@@ -176,17 +231,59 @@ public class GetMethod {
         }
     }
 
-    private String getContentType(Header[] headers){
-        String value = "";
-        for(Header header : headers){
-            if(header.getName().equals("Content-Type")){
-                value= header.getValue();
+    private String getContentType(Header[] headers, String outputName){
+        if(getPosFix(outputName).length()!=0){
+            return getPosFix(outputName);
+        }else {
+            String value = "";
+            for (Header header : headers) {
+                if (header.getName().equals("Content-Type")) {
+                    value = header.getValue();
+                }
+            }
+            if (value.equals("image/png")) {
+                return ".png";
+            } else if (value.contains("text/html")) {
+                return ".html";
+            } else {
+                return ".txt";
             }
         }
-        if(value.equals("image/png")) {
-            return ".png";
-        }else{
+    }
+
+    private String getPosFix(String outputName) {
+        int n = outputName.length();
+        if (n < 5) {
+            return "";
+        }
+        if (("" + outputName.charAt(n - 4) + outputName.charAt(n - 3) + outputName.charAt(n - 2) + outputName.charAt(n - 1)).equals(".txt")) {
             return ".txt";
+        } else if (("" + outputName.charAt(n - 4) + outputName.charAt(n - 3) + outputName.charAt(n - 2) + outputName.charAt(n - 1)).equals(".png")) {
+            return ".png";
+        } else if (("" + outputName.charAt(n - 5) + outputName.charAt(n - 4) + outputName.charAt(n - 3) + outputName.charAt(n - 2) + outputName.charAt(n - 1)).equals(".html")) {
+            return ".html";
+        } else {
+            return "";
+        }
+    }
+
+    private void writePngFile(BufferedInputStream readerContainer, String destinationPath) {
+        try{
+            FileOutputStream fileOS = new FileOutputStream(destinationPath);
+            byte data[] = new byte[1024];
+            int byteContent;
+            while ((byteContent = readerContainer.read(data, 0, 1024)) != -1) {
+                fileOS.write(data, 0, byteContent);
+            }
+        } catch (IOException e) {
+            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " problems with writing in the output file(image)");
+        }finally {
+            try{
+                readerContainer.close();
+            }catch (IOException exception){
+                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " problems with closing the output file");
+            }
+
         }
     }
 

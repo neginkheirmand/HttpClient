@@ -290,9 +290,6 @@ public class Command {
 
                 commandToDo.getRequest().setNameOutPutContainer(nameOfOutputFile);
 
-                //put in output file with the specified name
-                System.out.println("the name of the file has been chosen as"+ "\033[0;31m " +nameOfOutputFile+"\033[0m");
-                System.out.println("by the way i dont really know what to put in the end of the name (what kind of file ex: .txt)");
             }else if(commandToDo.getNumCommand().get(i)==6){
                 //-s the save
                 commandToDo.getRequest().setSaved(true);
