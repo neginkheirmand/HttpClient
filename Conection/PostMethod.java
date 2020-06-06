@@ -121,47 +121,46 @@ public class PostMethod {
                     + httpResponse.getStatusLine().getStatusCode());
 
 
-//            /*
-
-
-
-
             try{
-
-                BufferedReader reader ;
-                try {
-                    reader = new BufferedReader(new InputStreamReader(
-                            httpResponse.getEntity().getContent()));
-                }catch (NullPointerException nullPointerException){
-                    System.out.println("empty Response");
-                    return;
-                }
-
-                String inputLine;
-                StringBuffer response = new StringBuffer();
-
-                while ((inputLine = reader.readLine()) != null) {
-                    response.append(inputLine+"\n");
-                }
-                reader.close();
 
                 // print result
                 //-O --output option handled
                 Header[] headers = httpResponse.getAllHeaders();
-                String responseHeaders = "";
                 if(showresponseHeaders) {
                     for (Header header : headers) {
-                        responseHeaders += "Key : " + header.getName() + " ,Value : " + header.getValue() + "\n";
                         System.out.println("Key : " + header.getName() + " ,Value : " + header.getValue());
                     }
                 }
 
                 if (outPutFile == null || outPutFile.length() == 0) {
+
+                    BufferedReader reader ;
+                    try {
+                        reader = new BufferedReader(new InputStreamReader(
+                                httpResponse.getEntity().getContent()));
+                    }catch (NullPointerException nullPointerException){
+                        System.out.println("empty Response    ");
+                        return;
+                    }
+
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
+
+                    while ((inputLine = reader.readLine()) != null) {
+                        response.append(inputLine+"\n");
+                    }
+                    reader.close();
                     System.out.println(response.toString());
-                    System.out.println(responseHeaders);
                 }else {
                     //if the -O option is used
-                    File outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile);
+                    String posFix = GetMethod.getContentType(headers, outPutFile);
+                    File outputContainer;
+                    if(GetMethod.getPosFix(outPutFile).length()==0) {
+                        outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile + posFix);
+                    }else{
+                        outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile);
+                    }
+
                     //the next method sees if the parenrs of the file exist if not creates it and returnts true if already existed and false if created it
                     outputContainer.getParentFile().mkdirs();
                     if (!outputContainer.createNewFile()) {
@@ -175,26 +174,53 @@ public class PostMethod {
 
                         if(overWrite.equals("Y")){
 
+                            BufferedReader reader ;
+                            try {
+                                reader = new BufferedReader(new InputStreamReader(
+                                        httpResponse.getEntity().getContent()));
+                            }catch (NullPointerException nullPointerException){
+                                System.out.println("empty Response  ");
+                                return;
+                            }
+
+                            String inputLine;
+                            StringBuffer response = new StringBuffer();
+
+                            while ((inputLine = reader.readLine()) != null) {
+                                response.append(inputLine+"\n");
+                            }
+                            reader.close();
+
                             FileWriter fileWriter = new FileWriter(outputContainer);
                             fileWriter.write(response.toString());
-                            if (showresponseHeaders) {
-                                fileWriter.append(responseHeaders);
-                            }
                             fileWriter.close();
                         }else {
                             System.out.println("retry again with a new name");
                         }
                     }else {
+
+                        BufferedReader reader ;
+                        try {
+                            reader = new BufferedReader(new InputStreamReader(
+                                    httpResponse.getEntity().getContent()));
+                        }catch (NullPointerException nullPointerException){
+                            System.out.println("Empty Response     ");
+                            return;
+                        }
+
+                        String inputLine;
+                        StringBuffer response = new StringBuffer();
+
+                        while ((inputLine = reader.readLine()) != null) {
+                            response.append(inputLine+"\n");
+                        }
+                        reader.close();
+
                         FileWriter fileWriter = new FileWriter(outputContainer);
                         fileWriter.write(response.toString());
-                        if (showresponseHeaders) {
-                            fileWriter.append(responseHeaders);
-                        }
                         fileWriter.close();
                     }
                 }
-
-
             }finally{
                 httpResponse.close();
             }
