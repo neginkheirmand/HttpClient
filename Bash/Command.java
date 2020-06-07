@@ -322,6 +322,7 @@ public class Command {
                 }
                 //so we are sure we actually have an valid message body in multipart format
                 System.out.println("valid message body");
+                commandToDo.getRequest().setTypeOfBody(FORM_DATA.FORM_URL);
                 commandToDo.getRequest().setFormDataInfo(formData);
             }else if(commandToDo.getNumCommand().get(i)==8){
                 //-j
@@ -337,6 +338,7 @@ public class Command {
                 }
 
                 try {
+                    System.out.println("*"+jsonMsBody+"*");
                     JSONObject jsonObject = new JSONObject(jsonMsBody);
                     System.out.println(jsonObject.toString());
                 }catch (JSONException err){
@@ -346,6 +348,7 @@ public class Command {
                     return;
                 }
                 //now we have the json object
+                commandToDo.getRequest().setTypeOfBody(FORM_DATA.JSON);
                 commandToDo.getRequest().setFormDataInfo(jsonMsBody);
             }else if(commandToDo.getNumCommand().get(i)==9){
                 //--upload
@@ -363,6 +366,7 @@ public class Command {
                 File file = new File(pathOfFile);
                 if(file.exists() && file.isFile()){
                     System.out.println("the file exist, HERE WE HAVE TO UPLOAD IT");
+                    commandToDo.getRequest().setTypeOfBody(FORM_DATA.BINARY);
                     commandToDo.getRequest().setFormDataInfo(file.getAbsolutePath());
                 }else if(file.exists() && file.isDirectory()){
                     System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" invalid path -pointing to directory-");
@@ -387,6 +391,26 @@ public class Command {
                 String[] authArray = getAuthInfo(auth, commandToDo);
                 if(authArray!=null) {
                     commandToDo.getRequest().setAuthInfo(authArray);
+                }else{
+                    return;
+                }
+            }else if(commandToDo.getNumCommand().get(i)==14){
+                //-q/--query
+                String query = "";
+                if(commandToDo.getNumCommand().size()-1==i){
+                    //we are in the last word/option of the command
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Used -q/--query option but did not specified the params");
+                }else if(commandToDo.getNumCommand().get(i+1)==-1){
+                    //the next string in the input is String holding the query params
+                    query = commandToDo.getStrCommand().get(i+1);
+                }else{
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Used -q/--query option but did not specified the params");
+                    return;
+                }
+                //separate with & so we will use the same function we did for the headers
+                ArrayList<String[]> queryParams = commandToDo.splitData(query);
+                if(queryParams!=null){
+                    commandToDo.getRequest().setQueryInfo(queryParams);
                 }else{
                     return;
                 }
@@ -436,7 +460,7 @@ public class Command {
         return showHeaders;
     }
 
-    //stil not sure if it actually works
+    //still not sure if it actually works with ;
     private ArrayList<String[]> splitHeader(String input){
 //        System.out.println("[0]="+input.charAt(0));
 //        System.out.println("[n-1]="+input.charAt(input.length()-1));
@@ -515,7 +539,7 @@ public class Command {
                     }
                 }
             }
-        }else{
+        }else {
 
             if (input.length() == 0) {
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " did not enter headers but specified option -H/--headers");
@@ -524,7 +548,7 @@ public class Command {
             String[] pair = new String[3];
             String temp = "";
             int pairNum = 0;
-            for (int i = 0 ; i < input.length() ; i++) {
+            for (int i = 0; i < input.length(); i++) {
                 //all the pairs are enabled so the pair[2] is "true"
                 if (input.charAt(i) != '=' && input.charAt(i) != ';') {
                     temp += input.charAt(i);
@@ -584,14 +608,11 @@ public class Command {
                     }
                 }
             }
-
         }
-
-
         return headers;
     }
 
-    //still not sure if it actually works
+    //still not sure if it actually works with &
     private ArrayList<String[]> splitData(String input){
         ArrayList<String[]> dataInfo = new ArrayList<>();
         if(!commandLine) {

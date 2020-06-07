@@ -1,5 +1,7 @@
 package Bash;
 
+import GUI.TYPE;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -163,6 +165,14 @@ public class Options {
         if(requestNumberCommand.get(1)!=-1){
             System.out.println("enter url after curl");
         }
+        if( isGetterRequest() && (requestNumberCommand.contains(7) || requestNumberCommand.contains(8) || requestNumberCommand.contains(9) ) ){
+            //is a get-typed request but has body in one of the types(binary file/json/formdata)
+            System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" the methods " +
+                    "\033[1;31m"+"DELETE"+"\033[0m/"+"\033[1;35m"+"GET"+"\033[0m/"+"\033[1;36m"+"HEAD"+"\033[0m/"+"\033[1;34m"+"OPTION"+"\033[0m" +
+                    " Cannot have body message");
+            System.out.println("The body info given will be ignored");
+        }
+
     }
 
     public void identifyRequestOptions(String inputCommand){
@@ -171,6 +181,24 @@ public class Options {
             requestNumberCommand.add(i, getOptionNum(requestStringCommand.get(i)) );
         }
         showWarnings();
+    }
+
+    private boolean isGetterRequest(){
+        //cause the default method is the get method
+        for(int i=0; i<requestNumberCommand.size(); i++){
+            if(requestNumberCommand.get(i)==0){
+                if(i+1<requestNumberCommand.size()){
+                 //make sure there actually is a "next" option
+                    if(requestNumberCommand.get(i+1)==-1 &&( TYPE.getTYPE(requestStringCommand.get(i+1)).equals(TYPE.PATCH)
+                            || TYPE.getTYPE(requestStringCommand.get(i+1)).equals(TYPE.PUT) || TYPE.getTYPE(requestStringCommand.get(i+1)).equals(TYPE.POST) ) ){
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public ArrayList<Integer> getRequestNumberCommand() {

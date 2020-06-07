@@ -272,6 +272,13 @@ public class Request {
     }
 
     //costume methods
+
+    public void setTypeOfBody(FORM_DATA bodyType){
+        if(bodyType!=null) {
+            typeOfData = bodyType;
+        }
+    }
+
     public boolean isBearerTokenEnabled(){
         if(!auth) {
             return false;
@@ -305,7 +312,6 @@ public class Request {
     public static ArrayList<Request> getListOfrequests(){
         return listOfrequests;
     }
-
 
 
     public static void main(String[] args) {

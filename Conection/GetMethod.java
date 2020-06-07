@@ -42,8 +42,9 @@ public class GetMethod {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Cannot execute the Get Request");
             return;
         }
+
         CloseableHttpClient httpClient;
-        if(followRedirect) {
+        if (followRedirect) {
             //method 1:
             //the next code does show you that you are being redirected
             httpClient = HttpClients.createDefault();
@@ -51,11 +52,11 @@ public class GetMethod {
             //the next code doesnt show you that you are being redirected
 //        httpClient =  HttpClientBuilder.create()
 //                .setRedirectStrategy(new LaxRedirectStrategy()).build();
-        }else {
+        } else {
             httpClient = HttpClientBuilder.create().disableRedirectHandling().build();
         }
         //we make sure the user has given a url
-        if (getRequest.getUrl()==null || getRequest.getUrl().length() == 0) {
+        if (getRequest.getUrl() == null || getRequest.getUrl().length() == 0) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " The url field is empty");
             return;
         }
@@ -65,9 +66,9 @@ public class GetMethod {
             //creating the query parameters
             URIBuilder builder = new URIBuilder(getRequest.getUrl());
 
-            if(getRequest.getQueryInfo()!=null) {
-                for(int i=0; i<getRequest.getQueryInfo().size(); i++){
-                    if((getRequest.getQueryInfo().get(i)[2]).equals("true")) {
+            if (getRequest.getQueryInfo() != null) {
+                for (int i = 0; i < getRequest.getQueryInfo().size(); i++) {
+                    if ((getRequest.getQueryInfo().get(i)[2]).equals("true")) {
                         builder.addParameter(getRequest.getQueryInfo().get(i)[0], getRequest.getQueryInfo().get(i)[1]);
                     }
                 }
@@ -76,7 +77,7 @@ public class GetMethod {
             HttpGet httpGet = new HttpGet(builder.build());
 
 
-            if (getRequest.getHeaderInfo() != null ) {
+            if (getRequest.getHeaderInfo() != null) {
                 for (int i = 0; i < getRequest.getHeaderInfo().size(); i++) {
                     if (getRequest.getHeaderInfo().get(i)[0] != null && getRequest.getHeaderInfo().get(i)[1] != null && getRequest.getHeaderInfo().get(i)[2].equals("true")) {
                         httpGet.addHeader(getRequest.getHeaderInfo().get(i)[0], getRequest.getHeaderInfo().get(i)[1]);
@@ -84,7 +85,7 @@ public class GetMethod {
                 }
 
             }
-            if(getRequest.getAuth() && getRequest.getAuthInfo()!=null && (getRequest.getAuthInfo()[2]).equals("true")) {
+            if (getRequest.getAuth() && getRequest.getAuthInfo() != null && (getRequest.getAuthInfo()[2]).equals("true")) {
                 httpGet.addHeader(getRequest.getAuthInfo()[0], getRequest.getAuthInfo()[1]);
             }
 
@@ -95,13 +96,12 @@ public class GetMethod {
                     + httpResponse.getStatusLine().getStatusCode());
 
 
-
             //but did not close the reader container
 
             // print result
             //-O --output option handled
             Header[] headers = httpResponse.getAllHeaders();
-            if(showResponseHeaders) {
+            if (showResponseHeaders) {
                 System.out.println("Response Headers");
                 for (Header header : headers) {
                     System.out.println("Key : " + header.getName() + " ,Value : " + header.getValue() + "\n");
@@ -109,14 +109,13 @@ public class GetMethod {
             }
 
 
-
             if (outPutFile == null || outPutFile.length() == 0) {
 
-                BufferedReader reader ;
+                BufferedReader reader;
                 try {
                     reader = new BufferedReader(new InputStreamReader(
                             httpResponse.getEntity().getContent()));
-                }catch (NullPointerException nullPointerException){
+                } catch (NullPointerException nullPointerException) {
                     System.out.println("empty Response");
                     return;
                 }
@@ -126,7 +125,7 @@ public class GetMethod {
                 StringBuffer response = new StringBuffer();
 
                 while ((inputLine = reader.readLine()) != null) {
-                    response.append(inputLine+"\n");
+                    response.append(inputLine + "\n");
                 }
                 reader.close();
 
@@ -135,9 +134,9 @@ public class GetMethod {
                 //if the -O option is used
                 String posFix = getContentType(headers, outPutFile);
                 File outputContainer;
-                if(getPosFix(outPutFile).length()==0) {
+                if (getPosFix(outPutFile).length() == 0) {
                     outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile + posFix);
-                }else{
+                } else {
                     outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile);
                 }
                 //the next method sees if the parenrs of the file exist if not creates it and returnts true if already existed and false if created it
@@ -145,33 +144,33 @@ public class GetMethod {
                 if (!outputContainer.createNewFile()) {
                     System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "unable to create output container file");
                     System.out.println("A file with this name already exist, do you want to over-write it? <Y/n>");
-                    String overWrite = "" +(new Scanner(System.in)).nextLine();
+                    String overWrite = "" + (new Scanner(System.in)).nextLine();
 
-                    while( !overWrite.equals("Y") && !overWrite.equals("n") ){
-                        overWrite = "" +(new Scanner(System.in)).nextLine();
+                    while (!overWrite.equals("Y") && !overWrite.equals("n")) {
+                        overWrite = "" + (new Scanner(System.in)).nextLine();
                     }
 
-                    if(overWrite.equals("Y")){
+                    if (overWrite.equals("Y")) {
 
-                        if(posFix.equals(".png") || posFix.equals(".html")){
+                        if (posFix.equals(".png") || posFix.equals(".html")) {
                             BufferedInputStream readerStream;
                             try {
                                 readerStream = new BufferedInputStream(
-                                        httpResponse.getEntity().getContent()) ;
+                                        httpResponse.getEntity().getContent());
 
-                            }catch (NullPointerException nullPointerException){
+                            } catch (NullPointerException nullPointerException) {
                                 System.out.println("empty Response ");
                                 return;
                             }
                             writePngFile(readerStream, outputContainer.getAbsolutePath());
                             readerStream.close();
-                        }else {
+                        } else {
 
-                            BufferedReader reader ;
+                            BufferedReader reader;
                             try {
                                 reader = new BufferedReader(new InputStreamReader(
                                         httpResponse.getEntity().getContent()));
-                            }catch (NullPointerException nullPointerException){
+                            } catch (NullPointerException nullPointerException) {
                                 System.out.println(" empty Response");
                                 return;
                             }
@@ -181,7 +180,7 @@ public class GetMethod {
                             StringBuffer response = new StringBuffer();
 
                             while ((inputLine = reader.readLine()) != null) {
-                                response.append(inputLine+"\n");
+                                response.append(inputLine + "\n");
                             }
                             reader.close();
 
@@ -189,30 +188,30 @@ public class GetMethod {
                             fileWriter.write(response.toString());
                             fileWriter.close();
                         }
-                    }else {
+                    } else {
                         System.out.println("retry again with a new name");
                     }
-                }else {
-                    if(posFix.equals(".png") || posFix.equals(".html")){
+                } else {
+                    if (posFix.equals(".png") || posFix.equals(".html")) {
                         BufferedInputStream readerStream;
                         try {
                             readerStream = new BufferedInputStream(
-                                    httpResponse.getEntity().getContent()) ;
-                        }catch (NullPointerException nullPointerException){
+                                    httpResponse.getEntity().getContent());
+                        } catch (NullPointerException nullPointerException) {
                             System.out.println("empty Response");
                             return;
                         }
                         writePngFile(readerStream, outputContainer.getAbsolutePath());
                         readerStream.close();
-                    }else {
+                    } else {
                         //the default .txt will be
 
-                        BufferedReader reader ;
+                        BufferedReader reader;
                         try {
                             reader = new BufferedReader(new InputStreamReader(
                                     httpResponse.getEntity().getContent()));
 
-                        }catch (NullPointerException nullPointerException){
+                        } catch (NullPointerException nullPointerException) {
                             System.out.println("empty Response");
                             return;
                         }
@@ -222,7 +221,7 @@ public class GetMethod {
                         StringBuffer response = new StringBuffer();
 
                         while ((inputLine = reader.readLine()) != null) {
-                            response.append(inputLine+"\n");
+                            response.append(inputLine + "\n");
                         }
                         reader.close();
                         FileWriter fileWriter = new FileWriter(outputContainer);
@@ -237,16 +236,23 @@ public class GetMethod {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Invalid URL, check the spacing");
         } catch (org.apache.http.client.ClientProtocolException exception) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Invalid URL");
+            if (!(getRequest.getUrl().charAt(0) + getRequest.getUrl().charAt(1) + getRequest.getUrl().charAt(2) + getRequest.getUrl().charAt(3) + getRequest.getUrl().charAt(4)
+                    + getRequest.getUrl().charAt(5) + getRequest.getUrl().charAt(6) + "").equals("http://")
+                    && !(getRequest.getUrl().charAt(0) + getRequest.getUrl().charAt(1) + getRequest.getUrl().charAt(2) + getRequest.getUrl().charAt(3) + getRequest.getUrl().charAt(4)
+                    + getRequest.getUrl().charAt(5) + getRequest.getUrl().charAt(6) + getRequest.getUrl().charAt(7) + "").equals("https://")
+            ) {
+                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " URL should start with \"http://\" or \"https://\"");
+            }
         } catch (java.net.UnknownHostException exception) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in finding available Port, Please check Your internet connection");
         } catch (IOException exception) {
             //the methods: execute/ getContent / readLine / close
-            if(outPutFile==null || outPutFile.length()==0) {
+            if (outPutFile == null || outPutFile.length() == 0) {
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file ");
-            }else{
+            } else {
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Time out problem: please try again");
             }
-        }catch (NullPointerException exception){
+        } catch (NullPointerException exception) {
             System.out.println("here");
         } catch (URISyntaxException e) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " url problem");

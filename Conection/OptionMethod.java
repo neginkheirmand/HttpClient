@@ -40,7 +40,7 @@ public class OptionMethod {
 
 
         CloseableHttpClient httpClient;
-        if(followRedirect) {
+        if (followRedirect) {
             //method 1:
             //the next code does show you that you are being redirected
             httpClient = HttpClients.createDefault();
@@ -48,12 +48,12 @@ public class OptionMethod {
             //the next code doesnt show you that you are being redirected
 //        httpClient =  HttpClientBuilder.create()
 //                .setRedirectStrategy(new LaxRedirectStrategy()).build();
-        }else {
+        } else {
             httpClient = HttpClientBuilder.create().disableRedirectHandling().build();
         }
 
         //we make sure the user has given a url
-        if (optionRequest.getUrl()==null || optionRequest.getUrl().length() == 0) {
+        if (optionRequest.getUrl() == null || optionRequest.getUrl().length() == 0) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " The url field is empty");
             return;
         }
@@ -64,9 +64,9 @@ public class OptionMethod {
             //creating the query parameters
             URIBuilder builder = new URIBuilder(optionRequest.getUrl());
 
-            if(optionRequest.getQueryInfo()!=null) {
-                for(int i=0; i<optionRequest.getQueryInfo().size(); i++){
-                    if((optionRequest.getQueryInfo().get(i)[2]).equals("true")) {
+            if (optionRequest.getQueryInfo() != null) {
+                for (int i = 0; i < optionRequest.getQueryInfo().size(); i++) {
+                    if ((optionRequest.getQueryInfo().get(i)[2]).equals("true")) {
                         builder.addParameter(optionRequest.getQueryInfo().get(i)[0], optionRequest.getQueryInfo().get(i)[1]);
                     }
                 }
@@ -83,7 +83,7 @@ public class OptionMethod {
             }
 
             //--auth
-            if(optionRequest.getAuth() && optionRequest.getAuthInfo()!=null && (optionRequest.getAuthInfo()[2]).equals("true")) {
+            if (optionRequest.getAuth() && optionRequest.getAuthInfo() != null && (optionRequest.getAuthInfo()[2]).equals("true")) {
                 httpOption.addHeader(optionRequest.getAuthInfo()[0], optionRequest.getAuthInfo()[1]);
             }
 
@@ -97,7 +97,7 @@ public class OptionMethod {
             // print result
             //-O --output option handled
             Header[] headers = httpResponse.getAllHeaders();
-            if(showresponseHeaders) {
+            if (showresponseHeaders) {
                 for (Header header : headers) {
                     System.out.println("Key : " + header.getName() + " ,Value : " + header.getValue());
                 }
@@ -114,11 +114,11 @@ public class OptionMethod {
 //            }
 
             if (outPutFile == null || outPutFile.length() == 0) {
-                BufferedReader reader ;
+                BufferedReader reader;
                 try {
                     reader = new BufferedReader(new InputStreamReader(
                             httpResponse.getEntity().getContent()));
-                }catch (NullPointerException nullPointerException){
+                } catch (NullPointerException nullPointerException) {
                     System.out.println("empty response");
                     return;
                 }
@@ -127,7 +127,7 @@ public class OptionMethod {
                 StringBuffer response = new StringBuffer();
 
                 while ((inputLine = reader.readLine()) != null) {
-                    response.append(inputLine+"\n");
+                    response.append(inputLine + "\n");
                 }
                 reader.close();
                 System.out.println(response.toString());
@@ -136,9 +136,9 @@ public class OptionMethod {
 
                 String posFix = GetMethod.getContentType(headers, outPutFile);
                 File outputContainer;
-                if(GetMethod.getPosFix(outPutFile).length()==0) {
+                if (GetMethod.getPosFix(outPutFile).length() == 0) {
                     outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile + posFix);
-                }else{
+                } else {
                     outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile);
                 }
                 //the next method sees if the parenrs of the file exist if not creates it and returnts true if already existed and false if created it
@@ -146,19 +146,19 @@ public class OptionMethod {
                 if (!outputContainer.createNewFile()) {
                     System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "unable to create output file");
                     System.out.println("A file with this name already exist, Do you want to over-write on it? <Y/n>");
-                    String overWrite = "" +(new Scanner(System.in)).nextLine();
+                    String overWrite = "" + (new Scanner(System.in)).nextLine();
 
-                    while( !overWrite.equals("Y") && !overWrite.equals("n") ){
-                        overWrite = "" +(new Scanner(System.in)).nextLine();
+                    while (!overWrite.equals("Y") && !overWrite.equals("n")) {
+                        overWrite = "" + (new Scanner(System.in)).nextLine();
                     }
 
-                    if(overWrite.equals("Y")){
+                    if (overWrite.equals("Y")) {
 
-                        BufferedReader reader ;
+                        BufferedReader reader;
                         try {
                             reader = new BufferedReader(new InputStreamReader(
                                     httpResponse.getEntity().getContent()));
-                        }catch (NullPointerException nullPointerException){
+                        } catch (NullPointerException nullPointerException) {
                             System.out.println(" Empty Response ");
                             return;
                         }
@@ -167,22 +167,22 @@ public class OptionMethod {
                         StringBuffer response = new StringBuffer();
 
                         while ((inputLine = reader.readLine()) != null) {
-                            response.append(inputLine+"\n");
+                            response.append(inputLine + "\n");
                         }
                         reader.close();
 
                         FileWriter fileWriter = new FileWriter(outputContainer);
                         fileWriter.write(response.toString());
                         fileWriter.close();
-                    }else {
+                    } else {
                         System.out.println("Retry again with a new name");
                     }
-                }else {
-                    BufferedReader reader ;
+                } else {
+                    BufferedReader reader;
                     try {
                         reader = new BufferedReader(new InputStreamReader(
                                 httpResponse.getEntity().getContent()));
-                    }catch (NullPointerException nullPointerException){
+                    } catch (NullPointerException nullPointerException) {
                         System.out.println("Empty Response  ");
                         return;
                     }
@@ -191,7 +191,7 @@ public class OptionMethod {
                     StringBuffer response = new StringBuffer();
 
                     while ((inputLine = reader.readLine()) != null) {
-                        response.append(inputLine+"\n");
+                        response.append(inputLine + "\n");
                     }
                     reader.close();
                     FileWriter fileWriter = new FileWriter(outputContainer);
@@ -205,12 +205,19 @@ public class OptionMethod {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Invalid URL, check the spacing");
         } catch (org.apache.http.client.ClientProtocolException exception) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Invalid URL");
+            if (!(optionRequest.getUrl().charAt(0) + optionRequest.getUrl().charAt(1) + optionRequest.getUrl().charAt(2) + optionRequest.getUrl().charAt(3) + optionRequest.getUrl().charAt(4)
+                    + optionRequest.getUrl().charAt(5) + optionRequest.getUrl().charAt(6) + "").equals("http://")
+                    && !(optionRequest.getUrl().charAt(0) + optionRequest.getUrl().charAt(1) + optionRequest.getUrl().charAt(2) + optionRequest.getUrl().charAt(3) + optionRequest.getUrl().charAt(4)
+                    + optionRequest.getUrl().charAt(5) + optionRequest.getUrl().charAt(6) + optionRequest.getUrl().charAt(7) + "").equals("https://")
+            ) {
+                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "URL should start with \"http://\" or \"https://\" ");
+            }
         } catch (java.net.UnknownHostException exception) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in finding available Port, Please check Your internet connection");
         } catch (IOException exception) {
             //the methods: execute/ getContent / readLine / close
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file ");
-        }catch (NullPointerException exception){
+        } catch (NullPointerException exception) {
             System.out.println("here");
         } catch (URISyntaxException e) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problems setting the query params ");
