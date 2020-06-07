@@ -213,7 +213,7 @@ public class DeleteMethod {
                             + deleteRequest.getUrl().charAt(4) + deleteRequest.getUrl().charAt(5) + deleteRequest.getUrl().charAt(6)
                             + deleteRequest.getUrl().charAt(7) + "").equals("https://")
             ) {
-                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "URL should start with \"http://\" or \"https://\"");
+                System.out.println( "      " + "URL should start with \"http://\" or \"https://\"");
             }
         } catch (java.net.UnknownHostException exception) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in finding available Port, Please check Your internet connection");

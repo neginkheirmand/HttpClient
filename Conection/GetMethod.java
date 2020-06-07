@@ -241,7 +241,7 @@ public class GetMethod {
                     && !(getRequest.getUrl().charAt(0) + getRequest.getUrl().charAt(1) + getRequest.getUrl().charAt(2) + getRequest.getUrl().charAt(3) + getRequest.getUrl().charAt(4)
                     + getRequest.getUrl().charAt(5) + getRequest.getUrl().charAt(6) + getRequest.getUrl().charAt(7) + "").equals("https://")
             ) {
-                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " URL should start with \"http://\" or \"https://\"");
+                System.out.println("      " + " URL should start with \"http://\" or \"https://\"");
             }
         } catch (java.net.UnknownHostException exception) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in finding available Port, Please check Your internet connection");

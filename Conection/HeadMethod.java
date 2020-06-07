@@ -198,7 +198,7 @@ public class HeadMethod {
                     && !(headRequest.getUrl().charAt(0) + headRequest.getUrl().charAt(1) + headRequest.getUrl().charAt(2) + headRequest.getUrl().charAt(3) + headRequest.getUrl().charAt(4)
                     + headRequest.getUrl().charAt(5) + headRequest.getUrl().charAt(6) + headRequest.getUrl().charAt(7) + "").equals("https://")
             ) {
-                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "URL should start with \"http://\" or \"https://\" ");
+                System.out.println("      "  + "URL should start with \"http://\" or \"https://\" ");
             }
         } catch (java.net.UnknownHostException exception) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in finding available Port, Please check Your internet connection");

@@ -263,7 +263,7 @@ public class PutMethod {
                     + putRequest.getUrl().charAt(4) + putRequest.getUrl().charAt(5) + putRequest.getUrl().charAt(6) + putRequest.getUrl().charAt(7)
                     + "").equals("https://")
             ) {
-                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "URL should start with \"http://\" or \"https://\"        ");
+                System.out.println("      "  + "URL should start with \"http://\" or \"https://\"        ");
             }
         } catch (java.net.UnknownHostException exception) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in finding available Port, Please check Your internet connection");
@@ -287,7 +287,7 @@ public class PutMethod {
                         + putRequest.getUrl().charAt(4) + putRequest.getUrl().charAt(5) + putRequest.getUrl().charAt(6) + putRequest.getUrl().charAt(7)
                         + "").equals("https://")
                 ) {
-                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "URL should start with \"http://\" or \"https://\"            ");
+                    System.out.println("      "  + "URL should start with \"http://\" or \"https://\"            ");
                 }
             } catch (java.net.UnknownHostException exception) {
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in finding available Port, Please check Your internet connection");

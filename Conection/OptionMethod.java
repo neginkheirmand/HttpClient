@@ -210,7 +210,7 @@ public class OptionMethod {
                     && !(optionRequest.getUrl().charAt(0) + optionRequest.getUrl().charAt(1) + optionRequest.getUrl().charAt(2) + optionRequest.getUrl().charAt(3) + optionRequest.getUrl().charAt(4)
                     + optionRequest.getUrl().charAt(5) + optionRequest.getUrl().charAt(6) + optionRequest.getUrl().charAt(7) + "").equals("https://")
             ) {
-                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "URL should start with \"http://\" or \"https://\" ");
+                System.out.println("      "  + "URL should start with \"http://\" or \"https://\"  ");
             }
         } catch (java.net.UnknownHostException exception) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in finding available Port, Please check Your internet connection");

@@ -240,7 +240,7 @@ public class PatchMethod {
                     && !(patchRequest.getUrl().charAt(0) + patchRequest.getUrl().charAt(1) + patchRequest.getUrl().charAt(2) + patchRequest.getUrl().charAt(3) + patchRequest.getUrl().charAt(4)
                     + patchRequest.getUrl().charAt(5) + patchRequest.getUrl().charAt(6) + patchRequest.getUrl().charAt(7) + "").equals("https://")
             ) {
-                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "URL should start with \"http://\" or \"https://\"      ");
+                System.out.println("      "  + "URL should start with \"http://\" or \"https://\"      ");
             }
         } catch (java.net.UnknownHostException exception) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in finding available Port, Please check Your internet connection");
@@ -263,7 +263,7 @@ public class PatchMethod {
                         && !(patchRequest.getUrl().charAt(0) + patchRequest.getUrl().charAt(1) + patchRequest.getUrl().charAt(2) + patchRequest.getUrl().charAt(3) + patchRequest.getUrl().charAt(4)
                         + patchRequest.getUrl().charAt(5) + patchRequest.getUrl().charAt(6) + patchRequest.getUrl().charAt(7) + "").equals("https://")
                 ) {
-                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "URL should start with \"http://\" or \"https://\"    ");
+                    System.out.println("      "  + "URL should start with \"http://\" or \"https://\"    ");
                 }
             } catch (java.net.UnknownHostException exception) {
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in finding available Port, Please check Your internet connection");

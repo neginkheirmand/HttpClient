@@ -91,6 +91,8 @@ public class Options {
                     System.out.println("The most similar option is\n-f");
                 }else if(inputOption.charAt(1)=='A'){
                     System.out.println("The most similar option is\n-a");
+                }else if(inputOption.charAt(1)=='Q'){
+                    System.out.println("The most similar option is\n-q");
                 }
             }else{
                 String temp = "-";
