@@ -1228,11 +1228,11 @@ public class CreateGUI {
         });
         if( indexOfRequest>-1 && indexOfRequest<savedRequests.size() ) {
             System.out.println(savedRequests.get(indexOfRequest).getTypeOfData());
-            if (savedRequests.get(indexOfRequest).getTypeOfData().equals(FORM_DATA.FORM_URL)) {
+            if (savedRequests.get(indexOfRequest).getTypeOfData().equals(MESSAGEBODY_TYPE.FORM_URL)) {
                 dataType.setSelectedIndex(0);
-            }else if(savedRequests.get(indexOfRequest).getTypeOfData().equals(FORM_DATA.JSON)){
+            }else if(savedRequests.get(indexOfRequest).getTypeOfData().equals(MESSAGEBODY_TYPE.JSON)){
                 dataType.setSelectedIndex(1);
-            }else if(savedRequests.get(indexOfRequest).getTypeOfData().equals(FORM_DATA.BINARY)){
+            }else if(savedRequests.get(indexOfRequest).getTypeOfData().equals(MESSAGEBODY_TYPE.BINARY)){
                 dataType.setSelectedIndex(3);
             }
         }
@@ -2194,7 +2194,7 @@ public class CreateGUI {
                 nameNewRequest = nameTextField.getText();
                 newRequest.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
 
-                Request newRequest = new Request(nameNewRequest, TYPE.GET, "https://api.myproduct.com/v1/users", FORM_DATA.FORM_URL);
+                Request newRequest = new Request(nameNewRequest, TYPE.GET, "https://api.myproduct.com/v1/users", MESSAGEBODY_TYPE.FORM_URL);
 //                nameNewRequest="new Request";
                 newRequest.setSaved(false);
 
@@ -2233,7 +2233,7 @@ public class CreateGUI {
                     nameNewRequest = nameTextField.getText();
                     newRequest.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
 
-                    Request newRequest = new Request(nameNewRequest, TYPE.GET, "https://api.myproduct.com/v1/users", FORM_DATA.FORM_URL);
+                    Request newRequest = new Request(nameNewRequest, TYPE.GET, "https://api.myproduct.com/v1/users", MESSAGEBODY_TYPE.FORM_URL);
 //                nameNewRequest="new Request";
                     newRequest.setSaved(false);
 

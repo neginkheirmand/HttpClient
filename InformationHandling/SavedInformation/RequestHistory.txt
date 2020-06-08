@@ -1,4 +1,4 @@
-8
+7
 GET
 GET
 www.google1.com
@@ -110,18 +110,6 @@ true
 ----
 HEAD
 HEAD
-https://api.myproduct.com/v1/users
-FORM_URL
-0
-false
-1
-new header 3
-new value 3
-true
-0
-----
-Enter the name of the Request
-GET
 https://api.myproduct.com/v1/users
 FORM_URL
 0

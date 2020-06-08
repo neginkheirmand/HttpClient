@@ -3,7 +3,7 @@ package GUI;
 /**
  * different types of the Form Data
  */
-public enum FORM_DATA{
+public enum MESSAGEBODY_TYPE{
     FORM_URL,
     JSON,
     BINARY,
@@ -13,7 +13,7 @@ public enum FORM_DATA{
      * @param formData the form data passed to the method
      * @return the string version of the form data
      */
-    public static String getName(FORM_DATA formData){
+    public static String getName(MESSAGEBODY_TYPE formData){
         if(formData.equals(FORM_URL)){
             return "FORM_URL";
         }else if(formData.equals(JSON)){
@@ -27,9 +27,9 @@ public enum FORM_DATA{
     }
 
     /**
-     * this method takes a form data as an string and return it in FORM_DATA.ordinal() mode
+     * this method takes a form data as an string and return it in MESSAGEBODY_TYPE.ordinal() mode
      * @param formData the string passed to the function
-     * @return the FORM_DATA.ordinal() returned
+     * @return the MESSAGEBODY_TYPE.ordinal() returned
      */
     public static int getIndex(String formData){
         if(formData.equals(FORM_URL+"")){
@@ -46,7 +46,7 @@ public enum FORM_DATA{
     }
 
 
-    public static FORM_DATA getFormByIndex(int index){
+    public static MESSAGEBODY_TYPE getFormByIndex(int index){
         if(index==0){
             return FORM_URL;
         }else if(index == 1){
@@ -61,11 +61,11 @@ public enum FORM_DATA{
 
 
     /**
-     * this method takes a form data as an string and return it in FORM_DATA mode
+     * this method takes a form data as an string and return it in MESSAGEBODY_TYPE mode
      * @param formData the string passed to the function
-     * @return the FORM_DATA returned
+     * @return the MESSAGEBODY_TYPE returned
      */
-    public static FORM_DATA getFormData(String formData){
+    public static MESSAGEBODY_TYPE getFormData(String formData){
         if(formData.equals(FORM_URL+"")){
             return FORM_URL;
         }else if(formData.equals(JSON+"")){

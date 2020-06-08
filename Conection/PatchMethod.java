@@ -1,6 +1,6 @@
 package Conection;
 
-import GUI.FORM_DATA;
+import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 import GUI.TYPE;
 import org.apache.http.Header;
@@ -77,7 +77,7 @@ public class PatchMethod {
             }
 
             //in case its form url encoded
-            if (patchRequest.getTypeOfData().equals(FORM_DATA.FORM_URL)) {
+            if (patchRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.FORM_URL)) {
                 List<NameValuePair> params = null;
                 if (patchRequest.getFormDataInfo() != null) {
                     params = new ArrayList<NameValuePair>();
@@ -94,7 +94,7 @@ public class PatchMethod {
                 if (params != null) {
                     httpPatch.setEntity(new UrlEncodedFormEntity(params));
                 }
-            } else if (patchRequest.getTypeOfData().equals(FORM_DATA.JSON)) {
+            } else if (patchRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.JSON)) {
                 //in case is json we can use of .setHeader(HttpHeaders.CONTENT_TYPE, "application/json") in the HttpPatch
                 if (patchRequest.getFormDataInfo() != null && !((String) patchRequest.getFormDataInfo()).equals("")) {
                     StringEntity entity = new StringEntity((String) patchRequest.getFormDataInfo());
@@ -103,14 +103,14 @@ public class PatchMethod {
                     httpPatch.setHeader("Accept", "application/json");
                     httpPatch.setHeader("Content-type", "application/json");
                 }
-            } else if (patchRequest.getTypeOfData().equals(FORM_DATA.BINARY)) {
+            } else if (patchRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.BINARY)) {
                 //this part is done with the multi part form data too
                 if (patchRequest.getFormDataInfo() != null) {
                     File uploadFile = new File((String) patchRequest.getFormDataInfo());
                     if (uploadFile.exists() && uploadFile.isFile()) {
                         FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.DEFAULT_BINARY);
 //                        FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.APPLICATION_OCTET_STREAM);
-//                        FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.MULTIPART_FORM_DATA);
+//                        FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.MULTIPART_MESSAGEBODY_TYPE);
                         httpPatch.setEntity(fileToUpload);
                     } else {
                         System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "File not found");
@@ -120,8 +120,24 @@ public class PatchMethod {
                     System.out.println("\033[0;31m" + "Line 99 of class PatchMethod" + "\033[0m");
                     return;
                 }
+            }else if (patchRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
+                List<NameValuePair> params = null;
+                if (patchRequest.getFormDataInfo() != null) {
+                    params = new ArrayList<NameValuePair>();
+                    System.out.println(patchRequest.getFormDataInfo().getClass());
+                    for (int i = 0; i < ((ArrayList<String[]>) patchRequest.getFormDataInfo()).size(); i++) {
+                        if (((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[2].equals("true") &&
+                                ((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[0] != null &&
+                                ((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[1] != null) {
+                            params.add(new BasicNameValuePair(((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[0],
+                                    ((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[1]));
+                        }
+                    }
+                }
+                if (params != null) {
+                    httpPatch.setEntity(new UrlEncodedFormEntity(params));
+                }
             }
-            //we have to add the option of form data/multipart form
 
 
             //Execute the patch request
@@ -279,7 +295,7 @@ public class PatchMethod {
     public static void main(String[] args) {
 
         String url = ""+(new Scanner(System.in)).nextLine();
-        Request patchRequest = new Request("nameOfRequest", TYPE.PATCH, url , FORM_DATA.FORM_URL);
+        Request patchRequest = new Request("nameOfRequest", TYPE.PATCH, url , MESSAGEBODY_TYPE.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
         String[] header1 = {"Header1", "Value1", "false"};
         String[] header2 = {"Header2", "Value2", "true"};

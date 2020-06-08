@@ -3,7 +3,7 @@ package Conection;
 import GUI.Request;
 
 
-import GUI.FORM_DATA;
+import GUI.MESSAGEBODY_TYPE;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -88,7 +88,7 @@ public class PutMethod {
             }
 
             //in case its form url encoded
-            if (putRequest.getTypeOfData().equals(FORM_DATA.FORM_URL)) {
+            if (putRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.FORM_URL)) {
                 System.out.println("its form url encoded");
                 httpPut.addHeader("Content-Type", "application/x-www-form-urlencoded");
                 List<NameValuePair> params = null;
@@ -107,7 +107,7 @@ public class PutMethod {
                 if (params != null) {
                     httpPut.setEntity(new UrlEncodedFormEntity(params));
                 }
-            } else if (putRequest.getTypeOfData().equals(FORM_DATA.JSON)) {
+            } else if (putRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.JSON)) {
                 //in case is json we can use of .setHeader(HttpHeaders.CONTENT_TYPE, "application/json") in the httpPut
                 if (putRequest.getFormDataInfo() != null && !((String) putRequest.getFormDataInfo()).equals("")) {
                     StringEntity entity = new StringEntity((String) putRequest.getFormDataInfo());
@@ -116,14 +116,14 @@ public class PutMethod {
                     httpPut.setHeader("Accept", "application/json");
                     httpPut.setHeader("Content-type", "application/json");
                 }
-            } else if (putRequest.getTypeOfData().equals(FORM_DATA.BINARY)) {
+            } else if (putRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.BINARY)) {
                 //this part is done with the multi part form data too
                 if (putRequest.getFormDataInfo() != null) {
                     File uploadFile = new File((String) putRequest.getFormDataInfo());
                     if (uploadFile.exists() && uploadFile.isFile()) {
                         FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.DEFAULT_BINARY);
 //                        FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.APPLICATION_OCTET_STREAM);
-//                        FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.MULTIPART_FORM_DATA);
+//                        FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.MULTIPART_MESSAGEBODY_TYPE);
                         httpPut.setEntity(fileToUpload);
                     } else {
                         System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "File not found");
@@ -304,7 +304,7 @@ public class PutMethod {
 
     public static void main(String[] args) {
         String url = ""+(new Scanner(System.in)).nextLine();
-        Request putRequest = new Request("nameOfRequest", TYPE.PUT, url , FORM_DATA.FORM_URL);
+        Request putRequest = new Request("nameOfRequest", TYPE.PUT, url , MESSAGEBODY_TYPE.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
         String[] header1 = {"Header1", "Value1", "true"};
         String[] header2 = {"Header2", "Value2", "false"};

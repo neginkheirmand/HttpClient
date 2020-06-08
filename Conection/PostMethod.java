@@ -1,6 +1,6 @@
 package Conection;
 
-import GUI.FORM_DATA;
+import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 import GUI.TYPE;
 
@@ -100,7 +100,7 @@ public class  PostMethod {
 
 
             //in case its form url encoded
-            if (postRequest.getTypeOfData().equals(FORM_DATA.FORM_URL)) {
+            if (postRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.FORM_URL)) {
                 List<NameValuePair> params = null;
                 if (postRequest.getFormDataInfo() != null) {
                     params = new ArrayList<NameValuePair>();
@@ -116,7 +116,7 @@ public class  PostMethod {
                 if (params != null) {
                     httpPost.setEntity(new UrlEncodedFormEntity(params));
                 }
-            } else if (postRequest.getTypeOfData().equals(FORM_DATA.JSON)) {
+            } else if (postRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.JSON)) {
                 //in case is json we can use of .setHeader(HttpHeaders.CONTENT_TYPE, "application/json") in the HttpPost
                 if (postRequest.getFormDataInfo() != null && !((String) postRequest.getFormDataInfo()).equals("")) {
                     StringEntity entity = new StringEntity((String) postRequest.getFormDataInfo());
@@ -125,14 +125,14 @@ public class  PostMethod {
                     httpPost.setHeader("Accept", "application/json");
                     httpPost.setHeader("Content-type", "application/json");
                 }
-            } else if (postRequest.getTypeOfData().equals(FORM_DATA.BINARY)) {
+            } else if (postRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.BINARY)) {
                 //this part is done with the multi part form data too
                 if (postRequest.getFormDataInfo() != null) {
                     File uploadFile = new File((String) postRequest.getFormDataInfo());
                     if (uploadFile.exists() && uploadFile.isFile()) {
                         FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.DEFAULT_BINARY);
 //                        FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.APPLICATION_OCTET_STREAM);
-//                        FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.MULTIPART_FORM_DATA);
+//                        FileEntity fileToUpload = new FileEntity(uploadFile, ContentType.MULTIPART_MESSAGEBODY_TYPE);
                         httpPost.setEntity(fileToUpload);
                     } else {
                         System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "File not found");
@@ -305,7 +305,7 @@ public class  PostMethod {
     public static void main(String[] args) {
 
         String url = ""+(new Scanner(System.in)).nextLine();
-        Request postRequest = new Request("nameOfRequest", TYPE.POST, url , FORM_DATA.FORM_URL);
+        Request postRequest = new Request("nameOfRequest", TYPE.POST, url , MESSAGEBODY_TYPE.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
         String[] header3 = {"Header3", "Value3", "true"};
         headers.add(header3);

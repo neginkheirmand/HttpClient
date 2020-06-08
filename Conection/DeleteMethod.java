@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
-import GUI.FORM_DATA;
+import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 import GUI.TYPE;
 import org.apache.http.Header;
@@ -234,7 +234,7 @@ public class DeleteMethod {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy--MM--dd hh-mm-ss");
         Date date = new Date();
         String nameOfOutputFile="output_["+formatter.format(date)+"].txt";
-        Request testDeleteRequest = new Request("nameOfRequest" , TYPE.DELETE, url, FORM_DATA.FORM_URL);
+        Request testDeleteRequest = new Request("nameOfRequest" , TYPE.DELETE, url, MESSAGEBODY_TYPE.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
         String[] header1 = {"Header1", "Value1", "true"};
         String[] header2 = {"Header2", "Value2", "false"};

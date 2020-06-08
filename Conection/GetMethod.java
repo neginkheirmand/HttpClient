@@ -1,6 +1,6 @@
 package Conection;
 
-import GUI.FORM_DATA;
+import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 
 
@@ -324,7 +324,7 @@ public class GetMethod {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy--MM--dd hh-mm-ss");
         Date date = new Date();
         String nameOfOutputFile="output_["+formatter.format(date)+"]";
-        Request testGetRequest = new Request("nameOfGETRequest" , TYPE.GET, url, FORM_DATA.FORM_URL);
+        Request testGetRequest = new Request("nameOfGETRequest" , TYPE.GET, url, MESSAGEBODY_TYPE.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
         String[] header1 = {"Header1", "Value1", "true"};
         headers.add(header1);

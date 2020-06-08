@@ -1,6 +1,6 @@
 package InformationHandling;
 
-import GUI.FORM_DATA;
+import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 import GUI.TYPE;
 
@@ -98,7 +98,7 @@ public class LoadInfo {
 //                System.out.println(couldReadWithOutProblems+"8 i="+i);
                 str = str.replace("\n", "").replace("\r", "");
 //                System.out.println("(if the next is wrong check it)the Form Data is : *"+str+"*");
-                FORM_DATA typeOfFormData = FORM_DATA.getFormData(str);
+                MESSAGEBODY_TYPE typeOfFormData = MESSAGEBODY_TYPE.getFormData(str);
 //                System.out.println(i+")FormData = "+typeOfFormData);
 //                System.out.println(couldReadWithOutProblems+"9 i="+i);
                 Request newRequest = new Request(nameOfRequest, typeOfRequest, url, typeOfFormData);
@@ -264,7 +264,7 @@ public class LoadInfo {
         return savedRequests;
     }
 
-    private boolean readTheFormDataInFile(Scanner fileReader, FORM_DATA typeOfFormat, int index) {
+    private boolean readTheFormDataInFile(Scanner fileReader, MESSAGEBODY_TYPE typeOfFormat, int index) {
 
 //            Scanner fileReader = new Scanner(file);
         if (typeOfFormat.ordinal() == 0) {
@@ -575,15 +575,15 @@ public class LoadInfo {
             System.out.println("TYPE: "+savedRequests.get(i).getTypeOfRequest());
             System.out.println("url: "+savedRequests.get(i).getUrl());
             System.out.println("FORMAT: "+savedRequests.get(i).getTypeOfData());
-            if(savedRequests.get(i).getTypeOfData().equals(FORM_DATA.FORM_URL)) {
+            if(savedRequests.get(i).getTypeOfData().equals(MESSAGEBODY_TYPE.FORM_URL)) {
                 System.out.println("Form Url: ");
                 ArrayList<String[]> form = (ArrayList<String[]>)savedRequests.get(i).getFormDataInfo();
                 for(int j=0; j<form.size(); j++){
                     System.out.println(j+")"+form.get(j)[0]+" "+form.get(j)[1]+" "+form.get(j)[2]);
                 }
-            }else if(savedRequests.get(i).getTypeOfData().equals(FORM_DATA.BINARY)){
+            }else if(savedRequests.get(i).getTypeOfData().equals(MESSAGEBODY_TYPE.BINARY)){
                 System.out.println("binary path: "+(String)savedRequests.get(i).getFormDataInfo());
-            }else if(savedRequests.get(i).getTypeOfData().equals(FORM_DATA.JSON)){
+            }else if(savedRequests.get(i).getTypeOfData().equals(MESSAGEBODY_TYPE.JSON)){
                 System.out.println("JSON text: "+(String)savedRequests.get(i).getFormDataInfo());
             }
             System.out.println("auth enabled?: "+savedRequests.get(i).getAuth());

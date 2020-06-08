@@ -21,7 +21,7 @@ public class Request {
     //the url passed to
     private String url="";
     //the first tab takes its info from here
-    private FORM_DATA typeOfData = FORM_DATA.FORM_URL;
+    private MESSAGEBODY_TYPE typeOfData = MESSAGEBODY_TYPE.FORM_URL;
     private Object formDataInfo = null;
     //is there an authentication
     private boolean auth=false;
@@ -50,7 +50,7 @@ public class Request {
      * @param url url of the request
      * @param formatOfData form data of the request
      */
-    public Request(String nameOfRequest, TYPE typeOfRequest, String url, FORM_DATA formatOfData) {
+    public Request(String nameOfRequest, TYPE typeOfRequest, String url, MESSAGEBODY_TYPE formatOfData) {
         this.nameOfRequest = nameOfRequest;
         this.typeOfRequest = typeOfRequest;
         this.url = url;
@@ -58,11 +58,11 @@ public class Request {
         queryInfo=new ArrayList<>();
         headerInfo=new ArrayList<>();
         authInfo=new String[3];
-        if(typeOfData.equals(FORM_DATA.FORM_URL)){
+        if(typeOfData.equals(MESSAGEBODY_TYPE.FORM_URL)){
             this.formDataInfo = (ArrayList<String[]>) new ArrayList<String[]>();
-        }else if(typeOfData.equals(FORM_DATA.JSON)){
+        }else if(typeOfData.equals(MESSAGEBODY_TYPE.JSON)){
             this.formDataInfo = (String) "enter JSON format";
-        }else if(typeOfData.equals(FORM_DATA.BINARY)){
+        }else if(typeOfData.equals(MESSAGEBODY_TYPE.BINARY)){
             this.formDataInfo = (String) "basically the path of the file";
         }
     }
@@ -103,7 +103,7 @@ public class Request {
      * getter method
      * @return FORM DATA of the request
      */
-    public FORM_DATA getTypeOfData() {
+    public MESSAGEBODY_TYPE getTypeOfData() {
         return typeOfData;
     }
 
@@ -193,13 +193,13 @@ public class Request {
      */
     public void setTypeOfData(int indexOfFormat) {
 
-        this.typeOfData = FORM_DATA.getFormByIndex(indexOfFormat) ;
+        this.typeOfData = MESSAGEBODY_TYPE.getFormByIndex(indexOfFormat) ;
 
-        if(typeOfData.equals(FORM_DATA.FORM_URL)){
+        if(typeOfData.equals(MESSAGEBODY_TYPE.FORM_URL)){
             formDataInfo = new ArrayList<String []>();
-        }else if(typeOfData.equals(FORM_DATA.JSON)){
+        }else if(typeOfData.equals(MESSAGEBODY_TYPE.JSON)){
             formDataInfo = "";
-        }else if(typeOfData.equals(FORM_DATA.BINARY)){
+        }else if(typeOfData.equals(MESSAGEBODY_TYPE.BINARY)){
             formDataInfo = "";
         }
     }
@@ -273,7 +273,7 @@ public class Request {
 
     //costume methods
 
-    public void setTypeOfBody(FORM_DATA bodyType){
+    public void setTypeOfBody(MESSAGEBODY_TYPE bodyType){
         if(bodyType!=null) {
             typeOfData = bodyType;
         }
@@ -315,7 +315,7 @@ public class Request {
 
 
     public static void main(String[] args) {
-        Request newRequest = new Request("nameNewRequest" , TYPE.GET, "https://api.myproduct.com/v1/users", FORM_DATA.FORM_URL);
+        Request newRequest = new Request("nameNewRequest" , TYPE.GET, "https://api.myproduct.com/v1/users", MESSAGEBODY_TYPE.FORM_URL);
         newRequest.setSaved(false);
 
         //since we are creating a new Request with the default format of FORM URL

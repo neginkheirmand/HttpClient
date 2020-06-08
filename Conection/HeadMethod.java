@@ -1,6 +1,6 @@
 package Conection;
 
-import GUI.FORM_DATA;
+import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 import GUI.TYPE;
 import org.apache.http.Header;
@@ -217,7 +217,7 @@ public class HeadMethod {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy--MM--dd hh-mm-ss");
         Date date = new Date();
         String nameOfOutputFile="output_["+formatter.format(date)+"].txt";
-        Request testheadRequest = new Request("nameOfRequest" , TYPE.HEAD, url, FORM_DATA.FORM_URL);
+        Request testheadRequest = new Request("nameOfRequest" , TYPE.HEAD, url, MESSAGEBODY_TYPE.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
         String[] header1 = {"Header1", "Value1", "true"};
         String[] header2 = {"Header2", "Value2", "true"};

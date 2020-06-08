@@ -1,6 +1,6 @@
 package Bash;
 
-import GUI.FORM_DATA;
+import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 import GUI.TYPE;
 import org.json.JSONException;
@@ -141,7 +141,7 @@ public class Command {
 
             System.out.printf("| ");
 
-            System.out.println("FormData: " + FORM_DATA.getName(request.getTypeOfData()));
+            System.out.println("FormData: " + MESSAGEBODY_TYPE.getName(request.getTypeOfData()));
 
         }
 
@@ -296,13 +296,8 @@ public class Command {
                 //remember to do the save in the end
             }else if(commandToDo.getNumCommand().get(i)==7){
                 //-d
-                //but what if the user triggers both the -d and -j method at the very same time??
-                //then this request cannot be done and we will just return
-
                 //this is basically the multipart form data of the message body:
-                //checking if the -d is the last one then means the message body will come in the next line but if its not and the next
-                // string in the input is a String starting and ending with " means the message body came in the same line
-                //if after the option of -d comes another option means
+                //checking if the -d is the last one then means the message body was not given
                 String messageBody = "";
                 if(i==commandToDo.getNumCommand().size()-1){
                     //its the last one so the body is in the next line
@@ -311,7 +306,7 @@ public class Command {
                     //its the next String after this one
                     messageBody = commandToDo.getStrCommand().get(i+1);
                 }else{
-                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"wrong command, pay attention to the -d option");
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"-d option used but did ot specified the message body");
                 }
                 ArrayList<String[]> formData = commandToDo.splitData(messageBody);
                 if(formData==null){
@@ -320,7 +315,7 @@ public class Command {
                 }
                 //so we are sure we actually have an valid message body in multipart format
                 System.out.println("valid message body");
-                commandToDo.getRequest().setTypeOfBody(FORM_DATA.FORM_URL);
+                commandToDo.getRequest().setTypeOfBody(MESSAGEBODY_TYPE.MULTIPART_FORM);
                 commandToDo.getRequest().setFormDataInfo(formData);
             }else if(commandToDo.getNumCommand().get(i)==8){
                 //-j
@@ -346,7 +341,7 @@ public class Command {
                     return;
                 }
                 //now we have the json object
-                commandToDo.getRequest().setTypeOfBody(FORM_DATA.JSON);
+                commandToDo.getRequest().setTypeOfBody(MESSAGEBODY_TYPE.JSON);
                 commandToDo.getRequest().setFormDataInfo(jsonMsBody);
             }else if(commandToDo.getNumCommand().get(i)==9){
                 //--upload
@@ -371,7 +366,7 @@ public class Command {
                 }
                 File file = new File(path);
                 if(file.exists() && file.isFile()){
-                    commandToDo.getRequest().setTypeOfBody(FORM_DATA.BINARY);
+                    commandToDo.getRequest().setTypeOfBody(MESSAGEBODY_TYPE.BINARY);
                     commandToDo.getRequest().setFormDataInfo(file.getAbsolutePath());
                 }else if(file.exists() && file.isDirectory()){
                     System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" invalid path -pointing to directory-");
@@ -419,6 +414,28 @@ public class Command {
                 }else{
                     return;
                 }
+            }else if(commandToDo.getNumCommand().get(i)==15){
+                //--data-urlencoded
+                //this is basically the data of the message body:
+                //checking if the --data-urlencoded is the last one then means the message body was not given
+                String messageBody = "";
+                if(i==commandToDo.getNumCommand().size()-1){
+                    //its the last one so the body is in the next line
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"Used --data-urlencoded option but did not specify the message body");
+                }else if(commandToDo.getNumCommand().get(i+1)==-1){
+                    //its the next String after this one
+                    messageBody = commandToDo.getStrCommand().get(i+1);
+                }else{
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"--data-urlencoded option used but did ot specified the message body");
+                }
+                ArrayList<String[]> formData = commandToDo.splitData(messageBody);
+                if(formData==null){
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Invalid body");
+                    return;
+                }
+                //so we are sure we actually have an valid message body in urlencoded
+                commandToDo.getRequest().setTypeOfBody(MESSAGEBODY_TYPE.FORM_URL);
+                commandToDo.getRequest().setFormDataInfo(formData);
             }
         }
         if(commandToDo.getRequest().isSaved()){

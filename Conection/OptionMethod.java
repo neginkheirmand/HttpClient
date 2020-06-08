@@ -1,6 +1,6 @@
 package Conection;
 
-import GUI.FORM_DATA;
+import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 import GUI.TYPE;
 import org.apache.http.Header;
@@ -229,7 +229,7 @@ public class OptionMethod {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy--MM--dd hh-mm-ss");
         Date date = new Date();
         String nameOfOutputFile="output_["+formatter.format(date)+"].txt";
-        Request testoptionRequest = new Request("nameOfRequest" , TYPE.OPTION, url, FORM_DATA.FORM_URL);
+        Request testoptionRequest = new Request("nameOfRequest" , TYPE.OPTION, url, MESSAGEBODY_TYPE.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
         String[] header1 = {"Header1", "Value1", "true"};
         String[] header2 = {"Header2", "Value2", "true"};

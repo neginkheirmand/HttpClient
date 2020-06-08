@@ -1,6 +1,6 @@
 package InformationHandling;
 
-import GUI.FORM_DATA;
+import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 import GUI.TYPE;
 
@@ -48,7 +48,7 @@ public class SaveInfo {
                 //the url "it could be nothing"
                 fileWriter.write(requestsInfo.get(i).getUrl()+"\n");
                 //now the type of FORM DATA and after it depending of this type, the Object is to be written in the file
-                String typeOfFormData = FORM_DATA.getName(requestsInfo.get(i).getTypeOfData());
+                String typeOfFormData = MESSAGEBODY_TYPE.getName(requestsInfo.get(i).getTypeOfData());
                 System.out.println("*"+typeOfFormData);
                 fileWriter.write(typeOfFormData+"\n");
                 fileWriter.close();
@@ -139,8 +139,8 @@ public class SaveInfo {
     private boolean writeTheFormDataInFile(File file, String typeOfFormat, Object format) {
         try {
             FileWriter fileWriter = new FileWriter(file, true);
-//            if (FORM_DATA.getIndex(typeOfFormat) == 0) {
-            if (FORM_DATA.FORM_URL.toString().equals(typeOfFormat)) {
+//            if (MESSAGEBODY_TYPE.getIndex(typeOfFormat) == 0) {
+            if (MESSAGEBODY_TYPE.FORM_URL.toString().equals(typeOfFormat)) {
                 ArrayList<String[]> formURLEncoded = (ArrayList<String[]>) format;
                 try {
                     fileWriter.write(formURLEncoded.size() + "\n");
@@ -157,8 +157,8 @@ public class SaveInfo {
                     return false;
                 }
                 return true;
-//            } else if (FORM_DATA.getIndex(typeOfFormat) == 1) {
-            } else if (FORM_DATA.JSON.toString().equals(typeOfFormat)) {
+//            } else if (MESSAGEBODY_TYPE.getIndex(typeOfFormat) == 1) {
+            } else if (MESSAGEBODY_TYPE.JSON.toString().equals(typeOfFormat)) {
                 //its JSON
                 System.out.println(format.getClass());
                 String JSON = (String) format;
@@ -171,8 +171,8 @@ public class SaveInfo {
                     return false;
                 }
                 return true;
-//            } else if (FORM_DATA.getIndex(typeOfFormat) == 3) {
-            } else if (FORM_DATA.BINARY.toString().equals(typeOfFormat)) {
+//            } else if (MESSAGEBODY_TYPE.getIndex(typeOfFormat) == 3) {
+            } else if (MESSAGEBODY_TYPE.BINARY.toString().equals(typeOfFormat)) {
                 //its BINARY
                 try {
                     String pathPfFile = (String) format;
@@ -249,7 +249,7 @@ public class SaveInfo {
 
     public static void main(String[] args) {
 
-        Request request1 = new Request("name Of request1", TYPE.GET, "www.google1.com", FORM_DATA.JSON);
+        Request request1 = new Request("name Of request1", TYPE.GET, "www.google1.com", MESSAGEBODY_TYPE.JSON);
         request1.setAuth(true);
         String[] authInfo1 = {"bearer token", "prefix", "true"};
         request1.setAuthInfo(authInfo1);
@@ -263,7 +263,7 @@ public class SaveInfo {
         request1.setFormDataInfo("this text written as the code in Json ");
 
 
-        Request request2 = new Request("name Of request2", TYPE.PATCH, "www.google2.com", FORM_DATA.BINARY);
+        Request request2 = new Request("name Of request2", TYPE.PATCH, "www.google2.com", MESSAGEBODY_TYPE.BINARY);
         request2.setAuth(true);
         String[] authInfo2 = {"bearer token", "prefix", "true"};
         request2.setAuthInfo(authInfo2);
@@ -286,7 +286,7 @@ public class SaveInfo {
         request2.setFormDataInfo("this is supposed to be the path of a file");
 
 
-        Request request3 = new Request("name Of request3", TYPE.PUT, "www.google3.com", FORM_DATA.FORM_URL);
+        Request request3 = new Request("name Of request3", TYPE.PUT, "www.google3.com", MESSAGEBODY_TYPE.FORM_URL);
         request3.setAuth(false);
         ArrayList<String[]> headers3 = new ArrayList<>();
         String[] header31={
