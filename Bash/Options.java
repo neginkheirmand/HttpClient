@@ -57,7 +57,7 @@ public class Options {
             requestOptions.put("-q", 14);
             requestOptions.put("--query", 14);
 
-            requestOptions.put("--data-binary", 15);
+            requestOptions.put("--data-urlencoded", 15);
         }
 
         requestNumberCommand = new ArrayList<>();

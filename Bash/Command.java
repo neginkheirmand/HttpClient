@@ -361,9 +361,16 @@ public class Command {
                 }else{
                     System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Used --upload option but did not specified the path of file.");
                 }
-                File file = new File(pathOfFile);
+                String path="";
+                if( pathOfFile.charAt(0)!='\"' || pathOfFile.charAt(pathOfFile.length()-1)!='\"'){
+                    System.out.println("the path of file should be in between \"");
+                    return;
+                }
+                for(int k=1; k<pathOfFile.length()-1; k++){
+                    path+= pathOfFile.charAt(k)+"";
+                }
+                File file = new File(path);
                 if(file.exists() && file.isFile()){
-                    System.out.println("the file exist, HERE WE HAVE TO UPLOAD IT");
                     commandToDo.getRequest().setTypeOfBody(FORM_DATA.BINARY);
                     commandToDo.getRequest().setFormDataInfo(file.getAbsolutePath());
                 }else if(file.exists() && file.isDirectory()){

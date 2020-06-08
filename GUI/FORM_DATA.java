@@ -6,8 +6,8 @@ package GUI;
 public enum FORM_DATA{
     FORM_URL,
     JSON,
-    BINARY;
-
+    BINARY,
+    MULTIPART_FORM;
     /**
      * this method takes a form data and return it in String mode
      * @param formData the form data passed to the method
@@ -20,6 +20,8 @@ public enum FORM_DATA{
             return "JSON";
         }else if(formData.equals(BINARY)){
             return "BINARY";
+        }else if(formData.equals(MULTIPART_FORM)){
+            return "MULTIPART_FORM";
         }
         return "what the";
     }
@@ -36,7 +38,9 @@ public enum FORM_DATA{
             return 1;
         }else if(formData.equals(BINARY+"")){
             return 2;
-        }else{
+        }else if(formData.equals(MULTIPART_FORM+"")){
+            return 3;
+        }{
             return -1;
         }
     }
@@ -49,6 +53,8 @@ public enum FORM_DATA{
             return JSON;
         }else if(index == 3){
             return BINARY;
+        }else if(index == 4){
+            return MULTIPART_FORM;
         }
         return null;
     }
@@ -66,6 +72,8 @@ public enum FORM_DATA{
             return JSON;
         }else if(formData.equals(BINARY+"")){
             return BINARY;
+        }else if(formData.equals(MULTIPART_FORM+"")){
+            return MULTIPART_FORM;
         }else{
             return null;
         }
