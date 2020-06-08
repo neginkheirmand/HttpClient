@@ -8,7 +8,7 @@ public class TestWithScanner {
     public static void main(String[] args) {
         Options newOptionIdentifier = new Options();
 
-        while (true) {
+        while(true) {
             String input="";
             try {
                 input = (new Scanner(System.in)).nextLine();
@@ -17,8 +17,5 @@ public class TestWithScanner {
                 System.out.println("Please enter valid input");
             }
         }
-
-
-
     }
 }

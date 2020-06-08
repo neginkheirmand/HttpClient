@@ -1,0 +1,90 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+<html dir=rtl>
+<head>
+	<title>Login</title>
+	<link rel=stylesheet type=text/css href=/aportal/regadm/style/global.css>
+</head>
+	
+<body>
+
+<br><br>
+<table width=300 align=center border=0 cellpadding=0 cellspacing=0>
+<tr>
+	<td align=center>
+		<span class=ttl>ورود کاربران پورتال دانشگاه</span>
+		<br><br>
+		<span class=ttm>در مراقبت از کلمه عبور خود دقت کافي مبذول داريد.</span>
+		<hr>
+		<br><br>
+		
+		<span class=ttm></span >
+	</td>
+</tr>
+<tr>
+	<td>
+		<br>
+		<table class=logtable align=center cellpadding=0 cellspacing=0>
+		<form name=login method=post action=login.jsp>
+			<tr>
+				<td class=logtlc width=80>نام کاربري:</td>
+				<td class=logtrc width=170 valign=middle><input class=logeditbox type=text name=username id=username maxlength=10 style='width: 150px;'></td>
+			</tr>
+			<tr>
+				<td class=logtlc width=80>کلمه عبور:</td>
+				<td class=logtrc width=170 valign=middle><input class=logeditbox type=password name=password id=password maxlength=10 style='width: 150px;'></td>
+			</tr>
+
+			<tr>
+				<td>&nbsp;</td>
+				<td class=logtrc><img src="PassImageServlet" border="0"></td>
+			</tr>
+			<tr>
+				<td class=logtlc width=80>حروف تصوير:</td>
+				<td class=logtrc width=170 valign=middle><input class=logeditbox type=text name=passline id=passline maxlength=10 style='width: 150px;'></td>
+			</tr>			
+			<tr>
+				<td>&nbsp;</td>
+				<td class=logtrc><input class=logbutton type=submit value="ورود به پورتال" name=login></td>
+			</tr>
+		</form>
+		</table>
+	</td>
+</tr>
+<tr>
+	<td align=center>
+		<span><a class=fillink href="/aportal/changePassword.jsp">فراموشي کلمه عبور اساتيد</a></span><br>
+		<span><a class=fillink href="/aportal/changePasswordS.jsp">فراموشي کلمه عبور دانشجويان</a></span>
+	</td>
+</tr>
+</table>
+
+</body>
+</html>

@@ -57,7 +57,7 @@ public class Options {
             requestOptions.put("-q", 14);
             requestOptions.put("--query", 14);
 
-
+            requestOptions.put("--data-binary", 15);
         }
 
         requestNumberCommand = new ArrayList<>();
@@ -112,12 +112,6 @@ public class Options {
         for(int i=0; i<input.length(); i++){
             if(str.length()==0){
                 if (input.charAt(i) == ' ') {
-                    //the last word ended
-                    if (str.length() > 0) {
-                        //add as a part of the input
-                        inputOptions.add(str);
-                        str = "";
-                    }
                     continue;
                 }
                 //a non ' ' char
@@ -125,12 +119,9 @@ public class Options {
             }else {
                 if(str.charAt(0)=='\"'){
                     if (input.charAt(i) == '\"') {
-                        //the last word ended
-                        if (str.length() > 0) {
                             //add as a part of the input
                             inputOptions.add(str+"\"");
                             str = "";
-                        }
                         continue;
                     }
                     //a non ' ' char
@@ -138,11 +129,9 @@ public class Options {
                 }else{
                     if (input.charAt(i) == ' ') {
                         //the last word ended
-                        if (str.length() > 0) {
                             //add as a part of the input
                             inputOptions.add(str);
                             str = "";
-                        }
                         continue;
                     }
                     //a non ' ' char

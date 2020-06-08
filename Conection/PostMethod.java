@@ -29,7 +29,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 
-public class PostMethod {
+public class  PostMethod {
     private Request postRequest;
     //afterwards we can put an Array list of responses so that we have the history of the request
     //but for that definitely have in mind the edit action on the request
