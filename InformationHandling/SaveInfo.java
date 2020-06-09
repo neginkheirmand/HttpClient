@@ -4,10 +4,7 @@ import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 import GUI.TYPE;
 
-import java.io.FileNotFoundException;
-import java.io.FileWriter;   // Import the FileWriter class
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 
@@ -18,9 +15,9 @@ import java.util.ArrayList;
  * @since       1.0
  */
 public class SaveInfo {
-
+/*
     public SaveInfo(ArrayList<Request> requestsInfo) {
-//        File file = new File((new File(".")).getAbsolutePath() + "\\src\\InformationHandling.SavedInformation\\RequestHistory.txt");
+//        File file = new File((new File(".")).getAbsolutePath() + "\\src\\InformationHandling\\SavedInformation\\RequestHistory.txt");
         File file = new File(".");
         try {
             file = new File((new File(".")).getAbsolutePath()+"\\src\\InformationHandling\\SavedInformation\\RequestHistory.txt");
@@ -97,18 +94,34 @@ public class SaveInfo {
         }
 
     }
+*/
+
+    public SaveInfo(ArrayList<Request> requestsInfo) {
+        try {
+            File container = new File((new File(".")).getAbsolutePath()+"\\src\\InformationHandling\\SavedInformation\\RequestHistory.ser");
+
+            container.getParentFile().mkdirs();
+            container.createNewFile();
+
+            FileOutputStream fileOut =
+                    new FileOutputStream(container);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+
+            out.writeObject(requestsInfo);
+            out.close();
+            fileOut.close();
+            System.out.println("Serialized data is saved in SavedRequests.ser");
+        } catch (IOException i) {
+            System.out.println("was not able to save info");
+            i.printStackTrace();
+        }
+    }
 
     public void savePreferences( ArrayList<String> preferences){
         File preferenceFile;
         try {
             preferenceFile = new File((new File(".")).getAbsolutePath()+"\\src\\InformationHandling\\SavedInformation\\Preferences.txt");
-            if(preferenceFile.createNewFile()) {
-                System.out.println("was created");
-            }else{
-                System.out.println("wasnt created");
-
-            }
-            //created or not what is important is that the file exists already
+            preferenceFile.createNewFile();
 
         } catch (IOException exception) {
             System.out.println("Could not save the preference info in the save class");

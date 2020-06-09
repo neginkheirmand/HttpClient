@@ -15,7 +15,7 @@ public class LoadInfo {
     private boolean couldReadPreferencesWithOutProblems ;
     private ArrayList<String> preferences = null;
 
-
+/*
     public LoadInfo() {
         couldReadWithOutProblems=true;
 //        System.out.println(couldReadWithOutProblems+"1");
@@ -175,6 +175,39 @@ public class LoadInfo {
         } catch (IOException exception) {
             couldReadWithOutProblems=false;
             System.out.println("Could not load the info8");
+            return;
+        }
+
+    }
+
+ */
+
+    public LoadInfo() {
+//        savedRequests = new ArrayList<>();
+        try {
+            couldReadWithOutProblems=true;
+            File container = new File((new File(".")).getAbsolutePath()+"\\src\\InformationHandling\\SavedInformation\\RequestHistory.ser");
+
+            FileInputStream fis = new FileInputStream(container);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+
+            savedRequests = (ArrayList) ois.readObject();
+
+            ois.close();
+            fis.close();
+        } catch(StreamCorruptedException exception){
+            exception.printStackTrace();
+            System.out.println("the file containing the info of the last run is not found");
+            couldReadWithOutProblems = false;
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            System.out.println("could not load the info");
+            couldReadWithOutProblems = false;
+            return;
+        } catch (ClassNotFoundException c) {
+            c.printStackTrace();
+            System.out.println("could not load the info");
+            couldReadWithOutProblems = false;
             return;
         }
 

@@ -65,7 +65,7 @@ public class CreateGUI {
         LoadInfo loader = new LoadInfo();
         if(!loader.getCouldReadWithOutProblems()){
             savedRequests = new ArrayList<>();
-            System.out.println("nothing saved, the historial of the requests i empty");
+            System.out.println("nothing saved, the historial of the requests is empty");
         }else{
             savedRequests = loader.getSavedRequests();
             if(savedRequests == null){

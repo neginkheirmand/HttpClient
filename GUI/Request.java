@@ -23,6 +23,7 @@ public class Request implements java.io.Serializable {
     private String url="";
     //the first tab takes its info from here
     private MESSAGEBODY_TYPE typeOfData = MESSAGEBODY_TYPE.FORM_URL;
+//the next one can be serialized
     private Object formDataInfo = null;
     //is there an authentication
     private boolean auth=false;
