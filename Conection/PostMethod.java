@@ -15,7 +15,9 @@ import java.util.Scanner;
 import java.io.*;
 import org.apache.http.Header;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -143,22 +145,33 @@ public class  PostMethod {
                     return;
                 }
             } else if (postRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
-                List<NameValuePair> params = null;
-                httpPost.setHeader("Content-Type", "multipart/form-data; boundary=");
+                List<NameValuePair> body = null;
+                System.out.println(0);
+//                httpPost.setHeader("Content-Type", "multipart/form-data; boundary="+ "*****" + Long.toString(System.currentTimeMillis()) + "*****");
                 if (postRequest.getFormDataInfo() != null) {
-                    params = new ArrayList<NameValuePair>();
+                    System.out.println(1);
+                    body = new ArrayList<NameValuePair>();
                     for (int i = 0; i < ((ArrayList<String[]>) postRequest.getFormDataInfo()).size(); i++) {
                         if (((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[2].equals("true") &&
                                 ((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[0] != null &&
                                 ((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[1] != null) {
-                            params.add(new BasicNameValuePair(((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[0],
+                            body.add(new BasicNameValuePair(((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[0],
                                     ((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[1]));
                         }
                     }
+                    System.out.println(12);
+//                    InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
+                    HttpEntity entity = EntityBuilder.create()
+                            .setContentType(ContentType.MULTIPART_FORM_DATA)
+                            .setParameters(body)
+//                            .setStream(new BufferedInputStream())
+                            .build();
+
+                    System.out.println(123);
+                    httpPost.setEntity(entity);
+
                 }
-                if (params != null) {
-                    httpPost.setEntity(new UrlEncodedFormEntity(params));
-                }
+
             }
             //we have to add the option of form data/multipart form
 
@@ -322,7 +335,7 @@ public class  PostMethod {
     public static void main(String[] args) {
 
         String url = ""+(new Scanner(System.in)).nextLine();
-        Request postRequest = new Request("nameOfRequest", TYPE.POST, url , MESSAGEBODY_TYPE.FORM_URL);
+        Request postRequest = new Request("nameOfRequest", TYPE.POST, url , MESSAGEBODY_TYPE.MULTIPART_FORM);
         ArrayList<String[]> headers = new ArrayList<>();
         String[] header3 = {"Header3", "Value3", "true"};
         headers.add(header3);
@@ -337,6 +350,17 @@ public class  PostMethod {
         queryPatams.add(param3);
         queryPatams.add(param4);
         postRequest.setQueryInfo(queryPatams);
+        ArrayList<String[]> body = new ArrayList<>();
+        String[] data1 = {"Header1", "Value1", "true"};
+        String[] data2 = {"Header2", "Value2", "true"};
+        String[] data3 = {"Header3", "Value3", "true"};
+        String[] data4 = {"Header4", "Value4", "true"};
+        body.add(data1);
+        body.add(data2);
+        body.add(data3);
+        body.add(data4);
+        postRequest.setFormDataInfo(body);
+
         PostMethod postCommand = new PostMethod(postRequest);
 //        postCommand.executePost("", true, true);
         postCommand.executePost("picture.png", true, true);

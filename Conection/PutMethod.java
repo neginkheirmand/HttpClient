@@ -17,7 +17,9 @@ import java.io.*;
 import GUI.TYPE;
 import org.apache.http.Header;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPut;
@@ -133,9 +135,35 @@ public class PutMethod {
                     System.out.println("\033[0;31m" + "Line 115 of class PutMethod" + "\033[0m");
                     return;
                 }
+            }else if (putRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
+                List<NameValuePair> body = null;
+                System.out.println(0);
+//                httpPost.setHeader("Content-Type", "multipart/form-data; boundary="+ "*****" + Long.toString(System.currentTimeMillis()) + "*****");
+                if (putRequest.getFormDataInfo() != null) {
+                    System.out.println(1);
+                    body = new ArrayList<NameValuePair>();
+                    for (int i = 0; i < ((ArrayList<String[]>) putRequest.getFormDataInfo()).size(); i++) {
+                        if (((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[2].equals("true") &&
+                                ((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[0] != null &&
+                                ((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[1] != null) {
+                            body.add(new BasicNameValuePair(((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[0],
+                                    ((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[1]));
+                        }
+                    }
+                    System.out.println(12);
+//                    InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
+                    HttpEntity entity = EntityBuilder.create()
+                            .setContentType(ContentType.MULTIPART_FORM_DATA)
+                            .setParameters(body)
+//                            .setStream(new BufferedInputStream())
+                            .build();
+
+                    System.out.println(123);
+                    httpPut.setEntity(entity);
+
+                }
+
             }
-            //we have to add the option of form data/multipart form
-//.addHeader("Content-type", "multipart/form-data");
 
 
             //Execute the put request

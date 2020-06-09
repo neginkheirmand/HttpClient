@@ -91,6 +91,15 @@ public class MultiPartPost {
             connection.setRequestProperty("User-Agent", "Multipart HTTP Client 1.0");
             connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
+            //the headers
+            if(postRequest.getHeaderInfo()!=null && postRequest.getHeaderInfo().size()!=0){
+                for(int i=0; i<postRequest.getHeaderInfo().size(); i++){
+                    if(postRequest.getHeaderInfo().get(i)[2].equals("true")){
+                        connection.setRequestProperty(postRequest.getHeaderInfo().get(i)[0], postRequest.getHeaderInfo().get(i)[1]);
+                    }
+                }
+            }
+
             outputStream = new DataOutputStream(connection.getOutputStream());
             /*
             outputStream.writeBytes(twoHyphens + boundary + lineEnd);
