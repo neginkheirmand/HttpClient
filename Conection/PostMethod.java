@@ -7,6 +7,7 @@ import GUI.TYPE;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -26,6 +27,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
@@ -43,15 +45,36 @@ public class  PostMethod {
 
     public void executePost(String outPutFile, boolean followRedirect, boolean showresponseHeaders) {
 
-        //Create an HttpClient object
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-
+        CloseableHttpClient httpClient;
+        if (followRedirect) {
+            //method 1:
+            //the next code does show you that you are being redirected
+            httpClient = HttpClients.createDefault();
+            //method 2:
+            //the next code doesnt show you that you are being redirected
+//        httpClient =  HttpClientBuilder.create()
+//                .setRedirectStrategy(new LaxRedirectStrategy()).build();
+        } else {
+            httpClient = HttpClientBuilder.create().disableRedirectHandling().build();
+        }
         if (postRequest == null) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problems in setting the request");
             return;
         }
 
         try {
+            if(postRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
+                MultiPartPost multiPartPost = new MultiPartPost(postRequest);
+                try {
+                    multiPartPost.multipartPostRequest(outPutFile, followRedirect, showresponseHeaders);
+                }catch (ParseException exception){
+                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problems in setting the request");
+                }catch (IOException exception){
+                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problems in setting the request");
+                }
+                return;
+            }
+
             //Create an HttpGet object
             //creating the query parameters
             HttpParams queryParams = null;
@@ -144,7 +167,7 @@ public class  PostMethod {
                     System.out.println("\033[0;31m" + "Line 99 of class PostMethod" + "\033[0m");
                     return;
                 }
-            } else if (postRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
+            }/* else if (postRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
                 List<NameValuePair> body = null;
                 System.out.println(0);
 //                httpPost.setHeader("Content-Type", "multipart/form-data; boundary="+ "*****" + Long.toString(System.currentTimeMillis()) + "*****");
@@ -176,8 +199,10 @@ public class  PostMethod {
             //we have to add the option of form data/multipart form
 
 
+            */
+
             //Execute the Post request
-            CloseableHttpResponse httpResponse = httpclient.execute(httpPost);
+            CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
             System.out.println("POST Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
 
@@ -308,7 +333,7 @@ public class  PostMethod {
             System.out.println("\033[0;31m" + "Error" + "\033[0m" + " Problems in setting the query ");
         } finally {
             try {
-                httpclient.close();
+                httpClient.close();
             } catch (java.lang.IllegalArgumentException exception) {
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Invalid URL, check the spacing");
             } catch (org.apache.http.client.ClientProtocolException exception) {

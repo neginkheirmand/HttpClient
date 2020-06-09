@@ -17,6 +17,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -39,8 +40,19 @@ public class PatchMethod {
 
     public void executePatch(String outPutFile, boolean followRedirect, boolean showresponseHeaders) {
 
-        //Create an HttpClient object
-        CloseableHttpClient httpclient = HttpClients.createDefault();
+
+        CloseableHttpClient httpClient;
+        if (followRedirect) {
+            //method 1:
+            //the next code does show you that you are being redirected
+            httpClient = HttpClients.createDefault();
+            //method 2:
+            //the next code doesnt show you that you are being redirected
+//        httpClient =  HttpClientBuilder.create()
+//                .setRedirectStrategy(new LaxRedirectStrategy()).build();
+        } else {
+            httpClient = HttpClientBuilder.create().disableRedirectHandling().build();
+        }
 
         if (patchRequest == null) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problems in setting the request");
@@ -153,7 +165,7 @@ public class PatchMethod {
 
 
             //Execute the patch request
-            CloseableHttpResponse httpResponse = httpclient.execute(httpPatch);
+            CloseableHttpResponse httpResponse = httpClient.execute(httpPatch);
             System.out.println("PATCH Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
 
@@ -281,7 +293,7 @@ public class PatchMethod {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with the query params");
         } finally {
             try {
-                httpclient.close();
+                httpClient.close();
             } catch (java.lang.IllegalArgumentException exception) {
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Invalid URL, check the spacing");
             } catch (org.apache.http.client.ClientProtocolException exception) {
