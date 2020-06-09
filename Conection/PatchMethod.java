@@ -161,6 +161,30 @@ public class PatchMethod {
 
                 }
 
+            }else if (patchRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
+                List<NameValuePair> body = null;
+//                httpPost.setHeader("Content-Type", "multipart/form-data; boundary="+ "*****" + Long.toString(System.currentTimeMillis()) + "*****");
+                if (patchRequest.getFormDataInfo() != null) {
+                    body = new ArrayList<NameValuePair>();
+                    for (int i = 0; i < ((ArrayList<String[]>) patchRequest.getFormDataInfo()).size(); i++) {
+                        if (((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[2].equals("true") &&
+                                ((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[0] != null &&
+                                ((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[1] != null) {
+                            body.add(new BasicNameValuePair(((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[0],
+                                    ((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[1]));
+                        }
+                    }
+//                    InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
+                    HttpEntity entity = EntityBuilder.create()
+                            .setContentType(ContentType.MULTIPART_FORM_DATA)
+                            .setParameters(body)
+//                            .setStream(new BufferedInputStream())
+                            .build();
+                    httpPatch.setEntity(entity);
+
+                    System.out.println("+"+httpPatch.getHeaders("Content-Type"));
+                }
+
             }
 
 
@@ -327,6 +351,9 @@ public class PatchMethod {
         headers.add(header1);
         headers.add(header2);
         headers.add(header3);
+
+
+
         patchRequest.setHeaderInfo(headers);
         PatchMethod postCommand = new PatchMethod(patchRequest);
 //        postCommand.executePost("", true, true);

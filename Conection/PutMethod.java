@@ -7,6 +7,7 @@ import GUI.MESSAGEBODY_TYPE;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -66,6 +67,20 @@ public class PutMethod {
         }
 
         try {
+
+
+            if(putRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
+                MultiPartPut multiPartPut = new MultiPartPut(putRequest);
+                try {
+                    multiPartPut.multipartPutRequest(outPutFile, followRedirect, showresponseHeaders);
+                }catch (ParseException exception){
+                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problems in setting the request");
+                }catch (IOException exception){
+                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problems in setting the request");
+                }
+                return;
+            }
+
             //Create an HttpGet object
             HttpPut httpPut;
             if (putRequest.getUrl() != null && !putRequest.getUrl().equals("")) {

@@ -140,7 +140,7 @@ public class MultiPartPost {
                     List<String> values = map.get(key);
 
                     for (String aValue : values) {
-                        System.out.println("\t" + aValue);
+                        System.out.println(aValue);
                     }
                 }
             }
