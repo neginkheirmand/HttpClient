@@ -45,7 +45,7 @@ public class OptionMethod {
             //the next code does show you that you are being redirected
             httpClient = HttpClients.createDefault();
             //method 2:
-            //the next code doesnt show you that you are being redirected
+            //the next code does not show you that you are being redirected
 //        httpClient =  HttpClientBuilder.create()
 //                .setRedirectStrategy(new LaxRedirectStrategy()).build();
         } else {

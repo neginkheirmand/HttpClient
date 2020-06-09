@@ -142,6 +142,23 @@ public class  PostMethod {
                     System.out.println("\033[0;31m" + "Line 99 of class PostMethod" + "\033[0m");
                     return;
                 }
+            } else if (postRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
+                List<NameValuePair> params = null;
+                httpPost.setHeader("Content-Type", "multipart/form-data; boundary=");
+                if (postRequest.getFormDataInfo() != null) {
+                    params = new ArrayList<NameValuePair>();
+                    for (int i = 0; i < ((ArrayList<String[]>) postRequest.getFormDataInfo()).size(); i++) {
+                        if (((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[2].equals("true") &&
+                                ((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[0] != null &&
+                                ((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[1] != null) {
+                            params.add(new BasicNameValuePair(((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[0],
+                                    ((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[1]));
+                        }
+                    }
+                }
+                if (params != null) {
+                    httpPost.setEntity(new UrlEncodedFormEntity(params));
+                }
             }
             //we have to add the option of form data/multipart form
 
