@@ -206,8 +206,6 @@ public class PatchMethod {
                 }
 
                 if (outPutFile == null || outPutFile.length() == 0) {
-
-
                     BufferedReader reader;
                     try {
                         reader = new BufferedReader(new InputStreamReader(

@@ -27,7 +27,7 @@ public class CreateGUI {
     private JFrame mainFrame;
     //number of times the Body Type ComboBox changed
     private static int timesBodyTypeComboBoxChanged = 0;
-    //number of times the ayth ComboBox changed
+    //number of times the auth ComboBox changed
     private static int timesAuthTypeComboBoxChanged = 0;
 
 
@@ -1178,7 +1178,8 @@ public class CreateGUI {
             new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\url-icon.png"), "Form Url Encoded"},
             {new Font("Serif", Font.BOLD, 15), new java.awt.Color(255, 161, 20),new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\json-icon-1.png") , "JSON"},
             {new Font("Serif", Font.BOLD, 15), Color.BLACK, null, "SEPARATOR"},
-            {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\binary-file-icon1.png"), "Binary File"}
+            {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\binary-file-icon1.png"), "Binary File"},
+            {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\multipartform-icon.png"), "Multi-Part Form"}
 
         };
         //the costume renderer for the JcomboBox containing the methods for sending the data
@@ -1209,11 +1210,11 @@ public class CreateGUI {
         }else{
             dataType.setBackground(new java.awt.Color(93, 93, 86));
         }
-        if(colorOfThemeForground.equals(purple)) {
-            dataType.setForeground(new java.awt.Color(127, 113, 255));
-        }else{
-            dataType.setForeground(new java.awt.Color(59, 192, 255));
-        }
+//        if(colorOfThemeForground.equals(purple)) {
+//            dataType.setForeground(new java.awt.Color(127, 113, 255));
+//        }else{
+//            dataType.setForeground(new java.awt.Color(59, 192, 255));
+//        }
         dataType.setForeground(Color.WHITE);
         dataType.setRenderer(renderer);
         dataType.addActionListener(new ActionListener() {
@@ -1234,6 +1235,8 @@ public class CreateGUI {
                 dataType.setSelectedIndex(1);
             }else if(savedRequests.get(indexOfRequest).getTypeOfData().equals(MESSAGEBODY_TYPE.BINARY)){
                 dataType.setSelectedIndex(3);
+            }else if(savedRequests.get(indexOfRequest).getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)){
+                dataType.setSelectedIndex(4);
             }
         }
         setRequestTabedPane.setTabComponentAt(0, dataType);
@@ -1510,6 +1513,20 @@ public class CreateGUI {
             body.add(fileChooserButton, constraints);
 
 
+        }else if(bodyType == 4) {
+            //it form data
+            GridBagConstraints constraints1 = new GridBagConstraints();
+            constraints1.gridy = 0;
+            constraints1.gridx = 0;
+            constraints1.weightx = 0;
+            constraints1.weighty = 0;
+            constraints1.fill = GridBagConstraints.HORIZONTAL;
+            constraints1.anchor = GridBagConstraints.FIRST_LINE_START;
+            createFormData(body, constraints1);
+            mainFrame.revalidate();
+            mainFrame.repaint();
+            mainFrame.pack();
+
         }
         mainFrame.revalidate();
         mainFrame.repaint();
@@ -1593,8 +1610,7 @@ public class CreateGUI {
         checkBox.setOpaque(false);
         newKeyValuePair.add(checkBox);
         //now the trash icon Button
-        icons[21]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\delete-icon1.png");
-        JButton trash = new JButton(icons[21]);
+        JButton trash = new JButton(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\delete-icon1.png"));
         trash.setBackground(colorOfThemeBackground2);
         trash.setOpaque(false);
         trash.setPreferredSize(new Dimension(18, 18));
@@ -1918,8 +1934,7 @@ public class CreateGUI {
         actionsSeparator.setEnabled(false);
         previewModeMenu.add(actionsSeparator);
         //Save Raw Response
-        icons[22]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\save-icon.png");
-        JMenuItem saveRawResponseMenuItem = new JMenuItem("Save Raw Response", icons[22]);
+        JMenuItem saveRawResponseMenuItem = new JMenuItem("Save Raw Response", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\save-icon.png"));
         saveRawResponseMenuItem.setFont(new Font("Serif", Font.PLAIN, 15));
         saveRawResponseMenuItem.setForeground(new java.awt.Color(255, 161, 20));
         saveRawResponseMenuItem.addActionListener(new ActionListener() {
@@ -2115,8 +2130,7 @@ public class CreateGUI {
         constraints.gridy++;
         constraints.fill=GridBagConstraints.NONE;
         constraints.anchor=GridBagConstraints.FIRST_LINE_END;
-        icons[23]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\copy-icon2.png");
-        JButton copyToClipboard = new JButton("  Copy to Clipboard  ", icons[23]);
+        JButton copyToClipboard = new JButton("  Copy to Clipboard  ", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\copy-icon2.png"));
         copyToClipboard.setBackground(colorOfThemeBackground2);
         if(colorOfThemeForground.equals(purple)) {
             copyToClipboard.setBorder(BorderFactory.createLineBorder(new java.awt.Color(122, 141, 255)));

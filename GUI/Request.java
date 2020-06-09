@@ -1,5 +1,6 @@
 package GUI;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  */
 
 
-public class Request {
+public class Request implements java.io.Serializable {
     //the name of the request
     private String nameOfRequest="";
     //the type of the request
@@ -201,6 +202,8 @@ public class Request {
             formDataInfo = "";
         }else if(typeOfData.equals(MESSAGEBODY_TYPE.BINARY)){
             formDataInfo = "";
+        }else if(typeOfData.equals(MESSAGEBODY_TYPE.MULTIPART_FORM)){
+            formDataInfo = new ArrayList<String []>();
         }
     }
 
