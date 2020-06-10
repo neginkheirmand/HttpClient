@@ -37,10 +37,13 @@ package Conection;
 //    }
 //}
 
+import Bash.Response;
 import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 import GUI.TYPE;
 import org.apache.commons.logging.Log;
+import org.apache.http.Header;
+import org.apache.http.NameValuePair;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -129,11 +132,22 @@ public class MultiPartPost {
             result = this.convertStreamToString(inputStream);
 
             System.out.println();
-            System.out.println("POST Response Status:: "+ connection.getResponseCode());
+
+            Response requestResponse = new Response(null, "", true, "", 0);
+            if(outPutFile==null || outPutFile.length()==0) {
+                requestResponse.setOutputContainer(false);
+            }else{
+                requestResponse.setOutputContainer(true);
+            }
+
+            int status = connection.getResponseCode();
+            System.out.println("POST Response Status:: "+ status);
+            requestResponse.setStatusCode(status);
 
             //-i option
             if(showresponseHeaders) {
                 Map<String, List<String>> map = connection.getHeaderFields();
+                requestResponse.setResponseHeader(map);
                 for (String key : map.keySet()) {
                     System.out.println(key + ":");
 
@@ -145,6 +159,7 @@ public class MultiPartPost {
                 }
             }
 
+            requestResponse.setOutput(result);
             if (outPutFile == null || outPutFile.length() == 0) {
 
                 if(result.length()==0){
@@ -161,6 +176,7 @@ public class MultiPartPost {
                     outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile+".txt");
                 }
 
+                requestResponse.setPathOutputFile(outputContainer.getAbsolutePath());
                 //the next method sees if the parenrs of the file exist if not creates it and returnts true if already existed and false if created it
                 outputContainer.getParentFile().mkdirs();
                 if (!outputContainer.createNewFile()) {
@@ -182,7 +198,7 @@ public class MultiPartPost {
                 } else {
 
                     FileWriter fileWriter = new FileWriter(outputContainer);
-                    fileWriter.write(result.toString());
+                    fileWriter.write(result);
                     fileWriter.close();
                 }
             }
@@ -193,6 +209,7 @@ public class MultiPartPost {
             outputStream.flush();
             outputStream.close();
 
+            postRequest.setResponse(requestResponse);
             return ;
         } catch (Exception e) {
 //            Log.e("MultipartRequest", "Multipart Form Upload Error");

@@ -37,6 +37,7 @@ package Conection;
 //    }
 //}
 
+import Bash.Response;
 import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 import GUI.TYPE;
@@ -127,13 +128,24 @@ public class MultiPartPut {
             result = this.convertStreamToString(inputStream);
 
             System.out.println();
-            System.out.println("PUT Response Status:: "+ connection.getResponseCode());
+            Response requestResponse = new Response(null, "", true, "", 0);
+            if(outPutFile==null || outPutFile.length()==0) {
+                requestResponse.setOutputContainer(false);
+            }else{
+                requestResponse.setOutputContainer(true);
+            }
+            int status = connection.getResponseCode();
+            System.out.println("PUT Response Status::  "+ status);
+            requestResponse.setStatusCode(status);
+
 
             //-i option
             if(showresponseHeaders) {
                 Map<String, List<String>> map = connection.getHeaderFields();
+                requestResponse.setResponseHeader(map);
+
                 for (String key : map.keySet()) {
-                    System.out.println(key + ":");
+                    System.out.println(key + ": ");
 
                     List<String> values = map.get(key);
 
@@ -143,6 +155,7 @@ public class MultiPartPut {
                 }
             }
 
+            requestResponse.setOutput(result);
             if (outPutFile == null || outPutFile.length() == 0) {
 
                 if(result.length()==0){
@@ -159,11 +172,13 @@ public class MultiPartPut {
                     outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile+".txt");
                 }
 
+                requestResponse.setPathOutputFile(outputContainer.getAbsolutePath());
+
                 //the next method sees if the parenrs of the file exist if not creates it and returnts true if already existed and false if created it
                 outputContainer.getParentFile().mkdirs();
                 if (!outputContainer.createNewFile()) {
-                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "unable to create output file");
-                    System.out.println("A file with this name already exist, do you want to over-write on it? <Y/n>");
+                    System.out.println("\033[0;31m" + "Error: " + "\033[0m" + "unable to create output file");
+                    System.out.println("A file with this name already exist, do you want to over-write on it? <Y/n> ");
                     String overWrite = "" + (new Scanner(System.in)).nextLine();
 
                     while (!overWrite.equals("Y") && !overWrite.equals("n")) {
@@ -190,7 +205,7 @@ public class MultiPartPut {
             inputStream.close();
             outputStream.flush();
             outputStream.close();
-
+            putRequest.setResponse(requestResponse);
             return ;
         } catch (Exception e) {
 //            Log.e("MultipartRequest", "Multipart Form Upload Error");

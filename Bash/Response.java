@@ -3,6 +3,8 @@ package Bash;
 import org.apache.http.Header;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 public class Response implements Serializable {
     //the headers of the response
@@ -12,13 +14,20 @@ public class Response implements Serializable {
     private String output = "";
     private boolean outputContainer = false;
     private int statusCode;
+    private Map<String, List<String>> responseHeader = null ;
 
 
 
-    public Response(Header[] responseHeaders, String output, boolean outputContainer, String pathOutputFile, int status code) {
+    public Response(Header[] responseHeaders, String output, boolean outputContainer, String pathOutputFile, int statuscode) {
         this.output = output;
         this.outputContainer = outputContainer;
+        this.pathOutputFile=pathOutputFile;
         this.responseHeaders = responseHeaders;
+        this.statusCode=statuscode;
+    }
+
+    public Map<String, List<String>> getResponseHeader() {
+        return responseHeader;
     }
 
     public String getPathOutputFile() {
@@ -39,6 +48,10 @@ public class Response implements Serializable {
 
     public boolean isOutputContainer() {
         return outputContainer;
+    }
+
+    public void setResponseHeader(Map<String, List<String>> responseHeader) {
+        this.responseHeader = responseHeader;
     }
 
     public void setPathOutputFile(String pathOutputFile) {

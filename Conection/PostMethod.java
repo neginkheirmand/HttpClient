@@ -1,5 +1,6 @@
 package Conection;
 
+import Bash.Response;
 import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 import GUI.TYPE;
@@ -44,6 +45,14 @@ public class  PostMethod {
     }
 
     public void executePost(String outPutFile, boolean followRedirect, boolean showresponseHeaders) {
+
+
+        Response requestResponse = new Response(null, "", true, "", 0);
+        if(outPutFile==null || outPutFile.length()==0) {
+            requestResponse.setOutputContainer(false);
+        }else{
+            requestResponse.setOutputContainer(true);
+        }
 
         CloseableHttpClient httpClient;
         if (followRedirect) {
@@ -205,6 +214,7 @@ public class  PostMethod {
             CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
             System.out.println("POST Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
+            requestResponse.setStatusCode(httpResponse.getStatusLine().getStatusCode());
 
 
             try {
@@ -212,6 +222,8 @@ public class  PostMethod {
                 // print result
                 //-O --output option handled
                 Header[] headers = httpResponse.getAllHeaders();
+                requestResponse.setResponseHeaders(headers);
+
                 if (showresponseHeaders) {
                     for (Header header : headers) {
                         System.out.println("Key : " + header.getName() + " ,Value : " + header.getValue());
@@ -236,6 +248,8 @@ public class  PostMethod {
                         response.append(inputLine + "\n");
                     }
                     reader.close();
+
+                    requestResponse.setOutput(response.toString());
                     System.out.println(response.toString());
                 } else {
                     //if the -O option is used
@@ -246,6 +260,8 @@ public class  PostMethod {
                     } else {
                         outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile);
                     }
+
+                    requestResponse.setPathOutputFile(outputContainer.getAbsolutePath());
 
                     //the next method sees if the parenrs of the file exist if not creates it and returnts true if already existed and false if created it
                     outputContainer.getParentFile().mkdirs();
@@ -304,6 +320,7 @@ public class  PostMethod {
 
                         FileWriter fileWriter = new FileWriter(outputContainer);
                         fileWriter.write(response.toString());
+                        requestResponse.setOutput(response.toString());
                         fileWriter.close();
                     }
                 }
@@ -334,6 +351,7 @@ public class  PostMethod {
         } finally {
             try {
                 httpClient.close();
+                postRequest.setResponse(requestResponse);
             } catch (java.lang.IllegalArgumentException exception) {
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Invalid URL, check the spacing");
             } catch (org.apache.http.client.ClientProtocolException exception) {

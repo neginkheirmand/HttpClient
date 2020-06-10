@@ -1,5 +1,6 @@
 package Conection;
 
+import Bash.Response;
 import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 
@@ -27,6 +28,8 @@ import org.apache.http.params.HttpParams;
 
 
 public class GetMethod {
+
+
     private Request getRequest;
     //afterwards we can put an Array list of responses so that we have the history of the request
     //but for that definitely have in mind the edit action on the request
@@ -39,8 +42,17 @@ public class GetMethod {
     public void executeGet(String outPutFile, boolean followRedirect, boolean showResponseHeaders) {
         //first make sure the getRequest ahs been created
         if (getRequest == null) {
-            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Cannot execute the Get Request");
+            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Cannot execute the GET Request");
             return;
+        }
+
+
+
+        Response requestResponse = new Response(null, "", true, "", 0);
+        if(outPutFile==null || outPutFile.length()==0) {
+            requestResponse.setOutputContainer(false);
+        }else{
+            requestResponse.setOutputContainer(true);
         }
 
         CloseableHttpClient httpClient;
@@ -94,6 +106,7 @@ public class GetMethod {
 
             System.out.println("GET Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
+            requestResponse.setStatusCode(httpResponse.getStatusLine().getStatusCode());
 
 
             //but did not close the reader container
@@ -101,6 +114,9 @@ public class GetMethod {
             // print result
             //-O --output option handled
             Header[] headers = httpResponse.getAllHeaders();
+
+            requestResponse.setResponseHeaders(headers);
+
             if (showResponseHeaders) {
                 System.out.println("Response Headers");
                 for (Header header : headers) {
@@ -129,6 +145,7 @@ public class GetMethod {
                 }
                 reader.close();
 
+                requestResponse.setOutput(response.toString());
                 System.out.println(response.toString());
             } else {
                 //if the -O option is used
@@ -139,6 +156,9 @@ public class GetMethod {
                 } else {
                     outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile);
                 }
+
+                requestResponse.setPathOutputFile(outputContainer.getAbsolutePath());
+
                 //the next method sees if the parenrs of the file exist if not creates it and returnts true if already existed and false if created it
                 outputContainer.getParentFile().mkdirs();
                 if (!outputContainer.createNewFile()) {
@@ -197,11 +217,14 @@ public class GetMethod {
                         try {
                             readerStream = new BufferedInputStream(
                                     httpResponse.getEntity().getContent());
+                            requestResponse.setOutput(httpResponse.getEntity().getContent().toString());
                         } catch (NullPointerException nullPointerException) {
                             System.out.println("empty Response");
                             return;
                         }
+
                         writePngFile(readerStream, outputContainer.getAbsolutePath());
+                        requestResponse.setOutput("The Output is a File");
                         readerStream.close();
                     } else {
                         //the default .txt will be
@@ -226,12 +249,15 @@ public class GetMethod {
                         reader.close();
                         FileWriter fileWriter = new FileWriter(outputContainer);
                         fileWriter.write(response.toString());
+                        requestResponse.setOutput(response.toString());
+
                         fileWriter.close();
                     }
                 }
             }
             httpResponse.close();
             httpClient.close();
+            getRequest.setResponse(requestResponse);
         } catch (java.lang.IllegalArgumentException exception) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Invalid URL, check the spacing");
         } catch (org.apache.http.client.ClientProtocolException exception) {

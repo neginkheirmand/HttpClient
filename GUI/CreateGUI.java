@@ -902,7 +902,7 @@ public class CreateGUI {
         secondUpPart.add(addressField);
 
         JButton sendButton = new JButton("Send");
-
+/*
         sendButton.setToolTipText("Ctrl + T");
         Action sendAction = new AbstractAction("Send") {
 

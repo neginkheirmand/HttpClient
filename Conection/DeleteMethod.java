@@ -189,8 +189,12 @@ public class DeleteMethod {
                         fileWriter.write(response.toString());
                         fileWriter.close();
                     } else {
+                        requestResponse.setOutputContainer(false);
+                        requestResponse.setPathOutputFile("");
+                        requestResponse.setOutput("");
                         System.out.println("retry again with a new name");
                     }
+
                 } else {
                     BufferedReader reader;
                     try {
@@ -240,7 +244,7 @@ public class DeleteMethod {
         } catch (URISyntaxException e) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with the query params");
         }
-        
+
     }
 
 
@@ -253,14 +257,30 @@ public class DeleteMethod {
         Request testDeleteRequest = new Request("nameOfRequest" , TYPE.DELETE, url, MESSAGEBODY_TYPE.FORM_URL);
         ArrayList<String[]> headers = new ArrayList<>();
         String[] header1 = {"Header1", "Value1", "true"};
-        String[] header2 = {"Header2", "Value2", "false"};
+        String[] header2 = {"Header2", "Value2", "true"};
         String[] header3 = {"Header3", "Value3", "true"};
         headers.add(header1);
         headers.add(header2);
         headers.add(header3);
         testDeleteRequest.setHeaderInfo(headers);
         DeleteMethod testDeleteMethod = new DeleteMethod(testDeleteRequest);
-        testDeleteMethod .executeDelete(nameOfOutputFile, true, true);
+        testDeleteMethod .executeDelete("hello.txt", true, true);
+
+
+        Response response = testDeleteRequest.getResponse();
+        if(response!=null) {
+            System.out.println("THE STATUS CODE " + response.getStatusCode());
+            System.out.println("HEADERS ARE HERE");
+            for (Header header : response.getResponseHeaders()) {
+                System.out.println("Key : " + header.getName() + " ,Value : " + header.getValue());
+            }
+            System.out.println("IS THERE ANY OUTPUT CONTAINER" + response.isOutputContainer());
+            if (response.isOutputContainer()) {
+                System.out.println("THE PATH IS " + response.getPathOutputFile());
+            }
+
+            System.out.println("THE RESPONSE BODY IS " + response.getOutput());
+        }
 
     }
 
