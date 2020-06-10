@@ -363,7 +363,7 @@ public class Command implements Serializable {
                 }catch (JSONException err){
 //                Log.d("Error", err.toString());
                     System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" incorrect format of input. this format doesnt support spacing\nCorrect form example: \n" +
-                            "curl ... -j/--json {key1 : value1, key2 : value2}\nor \ncurl ... --json/-j {\"key1\":\"value1\", \"key2\":\"value2\"}");
+                            "curl ... -j/--json {\"key1\":\"value1\",\"key2\":\"value2\"}    -with no spaces in between-");
                     return;
                 }
                 //now we have the json object

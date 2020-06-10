@@ -58,7 +58,7 @@ public class MultiPartPut {
     }
 
     public void multipartPutRequest(String outPutFile, boolean followRedirect, boolean showresponseHeaders) throws ParseException, IOException {
-        if(putRequest==null || putRequest.getUrl()==null || putRequest.getUrl().length()==0){
+        if (putRequest == null || putRequest.getUrl() == null || putRequest.getUrl().length() == 0) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with the request, try again");
             return;
         }
@@ -81,8 +81,22 @@ public class MultiPartPut {
 //            File file = new File(filepath);
 //            FileInputStream fileInputStream = new FileInputStream(file);
 
-            URL url = new URL(putRequest.getUrl());
+            String urlStr = putRequest.getUrl() + "?";
+            if (putRequest.getQueryInfo() != null && putRequest.getQueryInfo().size() != 0) {
+                for (int i = 0; i < putRequest.getQueryInfo().size(); i++) {
+                    if (putRequest.getQueryInfo().get(i)[2].equals("true")) {
+                        urlStr += putRequest.getQueryInfo().get(i)[0] + "=" + putRequest.getQueryInfo().get(i)[1];
+                    }
+                    if (i != putRequest.getQueryInfo().size() - 1) {
+                        urlStr += "&";
+                    }
+                }
+            }
+            URL url = new URL(urlStr);
+
+
             connection = (HttpURLConnection) url.openConnection();
+            connection.setFollowRedirects(followRedirect);
 
             connection.setDoInput(true);
             connection.setDoOutput(true);
@@ -94,9 +108,9 @@ public class MultiPartPut {
             connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
             //the headers
-            if(putRequest.getHeaderInfo()!=null && putRequest.getHeaderInfo().size()!=0){
-                for(int i=0; i<putRequest.getHeaderInfo().size(); i++){
-                    if(putRequest.getHeaderInfo().get(i)[2].equals("true")){
+            if (putRequest.getHeaderInfo() != null && putRequest.getHeaderInfo().size() != 0) {
+                for (int i = 0; i < putRequest.getHeaderInfo().size(); i++) {
+                    if (putRequest.getHeaderInfo().get(i)[2].equals("true")) {
                         connection.setRequestProperty(putRequest.getHeaderInfo().get(i)[0], putRequest.getHeaderInfo().get(i)[1]);
                     }
                 }
@@ -110,9 +124,9 @@ public class MultiPartPut {
 
             outputStream = new DataOutputStream(connection.getOutputStream());
 
-            if(putRequest.getFormDataInfo()!=null && ((ArrayList<String[]>)putRequest.getFormDataInfo()).size()!=0) {
-                for (int i = 0; i < ((ArrayList<String[]>)putRequest.getFormDataInfo()).size(); i++) {
-                    if(((ArrayList<String[]>)putRequest.getFormDataInfo()).get(i)[2].equals("true")) {
+            if (putRequest.getFormDataInfo() != null && ((ArrayList<String[]>) putRequest.getFormDataInfo()).size() != 0) {
+                for (int i = 0; i < ((ArrayList<String[]>) putRequest.getFormDataInfo()).size(); i++) {
+                    if (((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[2].equals("true")) {
                         outputStream.writeBytes(twoHyphens + boundary + lineEnd);
                         outputStream.writeBytes("Content-Disposition: form-data; name=\"" + ((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[0] + "\"" + lineEnd);
                         outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
@@ -129,18 +143,18 @@ public class MultiPartPut {
 
             System.out.println();
             Response requestResponse = new Response(null, "", true, "", 0);
-            if(outPutFile==null || outPutFile.length()==0) {
+            if (outPutFile == null || outPutFile.length() == 0) {
                 requestResponse.setOutputContainer(false);
-            }else{
+            } else {
                 requestResponse.setOutputContainer(true);
             }
             int status = connection.getResponseCode();
-            System.out.println("PUT Response Status::  "+ status);
+            System.out.println("PUT Response Status::  " + status);
             requestResponse.setStatusCode(status);
 
 
             //-i option
-            if(showresponseHeaders) {
+            if (showresponseHeaders) {
                 Map<String, List<String>> map = connection.getHeaderFields();
                 requestResponse.setResponseHeader(map);
 
@@ -150,7 +164,7 @@ public class MultiPartPut {
                     List<String> values = map.get(key);
 
                     for (String aValue : values) {
-                        System.out.println( aValue);
+                        System.out.println(aValue);
                     }
                 }
             }
@@ -158,18 +172,18 @@ public class MultiPartPut {
             requestResponse.setOutput(result);
             if (outPutFile == null || outPutFile.length() == 0) {
 
-                if(result.length()==0){
+                if (result.length() == 0) {
                     System.out.println(" empty response");
-                }else{
+                } else {
                     System.out.println(result);
                 }
-            }else{
+            } else {
                 File outputContainer;
-                if ((outPutFile.charAt(outPutFile.length()-4)+outPutFile.charAt(outPutFile.length()-3)+outPutFile.charAt(outPutFile.length()-2)+
-                        outPutFile.charAt(outPutFile.length()-1)+"").equals(".txt")) {
+                if ((outPutFile.charAt(outPutFile.length() - 4) + outPutFile.charAt(outPutFile.length() - 3) + outPutFile.charAt(outPutFile.length() - 2) +
+                        outPutFile.charAt(outPutFile.length() - 1) + "").equals(".txt")) {
                     outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile);
                 } else {
-                    outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile+".txt");
+                    outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile + ".txt");
                 }
 
                 requestResponse.setPathOutputFile(outputContainer.getAbsolutePath());
@@ -206,7 +220,7 @@ public class MultiPartPut {
             outputStream.flush();
             outputStream.close();
             putRequest.setResponse(requestResponse);
-            return ;
+            return;
         } catch (Exception e) {
 //            Log.e("MultipartRequest", "Multipart Form Upload Error");
             e.printStackTrace();
@@ -269,7 +283,7 @@ public class MultiPartPut {
         MultiPartPut mpp = new MultiPartPut(putRequest);
         try {
             mpp.multipartPutRequest("output", true, true);
-        }catch (Exception exception){
+        } catch (Exception exception) {
             System.out.println("exception~");
         }
     }

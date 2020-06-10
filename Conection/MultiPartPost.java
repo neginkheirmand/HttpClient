@@ -85,8 +85,24 @@ public class MultiPartPost {
 //            File file = new File(filepath);
 //            FileInputStream fileInputStream = new FileInputStream(file);
 
-            URL url = new URL(postRequest.getUrl());
+            String urlStr=postRequest.getUrl()+"?";
+            if( postRequest.getQueryInfo()!=null && postRequest.getQueryInfo().size()!=0){
+                for(int i=0; i<postRequest.getQueryInfo().size(); i++){
+                    if(postRequest.getQueryInfo().get(i)[2].equals("true")){
+                        urlStr+=postRequest.getQueryInfo().get(i)[0]+"="+postRequest.getQueryInfo().get(i)[1];
+                    }
+                    if(i!=postRequest.getQueryInfo().size()-1){
+                        urlStr+="&";
+                    }
+                }
+            }
+            URL url = new URL(urlStr);
+
+
+
             connection = (HttpURLConnection) url.openConnection();
+
+            connection.setFollowRedirects(followRedirect);
 
             connection.setDoInput(true);
             connection.setDoOutput(true);
