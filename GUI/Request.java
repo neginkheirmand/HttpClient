@@ -1,5 +1,7 @@
 package GUI;
 
+import Bash.Response;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -40,6 +42,7 @@ public class Request implements java.io.Serializable {
     //the follow redirect
     private boolean followRedirect = false;
 
+    private Response response = null;
 
     //a pointer to the list of the Requests
     private static ArrayList<Request> listOfrequests;
@@ -291,6 +294,14 @@ public class Request implements java.io.Serializable {
         }else{
             return false;
         }
+    }
+
+    public void setResponse(Response response) {
+        this.response = response;
+    }
+
+    public Response getResponse() {
+        return response;
     }
 
     public void setFollowRedirect(boolean followRedirect) {

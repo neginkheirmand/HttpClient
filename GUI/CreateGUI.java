@@ -1,5 +1,6 @@
 package GUI;
 
+import Bash.Executer;
 import InformationHandling.LoadInfo;
 import InformationHandling.SaveInfo;
 
@@ -77,7 +78,6 @@ public class CreateGUI {
                 preferences.add("true");
                 preferences.add("purple");
                 preferences.add("dark");
-
             }
             if(!loader.isCouldReadPreferencesWithOutProblems()){
                 System.out.println("could not load the preferences saved");
@@ -113,7 +113,7 @@ public class CreateGUI {
                     colorOfThemeBackground2=light2;
                 }
             }
-            System.out.println("the historial of requests was updated");
+            System.out.println("the history of requests was updated");
         }
         Request.setListOfrequests(savedRequests);
 
@@ -902,14 +902,73 @@ public class CreateGUI {
         secondUpPart.add(addressField);
 
         JButton sendButton = new JButton("Send");
+
+        sendButton.setToolTipText("Ctrl + T");
+        Action sendAction = new AbstractAction("Send") {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("sent");
+                if(indexOfRequest>=0&&indexOfRequest<savedRequests.size()) {
+                    //got execute the request
+                    savedRequests.get(indexOfRequest).setUrl(addressField.getText());
+                    if (((JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)).getSelectedIndex() == 0) {
+                        savedRequests.get(indexOfRequest).setAuth(true);
+                        //and the auth, you got take it and set it
+                    } else {
+                        savedRequests.get(indexOfRequest).setAuth(false);
+                    }
+                    savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
+                    //format of body
+                    savedRequests.get(indexOfRequest).setTypeOfData(((JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)).getSelectedIndex());
+                }
+                Executer methodExecuter = new Executer( savedRequests.get(indexOfRequest) );
+                updateFrame();
+            }
+
+        };
+        sendAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control T"));
+        saveButton.setAction(sendAction);
+        saveButton.getInputMap(WHEN_IN_FOCUSED_WINDOW).put( (KeyStroke)sendAction.getValue(Action.ACCELERATOR_KEY),"myAction");
+
+        saveButton.setBackground(Color.white);
+        saveButton.setPreferredSize(new Dimension(100, 48));
+        saveButton.setForeground(new java.awt.Color(166, 166, 166));
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(indexOfRequest>=0&&indexOfRequest<savedRequests.size()) {
+                    savedRequests.get(indexOfRequest).setSaved(true);
+                    savedRequests.get(indexOfRequest).setUrl(addressField.getText());
+                    if (((JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)).getSelectedIndex() == 0) {
+                        savedRequests.get(indexOfRequest).setAuth(true);
+                    } else {
+                        savedRequests.get(indexOfRequest).setAuth(false);
+                    }
+                    savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
+                    //format of body
+                    savedRequests.get(indexOfRequest).setTypeOfData((  (JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(0) ).getSelectedIndex());
+
+                }
+                updateFrame();
+            }
+        });
+
+        saveButton.getActionMap().put("myAction", sendAction);
+*/
+
+
         sendButton.setBackground(Color.white);
         sendButton.setPreferredSize(new Dimension(100, 48));
         sendButton.setForeground(new java.awt.Color(166, 166, 166));
+
         secondUpPart.add(sendButton);
 
 
+//        /-
 
         JButton saveButton = new JButton("Save");
+        saveButton.setToolTipText("Ctrl + S");
 
         Action action = new AbstractAction("Save") {
 
@@ -963,9 +1022,6 @@ public class CreateGUI {
         saveButton.getActionMap().put("myAction", action);
 
         secondUpPart.add(saveButton);
-
-
-
 
 
 

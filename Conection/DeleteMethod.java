@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
+import Bash.Response;
 import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 import GUI.TYPE;
@@ -25,7 +26,6 @@ import org.apache.http.impl.client.HttpClients;
 
 public class DeleteMethod {
 
-
     private Request deleteRequest = null ;
     //afterwards we can put an Array list of responses so that we have the history of the request
     //but for that definitely have in mind the edit action on the request
@@ -41,6 +41,13 @@ public class DeleteMethod {
         if (deleteRequest == null) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Cannot execute the DELETE Request");
             return;
+        }
+
+        Response requestResponse = new Response(null, "", true, "", 0);
+        if(outPutFile==null || outPutFile.length()==0) {
+            requestResponse.setOutputContainer(false);
+        }else{
+            requestResponse.setOutputContainer(true);
         }
 
 
@@ -97,10 +104,16 @@ public class DeleteMethod {
             System.out.println("DELETE Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
 
+            requestResponse.setStatusCode(httpResponse.getStatusLine().getStatusCode());
+
+
 
             // print result
             //-O --output option handled
             Header[] headers = httpResponse.getAllHeaders();
+
+            requestResponse.setResponseHeaders(headers);
+
             if (showresponseHeaders) {
                 for (Header header : headers) {
                     System.out.println("Key : " + header.getName() + " ,Value : " + header.getValue());
@@ -108,7 +121,6 @@ public class DeleteMethod {
             }
 
             if (outPutFile == null || outPutFile.length() == 0) {
-
                 BufferedReader reader;
                 try {
                     reader = new BufferedReader(new InputStreamReader(
@@ -126,6 +138,7 @@ public class DeleteMethod {
                     response.append(inputLine + "\n");
                 }
                 reader.close();
+                requestResponse.setOutput(response.toString());
                 System.out.println(response.toString());
             } else {
                 //if the -O option is used
@@ -137,6 +150,8 @@ public class DeleteMethod {
                 } else {
                     outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile);
                 }
+
+                requestResponse.setPathOutputFile(outputContainer.getAbsolutePath());
 
                 //the next method sees if the parenrs of the file exist if not creates it and returnts true if already existed and false if created it
                 outputContainer.getParentFile().mkdirs();
@@ -177,7 +192,6 @@ public class DeleteMethod {
                         System.out.println("retry again with a new name");
                     }
                 } else {
-
                     BufferedReader reader;
                     try {
                         reader = new BufferedReader(new InputStreamReader(
@@ -197,12 +211,13 @@ public class DeleteMethod {
                     reader.close();
                     FileWriter fileWriter = new FileWriter(outputContainer);
                     fileWriter.write(response.toString());
-
+                    requestResponse.setOutput(response.toString());
                     fileWriter.close();
                 }
             }
             httpResponse.close();
             httpClient.close();
+            deleteRequest.setResponse(requestResponse);
         } catch (java.lang.IllegalArgumentException exception) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Invalid URL, check the spacing");
         } catch (org.apache.http.client.ClientProtocolException exception) {
@@ -225,6 +240,7 @@ public class DeleteMethod {
         } catch (URISyntaxException e) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with the query params");
         }
+        
     }
 
 

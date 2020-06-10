@@ -154,6 +154,7 @@ public class Options {
             System.out.println("command should start with \"curl\"");
         }
         if(requestNumberCommand.get(1)!=-1){
+            if(requestNumberCommand.get(1)!=10 && requestNumberCommand.get(1)!=11 && requestNumberCommand.get(1)!=12 )
             System.out.println("enter url after curl");
         }
         if( isGetterRequest() && (requestNumberCommand.contains(7) || requestNumberCommand.contains(8) || requestNumberCommand.contains(9) ) ){
@@ -176,20 +177,25 @@ public class Options {
 
     private boolean isGetterRequest(){
         //cause the default method is the get method
-        for(int i=0; i<requestNumberCommand.size(); i++){
-            if(requestNumberCommand.get(i)==0){
-                if(i+1<requestNumberCommand.size()){
-                 //make sure there actually is a "next" option
-                    if(requestNumberCommand.get(i+1)==-1 &&( TYPE.getTYPE(requestStringCommand.get(i+1)).equals(TYPE.PATCH)
-                            || TYPE.getTYPE(requestStringCommand.get(i+1)).equals(TYPE.PUT) || TYPE.getTYPE(requestStringCommand.get(i+1)).equals(TYPE.POST) ) ){
-                        return false;
-                    }else{
-                        return true;
+        try {
+            for (int i = 0; i < requestNumberCommand.size(); i++) {
+                if (requestNumberCommand.get(i) == 0) {
+                    if (i + 1 < requestNumberCommand.size()) {
+                        //make sure there actually is a "next" option
+                        if (requestNumberCommand.get(i + 1) == -1 && (TYPE.getTYPE(requestStringCommand.get(i + 1)).equals(TYPE.PATCH)
+                                || TYPE.getTYPE(requestStringCommand.get(i + 1)).equals(TYPE.PUT) || TYPE.getTYPE(requestStringCommand.get(i + 1)).equals(TYPE.POST))) {
+                            return false;
+                        } else {
+                            return true;
+                        }
                     }
                 }
             }
+            return true;
+        }catch (NullPointerException exc ){
+            System.out.println("invalid input");
+            return false;
         }
-        return true;
     }
 
     public ArrayList<Integer> getRequestNumberCommand() {

@@ -6,6 +6,8 @@ import GUI.TYPE;
 
 public class Executer {
 
+
+
     public Executer(Request request, Command command){
         System.out.println("url"+request.getUrl());
 
@@ -32,6 +34,34 @@ public class Executer {
         }
 
     }
+
+    public Executer(Request request){
+        System.out.println("url"+request.getUrl());
+
+        if(request==null){
+            System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Problem with the request, try again");
+            return;
+        }else if(request.getTypeOfRequest().equals(TYPE.GET)){
+            executerGet(request);
+        }else if(request.getTypeOfRequest().equals(TYPE.POST)){
+            executerPost(request);
+        }else if(request.getTypeOfRequest().equals(TYPE.PUT)){
+            executerPut(request);
+        }else if(request.getTypeOfRequest().equals(TYPE.PATCH)){
+            executerPatch(request);
+        }else if(request.getTypeOfRequest().equals(TYPE.OPTION)){
+            executerOption(request);
+        }else if(request.getTypeOfRequest().equals(TYPE.DELETE)){
+            executerDelete(request);
+        }else if(request.getTypeOfRequest().equals(TYPE.HEAD)){
+            executerHead(request);
+        }else{
+            System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Problem with the request, try again");
+            return;
+        }
+
+    }
+
 
 
     /**
@@ -75,6 +105,48 @@ public class Executer {
     private void executerHead(Request request, Command command){
         HeadMethod newPostMethod = new HeadMethod(request);
         newPostMethod.executeHead(request.getNameOutPutContainer(), request.getFollowRedirect(), command.getShowHeaders());
+    }
+
+    /**
+     * this method executes the get requests but for the GUI
+     * @param request the request to be done
+     */
+    private void executerGet(Request request){
+        GetMethod newGetMethod = new GetMethod(request);
+        newGetMethod.executeGet(request.getNameOutPutContainer(), request.getFollowRedirect(), true);
+    }
+
+
+    private void executerPost(Request request){
+        PostMethod newPostMethod = new PostMethod(request);
+        newPostMethod.executePost(request.getNameOutPutContainer(), request.getFollowRedirect(), true);
+    }
+
+
+    private void executerPut(Request request){
+        PutMethod newPostMethod = new PutMethod(request);
+        newPostMethod.executePut(request.getNameOutPutContainer(), request.getFollowRedirect(), true);
+    }
+
+
+    private void executerPatch(Request request){
+        PatchMethod newPostMethod = new PatchMethod(request);
+        newPostMethod.executePatch(request.getNameOutPutContainer(), request.getFollowRedirect(), true);
+    }
+
+    private void executerOption(Request request){
+        OptionMethod newPostMethod = new OptionMethod(request);
+        newPostMethod.executeOption(request.getNameOutPutContainer(), request.getFollowRedirect(), true);
+    }
+
+    private void executerDelete(Request request){
+        DeleteMethod newPostMethod = new DeleteMethod(request);
+        newPostMethod.executeDelete(request.getNameOutPutContainer(), request.getFollowRedirect(), true);
+    }
+
+    private void executerHead(Request request){
+        HeadMethod newPostMethod = new HeadMethod(request);
+        newPostMethod.executeHead(request.getNameOutPutContainer(), request.getFollowRedirect(), true);
     }
 
 }

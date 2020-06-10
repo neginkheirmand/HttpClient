@@ -242,7 +242,4 @@ public class OptionMethod {
         testgetMethod.executeOption(nameOfOutputFile, true, true);
     }
 
-
-
-
 }

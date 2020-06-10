@@ -7,11 +7,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Command {
+public class Command implements Serializable {
     private ArrayList<Integer> numCommand;
     private ArrayList<String> strCommand;
     private static ArrayList<Command> savedRequests = new ArrayList<>();
@@ -20,7 +21,6 @@ public class Command {
     private boolean commandLine = true;
 
     //the last command was a list command
-    private static boolean list = false;
 
 
     public Command(String input, boolean commandLine) {
@@ -40,6 +40,7 @@ public class Command {
         strCommand = (option).getRequestStringCommand();
         doCommand();
     }
+
 
 
     public ArrayList<Integer> getNumCommand() {
@@ -73,20 +74,12 @@ public class Command {
         if (numCommand.get(1) == 10) {
             //wants to list
             list();
-            list = true;
             return;
         } else if (numCommand.get(1) == 12) {
-            System.out.println("its a fire command and can be done? :" + list);
             //its a fire command make sure this command is used right after the list command or else no output
-            if (list) {
-                list = false;
                 fire();
-            } else {
-                System.out.println("the \"fire\" command should be used right after the \"list\" command");
-            }
             return;
         }
-        list=false;
         doMethod(this);
     }
 
@@ -102,7 +95,7 @@ public class Command {
         for (int i = 0; i < savedRequests.size(); i++) {
             System.out.printf("\033[0;31m" + (i + 1) + "\033[0m" + ". url:");
             //printing th url
-            if (request.getUrl().length() == 0) {
+            if (request.getUrl()==null || request.getUrl().length() == 0) {
                 System.out.printf("\033[0;31m" + " no url saved\033[0m");
             } else {
                 System.out.printf(request.getUrl());
@@ -153,13 +146,11 @@ public class Command {
                 int numCommand = Integer.parseInt(strCommand.get(i));
                 if (numCommand > savedRequests.size() || numCommand <= 0) {
                     System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"enter a valid command number, the list of requests has only " + savedRequests.size() + " requests");
-                    list = true;
                     return;
                 }
                 doMethod(savedRequests.get(numCommand - 1));
             } catch (NumberFormatException exception) {
                 System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" After the fire word the Command-Number should be written");
-                list = true;
                 return;
             }
         }
@@ -291,7 +282,7 @@ public class Command {
                 }
                 commandToDo.getRequest().setNameOutPutContainer(nameOfOutputFile);
             }else if(commandToDo.getNumCommand().get(i)==6){
-                //-s the save
+                //-S the save
                 commandToDo.getRequest().setSaved(true);
                 //remember to do the save in the end
             }else if(commandToDo.getNumCommand().get(i)==7){
