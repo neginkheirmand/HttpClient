@@ -79,13 +79,17 @@ public class Command implements Serializable {
             //its a fire command make sure this command is used right after the list command or else no output
                 fire();
             return;
+        } else if (numCommand.get(1) == 16) {
+            //its a remove command
+                remove();
+            return;
         }
         doMethod(this);
     }
 
     private void list() {
         String cross = "\033[0;31m" + "\u274C" + "\033[0m";
-        String tick = "\033[0;31m" + "\u2713" + "\033[0m";
+        String tick = "\033[0;32m" + "\u2713" + "\033[0m";
 
         if (savedRequests.size() == 0) {
             System.out.println("no requests saved!");
@@ -95,47 +99,51 @@ public class Command implements Serializable {
         for (int i = 0; i < savedRequests.size(); i++) {
             System.out.printf("\033[0;31m" + (i + 1) + "\033[0m" + ". url:");
             //printing th url
-            if (request.getUrl()==null || request.getUrl().length() == 0) {
+            if (savedRequests.get(i).getRequest().getUrl()==null || savedRequests.get(i).getRequest().getUrl().length() == 0) {
                 System.out.printf("\033[0;31m" + " no url saved\033[0m");
             } else {
-                System.out.printf(request.getUrl());
+                System.out.printf(savedRequests.get(i).getRequest().getUrl()+"\033[0m");
             }
 
             System.out.printf("| ");
+
             //now the headers:
-            if (request.getHeaderInfo()!=null && request.getHeaderInfo().size() != 0) {
-                System.out.printf("headers: ");
-                for (int j = 0; j < request.getHeaderInfo().size(); j++) {
-                    System.out.printf(request.getHeaderInfo().get(j)[0] + ": " + request.getHeaderInfo().get(j)[1] + "enabled: ");
-                    if (request.getHeaderInfo().get(j)[2].equals("true")) {
-                        System.out.printf(tick);
+            System.out.printf("headers: ");
+            if (savedRequests.get(i).getRequest().getHeaderInfo()!=null && savedRequests.get(i).getRequest().getHeaderInfo().size() != 0) {
+                for (int j = 0; j < savedRequests.get(i).getRequest().getHeaderInfo().size(); j++) {
+                    System.out.printf(savedRequests.get(i).getRequest().getHeaderInfo().get(j)[0] + ": " + savedRequests.get(i).getRequest().getHeaderInfo().get(j)[1] + ", enabled: ");
+                    if (savedRequests.get(i).getRequest().getHeaderInfo().get(j)[2].equals("true")) {
+                        System.out.printf(tick + "  ");
                     } else {
-                        System.out.printf(cross);
+                        System.out.printf(cross +"  ");
                     }
                 }
             }
 
             System.out.printf("| ");
             //now the query
-            if (request.getQueryInfo()!=null && request.getQueryInfo().size() != 0) {
-                System.out.printf("query info: ");
-                for (int j = 0; j < request.getQueryInfo().size(); j++) {
-                    System.out.printf(request.getQueryInfo().get(j)[0] + ": " + request.getQueryInfo().get(j)[1] + "enabled: ");
-                    if (request.getQueryInfo().get(j)[2].equals("true")) {
-                        System.out.printf(tick);
+            System.out.printf("query info: ");
+            if (savedRequests.get(i).getRequest().getQueryInfo()!=null && savedRequests.get(i).getRequest().getQueryInfo().size() != 0) {
+                for (int j = 0; j < savedRequests.get(i).getRequest().getQueryInfo().size(); j++) {
+                    System.out.printf(savedRequests.get(i).getRequest().getQueryInfo().get(j)[0] + ": " + savedRequests.get(i).getRequest().getQueryInfo().get(j)[1] + ", enabled: ");
+                    if (savedRequests.get(i).getRequest().getQueryInfo().get(j)[2].equals("true")) {
+                        System.out.printf(tick +"  ");
                     } else {
-                        System.out.printf(cross);
+                        System.out.printf(cross+"  ");
                     }
                 }
             }
 
             System.out.printf("| ");
-            System.out.printf("Method:" + TYPE.getColor(request.getTypeOfRequest()) + request.getTypeOfRequest().name() + "\033[0m");
+            System.out.printf("Method:" + TYPE.getColor(savedRequests.get(i).getRequest().getTypeOfRequest()) + savedRequests.get(i).getRequest().getTypeOfRequest().name() + "\033[0m");
 
-            System.out.printf("| ");
+            if(!Options.isGetterRequest(savedRequests.get(i).numCommand, savedRequests.get(i).strCommand )) {
+                System.out.printf("| ");
 
-            System.out.println("FormData: " + MESSAGEBODY_TYPE.getName(request.getTypeOfData()));
 
+                System.out.printf("FormData: " + MESSAGEBODY_TYPE.getName(savedRequests.get(i).getRequest().getTypeOfData()));
+            }
+            System.out.println();
         }
 
     }
@@ -156,6 +164,22 @@ public class Command implements Serializable {
         }
     }
 
+    private void remove(){
+        for (int i = 2; i < numCommand.size(); i++) {
+            try {
+                int numCommand = Integer.parseInt(strCommand.get(i));
+                if (numCommand > savedRequests.size() || numCommand <= 0) {
+                    System.out.println("\033[0;31m"+"Error:"+"\033[0m"+"enter a valid command number, the list of requests has only " + savedRequests.size() + " requests");
+                    return;
+                }
+                savedRequests.remove(numCommand - 1);
+                System.out.println("Successfully Removed!");
+            } catch (NumberFormatException exception) {
+                System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" After the fire word the Command-Number should be written");
+                return;
+            }
+        }
+    }
     private static void doMethod(Command commandToDo) {
 
         //the first word in the command was curl
@@ -166,6 +190,7 @@ public class Command implements Serializable {
             return;
         }
 
+        int indexSave=-1;
         for(int i = 1; i<commandToDo.getNumCommand().size(); i++){
             if(commandToDo.getNumCommand().get(i)==-1){
                 if(commandToDo==null || commandToDo.getRequest()==null ){
@@ -229,33 +254,43 @@ public class Command implements Serializable {
             }else if(commandToDo.getNumCommand().get(i)==3){
                 //the -h/-help command
                 System.out.println("\033[0;32m"+"Usage: curl [options...] <url>\n"+"\033[0m");
-
+                //-a
+                System.out.println("\033[0;32m"+"-a, --auth"+"\033[0m"+"         <data>   auth header of bearer token kind\n" +
+                        "                    ex: curl <url> -a/--auth token123");
                 // -d
-                System.out.println("\033[0;32m"+"-d, --data"+"\033[0m"+" <data>   HTTP POST data\n" +
-                        "     --data-binary <data> HTTP POST binary data\n" +
-                        "     --data-urlencoded <data> HTTP POST data url encoded\n");
+                System.out.println("\033[0;32m"+"-d, --data"+"\033[0m"+"         <data>   HTTP POST data\n" +
+                        "\033[0;32m"+"--data-urlencoded"+"\033[0m  <data> HTTP POST data url encoded\n"+
+                                    "                    ex: curl <url> -M POST -d \"data1=value1&data2=value2\"\n"+
+                                    "                    ex: curl <url> -M POST --data-urlencode \"data1=value1&data2=value2\"\n");
                 //-f
-                System.out.println("-f, --follow        follow redirection");
+                System.out.println("\033[0;32m"+"-f, --follow "+"\033[0m        follow redirection");
                 //fire
-                System.out.println("fire,               use after calling the \"curl list\" method to trigger saved request by their index of use");
+                System.out.println("\033[0;32m"+"fire"+"\033[0m                 use to trigger saved request by their index of use. Use \"curl list\" to see the indexes");
                 //-h
-                System.out.println("-h, --help          This help text\n");
+                System.out.println("\033[0;32m"+"-h, --help    "+"\033[0m       This help text\n");
                 //-H
-                System.out.println("-H, --header <header/@file> Pass custom header(s) to server\n");
+                System.out.println("\033[0;32m"+"-H, --headers"+"\033[0m        <header/@file> Pass custom header(s) to server\n");
+                System.out.println("                    ex: \"header1=value1;header2=value2\"");
                 //-i
-                System.out.println("-i, --include       Include protocol response headers in the output\n");
+                System.out.println("\033[0;32m"+"-i, --include   "+"\033[0m     Include protocol response headers in the output\n");
                 //-j
-                System.out.println("-j,\n --json the format of the message body");
+                System.out.println("\033[0;32m"+"-j, --json          "+"\033[0m used to set the the message body format ");
+                System.out.println("                     ex:curl <url> -M POST -j/--json {\"key1\":\"value1\",\"key2\":\"value2\"} ");
                 //-M
-                System.out.println("-M, --method        specify method request");
+                System.out.println("\033[0;32m"+"-M, --method   "+"\033[0m     specify method request");
                 //list
-                System.out.println("list                list the saved requests");
+                System.out.println("\033[0;32m"+"list     "+"\033[0m           list the saved requests");
                 //-O
-                System.out.println("-O, --output <file> Write to file instead of stdout");
+                System.out.println("\033[0;32m"+"-O, --output"+"\033[0m        <file> Write to file instead of stdout");
+                //-q
+                System.out.println("\033[0;32m" + "-q, --query "+"\033[0m         set the query params of the request\n" +
+                        "                    ex: curl <url> -q/--query \"queryParam1=value1&queryParam2=value2\"           -with no space in between-\"");
+                //remove
+                System.out.println("\033[0;32m" + "remove "+"\033[0m             remove request from the list of saved requests");
                 //-S
-                System.out.println("-S, --save          save the request and add it to the list of saved requests");
+                System.out.println("\033[0;32m"+"-S, --save "+"\033[0m          save the request in the system ");
                 //--upload
-                System.out.println("--upload  <absolute path>          upload existing file using its absolute path");
+                System.out.println("\033[0;32m"+"--upload "+"\033[0m            <absolute path>   -upload existing file using its absolute path-");
             }else if(commandToDo.getNumCommand().get(i)==4){
                 commandToDo.getRequest().setFollowRedirect(true);
             }else if(commandToDo.getNumCommand().get(i)==5){
@@ -284,6 +319,7 @@ public class Command implements Serializable {
             }else if(commandToDo.getNumCommand().get(i)==6){
                 //-S the save
                 commandToDo.getRequest().setSaved(true);
+                indexSave=i;
                 //remember to do the save in the end
             }else if(commandToDo.getNumCommand().get(i)==7){
                 //-d
@@ -305,7 +341,6 @@ public class Command implements Serializable {
                     return;
                 }
                 //so we are sure we actually have an valid message body in multipart format
-                System.out.println("valid message body");
                 commandToDo.getRequest().setTypeOfBody(MESSAGEBODY_TYPE.MULTIPART_FORM);
                 commandToDo.getRequest().setFormDataInfo(formData);
             }else if(commandToDo.getNumCommand().get(i)==8){
@@ -429,11 +464,17 @@ public class Command implements Serializable {
                 commandToDo.getRequest().setFormDataInfo(formData);
             }
         }
-        if(commandToDo.getRequest().isSaved()){
+        if(indexSave!=-1){
             //gotta save the file
             savedRequests.add(commandToDo);
+
+            //we delete the --save/-S str from th option containers so when the user write's curl fire <index-command> doesnt save it again
+            commandToDo.getNumCommand().remove(indexSave);
+            commandToDo.getStrCommand().remove(indexSave);
         }
-        new Executer(commandToDo.getRequest(), commandToDo);
+        if(commandToDo.getRequest()!=null) {
+            new Executer(commandToDo.getRequest(), commandToDo);
+        }
     }
 
     private static String[] getAuthInfo(String auth, Command commandToDo){
@@ -448,7 +489,6 @@ public class Command implements Serializable {
             }
         }
         authInfo[2] = "true";
-        System.out.println(authInfo[1]);
         if(authInfo[1].length()==0){
             return null;
         }

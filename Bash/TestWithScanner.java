@@ -8,6 +8,7 @@ public class TestWithScanner {
     public static void main(String[] args) {
         Options newOptionIdentifier = new Options();
 
+
         while(true) {
             String input="";
             try {

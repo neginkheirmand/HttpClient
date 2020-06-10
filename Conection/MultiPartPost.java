@@ -62,7 +62,7 @@ public class MultiPartPost {
     }
 
     public void multipartPostRequest(String outPutFile, boolean followRedirect, boolean showresponseHeaders) throws ParseException, IOException {
-        if(postRequest==null || postRequest.getUrl()==null || postRequest.getUrl().length()==0){
+        if (postRequest == null || postRequest.getUrl() == null || postRequest.getUrl().length() == 0) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with the request, try again");
             return;
         }
@@ -98,9 +98,9 @@ public class MultiPartPost {
             connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
             //the headers
-            if(postRequest.getHeaderInfo()!=null && postRequest.getHeaderInfo().size()!=0){
-                for(int i=0; i<postRequest.getHeaderInfo().size(); i++){
-                    if(postRequest.getHeaderInfo().get(i)[2].equals("true")){
+            if (postRequest.getHeaderInfo() != null && postRequest.getHeaderInfo().size() != 0) {
+                for (int i = 0; i < postRequest.getHeaderInfo().size(); i++) {
+                    if (postRequest.getHeaderInfo().get(i)[2].equals("true")) {
                         connection.setRequestProperty(postRequest.getHeaderInfo().get(i)[0], postRequest.getHeaderInfo().get(i)[1]);
                     }
                 }
@@ -114,9 +114,9 @@ public class MultiPartPost {
 
             outputStream = new DataOutputStream(connection.getOutputStream());
 
-            if(postRequest.getFormDataInfo()!=null && ((ArrayList<String[]>)postRequest.getFormDataInfo()).size()!=0) {
-                for (int i = 0; i < ((ArrayList<String[]>)postRequest.getFormDataInfo()).size(); i++) {
-                    if(((ArrayList<String[]>)postRequest.getFormDataInfo()).get(i)[2].equals("true")) {
+            if (postRequest.getFormDataInfo() != null && ((ArrayList<String[]>) postRequest.getFormDataInfo()).size() != 0) {
+                for (int i = 0; i < ((ArrayList<String[]>) postRequest.getFormDataInfo()).size(); i++) {
+                    if (((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[2].equals("true")) {
                         outputStream.writeBytes(twoHyphens + boundary + lineEnd);
                         outputStream.writeBytes("Content-Disposition: form-data; name=\"" + ((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[0] + "\"" + lineEnd);
                         outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
@@ -134,18 +134,18 @@ public class MultiPartPost {
             System.out.println();
 
             Response requestResponse = new Response(null, "", true, "", 0);
-            if(outPutFile==null || outPutFile.length()==0) {
+            if (outPutFile == null || outPutFile.length() == 0) {
                 requestResponse.setOutputContainer(false);
-            }else{
+            } else {
                 requestResponse.setOutputContainer(true);
             }
 
             int status = connection.getResponseCode();
-            System.out.println("POST Response Status:: "+ status);
+            System.out.println("POST Response Status:: " + status);
             requestResponse.setStatusCode(status);
 
             //-i option
-            if(showresponseHeaders) {
+            if (showresponseHeaders) {
                 Map<String, List<String>> map = connection.getHeaderFields();
                 requestResponse.setResponseHeader(map);
                 for (String key : map.keySet()) {
@@ -162,18 +162,18 @@ public class MultiPartPost {
             requestResponse.setOutput(result);
             if (outPutFile == null || outPutFile.length() == 0) {
 
-                if(result.length()==0){
+                if (result.length() == 0) {
                     System.out.println("empty response");
-                }else{
+                } else {
                     System.out.println(result);
                 }
-            }else{
+            } else {
                 File outputContainer;
-                if ((outPutFile.charAt(outPutFile.length()-4)+outPutFile.charAt(outPutFile.length()-3)+outPutFile.charAt(outPutFile.length()-2)+
-                        outPutFile.charAt(outPutFile.length()-1)+"").equals(".txt")) {
+                if ((outPutFile.charAt(outPutFile.length() - 4) + outPutFile.charAt(outPutFile.length() - 3) + outPutFile.charAt(outPutFile.length() - 2) +
+                        outPutFile.charAt(outPutFile.length() - 1) + "").equals(".txt")) {
                     outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile);
                 } else {
-                    outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile+".txt");
+                    outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile + ".txt");
                 }
 
                 requestResponse.setPathOutputFile(outputContainer.getAbsolutePath());
@@ -210,7 +210,7 @@ public class MultiPartPost {
             outputStream.close();
 
             postRequest.setResponse(requestResponse);
-            return ;
+            return;
         } catch (Exception e) {
 //            Log.e("MultipartRequest", "Multipart Form Upload Error");
             e.printStackTrace();

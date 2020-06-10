@@ -16,6 +16,7 @@ import GUI.TYPE;
 
 import java.util.Date;
 
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.*;
 import org.apache.http.client.methods.CloseableHttpResponse;

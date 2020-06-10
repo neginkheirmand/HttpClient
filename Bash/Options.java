@@ -30,6 +30,7 @@ public class Options {
             requestOptions.put("--help", 3);
 
             requestOptions.put("-f", 4);
+            requestOptions.put("--follow", 4);
 
             requestOptions.put("-O", 5);
             requestOptions.put("--output", 5);
@@ -58,6 +59,9 @@ public class Options {
             requestOptions.put("--query", 14);
 
             requestOptions.put("--data-urlencoded", 15);
+
+            requestOptions.put("remove", 16);
+
         }
 
         requestNumberCommand = new ArrayList<>();
@@ -154,10 +158,10 @@ public class Options {
             System.out.println("command should start with \"curl\"");
         }
         if(requestNumberCommand.get(1)!=-1){
-            if(requestNumberCommand.get(1)!=10 && requestNumberCommand.get(1)!=11 && requestNumberCommand.get(1)!=12 )
+            if(requestNumberCommand.get(1)!=10 && requestNumberCommand.get(1)!=11 && requestNumberCommand.get(1)!=12 && requestNumberCommand.get(1)!=16 && requestNumberCommand.get(1)!=3)
             System.out.println("enter url after curl");
         }
-        if( isGetterRequest() && (requestNumberCommand.contains(7) || requestNumberCommand.contains(8) || requestNumberCommand.contains(9) ) ){
+        if( isGetterRequest(requestNumberCommand, requestStringCommand) && (requestNumberCommand.contains(7) || requestNumberCommand.contains(8) || requestNumberCommand.contains(9) ) ){
             //is a get-typed request but has body in one of the types(binary file/json/formdata)
             System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" the methods " +
                     "\033[1;31m"+"DELETE"+"\033[0m/"+"\033[1;35m"+"GET"+"\033[0m/"+"\033[1;36m"+"HEAD"+"\033[0m/"+"\033[1;34m"+"OPTION"+"\033[0m" +
@@ -175,7 +179,7 @@ public class Options {
         showWarnings();
     }
 
-    private boolean isGetterRequest(){
+    public static boolean isGetterRequest(ArrayList<Integer> requestNumberCommand, ArrayList<String> requestStringCommand){
         //cause the default method is the get method
         try {
             for (int i = 0; i < requestNumberCommand.size(); i++) {
