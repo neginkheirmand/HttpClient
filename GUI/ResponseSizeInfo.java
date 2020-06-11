@@ -6,7 +6,7 @@ import java.awt.*;
 public class ResponseSizeInfo extends JLabel{
     private final Color white = new java.awt.Color(166, 166, 166);
 
-    public ResponseSizeInfo(int size, Color colorOfForground){
+    public ResponseSizeInfo(Long size, Color colorOfForground){
         super(size+"B", SwingConstants.CENTER);
         this.setPreferredSize(new Dimension(40, 30));
         this.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));

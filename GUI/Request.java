@@ -47,6 +47,8 @@ public class Request implements java.io.Serializable {
     //a pointer to the list of the Requests
     private static ArrayList<Request> listOfrequests;
 
+    private transient RequestGuiHandler requestGuiHandler = new RequestGuiHandler();
+
 
     /**
      * constructor of the class
@@ -328,6 +330,10 @@ public class Request implements java.io.Serializable {
         return listOfrequests;
     }
 
+
+    public RequestGuiHandler getRequestGuiHandler() {
+        return requestGuiHandler;
+    }
 
     public static void main(String[] args) {
         Request newRequest = new Request("nameNewRequest" , TYPE.GET, "https://api.myproduct.com/v1/users", MESSAGEBODY_TYPE.FORM_URL);

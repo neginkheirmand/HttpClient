@@ -5,8 +5,12 @@ import InformationHandling.LoadInfo;
 import InformationHandling.SaveInfo;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -876,12 +880,21 @@ public class CreateGUI {
             method.setBackground(new java.awt.Color(187, 171, 255));
         }
         method.setRenderer(renderer);
-//        method.add(new JToolBar.Separator(),7);
-        secondUpPart.add(method);
-
         if(indexOfRequest!=-1 && indexOfRequest<savedRequests.size()){
             method.setSelectedIndex(savedRequests.get(indexOfRequest).getTypeOfRequest().ordinal());
         }
+
+        method.addActionListener (new ActionListener () {
+            public void actionPerformed(ActionEvent e) {
+                if (indexOfRequest > -1 && indexOfRequest < savedRequests.size()) {
+                    savedRequests.get(indexOfRequest).setType(TYPE.getTypeByIndex(method.getSelectedIndex()));
+                    updateFrame();
+                }
+            }
+        });
+
+        secondUpPart.add(method);
+
 
         JTextField addressField = new JTextField("https://api.myproduct.com/v1/users");
         addressField.addMouseListener(new MouseAdapter() {
@@ -891,6 +904,30 @@ public class CreateGUI {
                 addressField.setText("");
             }
         });
+        addressField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateLabel(e);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateLabel(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateLabel(e);
+            }
+
+            private void updateLabel(DocumentEvent e) {
+                if(indexOfRequest<savedRequests.size() && indexOfRequest>-1){
+                    savedRequests.get(indexOfRequest).setUrl(addressField.getText());
+                }
+            }
+        });
+
 
         if(indexOfRequest!=-1 && indexOfRequest<savedRequests.size()){
             addressField.setText(savedRequests.get(indexOfRequest).getUrl());
@@ -934,6 +971,7 @@ public class CreateGUI {
             }
 
         };
+
         sendAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control T"));
         saveButton.setAction(sendAction);
         saveButton.getInputMap(WHEN_IN_FOCUSED_WINDOW).put( (KeyStroke)sendAction.getValue(Action.ACCELERATOR_KEY),"myAction");
@@ -1066,13 +1104,33 @@ public class CreateGUI {
         thirdUpPart.add(statusLabel);
 
         //the time taken
-        JLabel timeTaken = new ResponseTimeInfo(0, colorOfThemeBackground1);
-        thirdUpPart.add(timeTaken);
+        JLabel timeTakenLabel = null;
+        if(indexOfRequest<0||indexOfRequest>=savedRequests.size()) {
+            timeTakenLabel = new ResponseTimeInfo(0L, colorOfThemeBackground1);
+        }else {
+            //its OK
+            if (savedRequests.get(indexOfRequest).getResponse() != null) {
+                timeTakenLabel = new ResponseTimeInfo(savedRequests.get(indexOfRequest).getResponse().getTimeTaken(), colorOfThemeBackground1);
+            } else {
+                timeTakenLabel = new ResponseTimeInfo(0L, colorOfThemeBackground1);
+            }
+        }
+        thirdUpPart.add(timeTakenLabel);
 
         //the size
-        JLabel netTaken = new ResponseSizeInfo(0, colorOfThemeBackground1);
-        thirdUpPart.add(netTaken);
-
+        JLabel contentSizeLabel = null;
+        if(indexOfRequest<0||indexOfRequest>=savedRequests.size()) {
+            contentSizeLabel =  new ResponseSizeInfo(0L, colorOfThemeBackground1);
+        }else {
+            //its OK
+            if (savedRequests.get(indexOfRequest).getResponse() != null) {
+                contentSizeLabel = new ResponseSizeInfo(savedRequests.get(indexOfRequest).getResponse().getContentSize(), colorOfThemeBackground1);
+            } else {
+                contentSizeLabel = new ResponseSizeInfo(0L, colorOfThemeBackground1);
+            }
+        }
+        thirdUpPart.add(contentSizeLabel);
+/*
         //badan bayad barash pup up menu ham bezani ke bere historial ghabli haro ham bebine
         //and the historial of this request
         JButton historialThisRequest = new JButton("Last Time");
@@ -1080,6 +1138,8 @@ public class CreateGUI {
         historialThisRequest.setPreferredSize(new Dimension(100, 48));
         historialThisRequest.setForeground(new java.awt.Color(166, 166, 166));
         thirdUpPart.add(historialThisRequest);
+
+ */
 
         insomniaPanelHandler.setThirdPanel(thirdUpPart);
         mainFrame.add(insomniaPanelHandler.getThirdPanel(), insomniaPanelHandler.getThirdPanelConstraints());
@@ -1293,6 +1353,9 @@ public class CreateGUI {
         dataType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(indexOfRequest<savedRequests.size() && indexOfRequest>-1){
+                    savedRequests.get(indexOfRequest).setTypeOfBody(MESSAGEBODY_TYPE.getFormByIndex(dataType.getSelectedIndex()));
+                }
                 createBodyTab(body, dataType.getSelectedIndex(), timesBodyTypeComboBoxChanged);
                 timesBodyTypeComboBoxChanged++;
                 mainFrame.revalidate();
@@ -1354,17 +1417,20 @@ public class CreateGUI {
             authType.setBackground(new java.awt.Color(93, 93, 86));
         }
 
-        if(colorOfThemeBackground1.equals(dark1)) {
-            authType.setForeground(colorOfThemeBackground1);
-        }else{
-            authType.setForeground(new java.awt.Color(1,1,1));
-        }
         authType.setForeground(Color.WHITE);
         authType.setRenderer(authRenderer);
         authType.setSelectedIndex(2);
         authType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                
+                if (indexOfRequest > -1 && indexOfRequest < savedRequests.size()) {
+                    if(authType.getSelectedIndex()==0) {
+                        savedRequests.get(indexOfRequest).setAuth(true);
+                    }else{
+                        savedRequests.get(indexOfRequest).setAuth(false);
+                    }
+                }
                 createAuthTab(auth, authType.getSelectedIndex(), timesAuthTypeComboBoxChanged);
                 timesAuthTypeComboBoxChanged++;
                 mainFrame.revalidate();
@@ -1649,6 +1715,26 @@ public class CreateGUI {
                 }
             }
         });
+        nameTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if(!nameTextField.getText().equals("New Name")){
+                    if(indexOfRequest<savedRequests.size()&&indexOfRequest>-1) {
+                        if(savedRequests.get(indexOfRequest).getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
+                            ((ArrayList<String[]>)savedRequests.get(indexOfRequest).getFormDataInfo()).get(constraints.gridy)[0]=nameTextField.getText();
+                        }
+                    }
+                }
+            }
+        });
         newKeyValuePair.add(nameTextField);
         //then the JTextField for the value
         JTextField valueTextField = new JTextField("New value");
@@ -1676,11 +1762,41 @@ public class CreateGUI {
                 }
             }
         });
+        valueTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if(!nameTextField.getText().equals("New value")){
+                    if(indexOfRequest<savedRequests.size()&&indexOfRequest>-1) {
+                        if(savedRequests.get(indexOfRequest).getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
+                            ((ArrayList<String[]>)savedRequests.get(indexOfRequest).getFormDataInfo()).get(constraints.gridy)[1]=valueTextField.getText();
+                        }
+                    }
+                }
+            }
+        });
         newKeyValuePair.add(valueTextField);
         //now the JCheckBox
         JCheckBox checkBox = new JCheckBox(" ", true);
         checkBox.setBackground(colorOfThemeBackground2);
         checkBox.setOpaque(false);
+        checkBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(checkBox.isSelected()){
+                    ((ArrayList<String[]>)savedRequests.get(indexOfRequest).getFormDataInfo()).get(constraints.gridy)[2]="true";
+                }else{
+                    ((ArrayList<String[]>)savedRequests.get(indexOfRequest).getFormDataInfo()).get(constraints.gridy)[2]="false";
+                }
+            }
+        });
         newKeyValuePair.add(checkBox);
         //now the trash icon Button
         JButton trash = new JButton(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\delete-icon1.png"));
@@ -1691,6 +1807,9 @@ public class CreateGUI {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("user clicked on the trash JButton");
                 body.remove(newKeyValuePair);
+                if(constraints.gridy<((ArrayList<String[]>) savedRequests.get(indexOfRequest).getFormDataInfo()).size()) {
+                    ((ArrayList<String[]>) savedRequests.get(indexOfRequest).getFormDataInfo()).remove(constraints.gridy);
+                }
                 if (constraints.gridy == 0) {
                     createFormData(body, constraints);
                 }
@@ -1701,6 +1820,7 @@ public class CreateGUI {
         newKeyValuePair.add(trash);
         body.add(newKeyValuePair, constraints);
 
+        System.out.println("the index of form data is"+constraints.gridy+"  and the data"+nameTextField.getText()+"   and the value"+valueTextField.getText());
     }
 
     /**

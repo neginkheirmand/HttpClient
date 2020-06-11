@@ -47,12 +47,10 @@ import org.apache.http.NameValuePair;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class MultiPartPost {
     Request postRequest;
@@ -256,18 +254,93 @@ public class MultiPartPost {
         return sb.toString();
     }
 
+
+    public static void bufferOutFormData(ArrayList<String[]> body, String boundary, BufferedOutputStream bufferedOutputStream) throws IOException {
+        for(int i=0; i<body.size(); i++){
+            bufferedOutputStream.write(("--" + boundary + "\r\n").getBytes());
+            if (body.get(i)[0].contains("file")) {
+                System.out.println("tryng to upload file with index"+i);
+                if(new File(body.get(i)[1]).isFile()){
+                    System.out.println("exists");
+                }
+                bufferedOutputStream.write(("Content-Disposition: form-data; filename=\"" + (new File(body.get(i)[1])).getName() + "\"\r\nContent-Type: Auto\r\n\r\n").getBytes());
+                System.out.println("Content-Disposition: form-data; filename=\"" + (new File(body.get(i)[1])).getName() + "\"\r\nContent-Type: Auto\r\n\r\n");
+                try {
+                    BufferedInputStream tempBufferedInputStream = new BufferedInputStream(new FileInputStream(new File(body.get(i)[1])));
+                    byte[] filesBytes = tempBufferedInputStream.readAllBytes();
+                    bufferedOutputStream.write(filesBytes);
+                    bufferedOutputStream.write("\r\n".getBytes());
+                    System.out.println("DONE UPLOADING");
+                } catch (IOException e) {
+                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problem uploading the file");
+                    e.printStackTrace();
+                }
+            } else {
+                bufferedOutputStream.write(("Content-Disposition: form-data; name=\"" + body.get(i)[0] + "\"\r\n\r\n").getBytes());
+                bufferedOutputStream.write((body.get(i)[1] + "\r\n").getBytes());
+            }
+        }
+        bufferedOutputStream.write(("--" + boundary + "--\r\n").getBytes());
+        bufferedOutputStream.flush();
+        bufferedOutputStream.close();
+    }
+
+    public static void formData(Request request) {
+        try {
+            if(request==null){
+                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "invalid request");
+                return;
+            }
+            if(request.getUrl()==null || request.getUrl().length()==0){
+                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "invalid url, please enter url");
+                return;
+            }
+            URL url = new URL(request.getUrl());
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            String boundary = System.currentTimeMillis() + "";
+            if(request.getTypeOfRequest().equals(TYPE.POST)) {
+                connection.setRequestMethod("POST");
+            }else if(request.getTypeOfRequest().equals((TYPE.PUT))){
+                connection.setRequestMethod("PUT");
+            }else{
+                return;
+            }
+            connection.setDoOutput(true);
+//            connection.setRequestProperty("accept", "");
+            connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+            BufferedOutputStream outputStream = new BufferedOutputStream(connection.getOutputStream());
+            bufferOutFormData((ArrayList<String[]>) request.getFormDataInfo(), boundary, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(connection.getInputStream());
+            System.out.println(new String(bufferedInputStream.readAllBytes()));
+            System.out.println(connection.getResponseCode());
+            System.out.println(connection.getHeaderFields());
+            bufferedInputStream.close();
+        } catch (java.net.MalformedURLException exc){
+            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "incorrect url");
+        } catch (ProtocolException e) {
+            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "invalid request method");
+        } catch (IOException e) {
+            System.out.println("\033[0;31m" + "Error" + "\033[0m" + " Cannot make this request");
+        }
+    }
+
+
+
     public static void main(String[] args) {
         Request postRequest = new Request("name", TYPE.POST, "https://webhook.site/d476bb71-fb13-4ceb-ab31-7923e71d3b18", MESSAGEBODY_TYPE.MULTIPART_FORM);
-        ArrayList<String[]> formdata = new ArrayList<>();
+//        Request postRequest = new Request("name", TYPE.POST, "http://httpbin.org/post", MESSAGEBODY_TYPE.MULTIPART_FORM);
+        ArrayList<String[]> bodyContainer = new ArrayList<>();
         String[] data1 = {"key1", "Value1", "true"};
-        String[] data2 = {"key2", "Value2", "true"};
+        String[] data2 = {"file", "C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\InformationHandling\\SaveInfoBash\\output_[01--06--08--10-06-2020].html", "true"};
         String[] data3 = {"key3", "Value3", "true"};
         String[] data4 = {"key4", "Value4", "true"};
-        formdata.add(data1);
-        formdata.add(data2);
-        formdata.add(data3);
-        formdata.add(data4);
-        postRequest.setFormDataInfo(formdata);
+        bodyContainer.add(data1);
+        bodyContainer.add(data2);
+        bodyContainer.add(data3);
+        bodyContainer.add(data4);
+        postRequest.setFormDataInfo(bodyContainer);
 
 
         ArrayList<String[]> headers = new ArrayList<>();
@@ -286,12 +359,18 @@ public class MultiPartPost {
         queryParams.add(param2);
         postRequest.setQueryInfo(queryParams);
 
-        MultiPartPost mpp = new MultiPartPost(postRequest);
-        try {
-            mpp.multipartPostRequest("output", true, true);
-        }catch (Exception exception){
-            System.out.println("exception~");
-        }
+//        MultiPartPost mpp = new MultiPartPost(postRequest);
+//        try {
+//            mpp.multipartPostRequest("output", true, true);
+//        }catch (Exception exception){
+//            System.out.println("exception~");
+//        }
+
+
+        System.out.println("done with that, Now:");
+        formData(postRequest);
     }
+
+
 
 }
