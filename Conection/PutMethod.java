@@ -10,6 +10,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -205,10 +206,21 @@ public class PutMethod {
             */
 
             //Execute the put request
+            Long start = new Date().getTime();
             CloseableHttpResponse httpResponse = httpClient.execute(httpPut);
+            Long end = new Date().getTime();
+
             System.out.println("PUT Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
             requestResponse.setStatusCode(httpResponse.getStatusLine().getStatusCode());
+            Long content_lengh = httpResponse.getEntity().getContentLength();
+            Long time_taken = end - start;
+            requestResponse.setContentSize(content_lengh);
+            requestResponse.setTimeTaken(time_taken);
+
+
+
+
 
 //            /*
 

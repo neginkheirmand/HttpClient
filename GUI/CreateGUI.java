@@ -902,27 +902,34 @@ public class CreateGUI {
         secondUpPart.add(addressField);
 
         JButton sendButton = new JButton("Send");
+
 /*
         sendButton.setToolTipText("Ctrl + T");
+        sendButton.setEnabled(true);
         Action sendAction = new AbstractAction("Send") {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("sent");
-                if(indexOfRequest>=0&&indexOfRequest<savedRequests.size()) {
+                if(indexOfRequest>=0 && indexOfRequest<savedRequests.size()) {
+                    System.out.println("sent");
                     //got execute the request
+                    //first we set everything and then we execute it
+                    //, , the format of data, the query, the auth, the headers
+                    //the url
                     savedRequests.get(indexOfRequest).setUrl(addressField.getText());
+                    //auth boolean
                     if (((JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)).getSelectedIndex() == 0) {
                         savedRequests.get(indexOfRequest).setAuth(true);
                         //and the auth, you got take it and set it
                     } else {
                         savedRequests.get(indexOfRequest).setAuth(false);
                     }
+                    //the type of request
                     savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
-                    //format of body
+                    //format of body type
                     savedRequests.get(indexOfRequest).setTypeOfData(((JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)).getSelectedIndex());
+                    Executer methodExecuter = new Executer( savedRequests.get(indexOfRequest) );
                 }
-                Executer methodExecuter = new Executer( savedRequests.get(indexOfRequest) );
                 updateFrame();
             }
 
@@ -955,8 +962,8 @@ public class CreateGUI {
         });
 
         saveButton.getActionMap().put("myAction", sendAction);
-*/
 
+*/
 
         sendButton.setBackground(Color.white);
         sendButton.setPreferredSize(new Dimension(100, 48));
@@ -1045,8 +1052,18 @@ public class CreateGUI {
         //badan bayad time, hajmesh va code status esh ro bedast biyari
 
         //creating components of the JPanel
-        JLabel error = new StatusCodeLabel("Error", true);
-        thirdUpPart.add(error);
+        JLabel statusLabel = null;
+        if(indexOfRequest<0||indexOfRequest>=savedRequests.size()) {
+            statusLabel = new StatusCodeLabel(StatusCodeLabel.statusCodeText(0), 0);
+        }else{
+            //its OK
+            if(savedRequests.get(indexOfRequest).getResponse()!=null) {
+                statusLabel = new StatusCodeLabel(StatusCodeLabel.statusCodeText(savedRequests.get(indexOfRequest).getResponse().getStatusCode()),savedRequests.get(indexOfRequest).getResponse().getStatusCode());
+            }else{
+                statusLabel = new StatusCodeLabel(StatusCodeLabel.statusCodeText(0), 0);
+            }
+        }
+        thirdUpPart.add(statusLabel);
 
         //the time taken
         JLabel timeTaken = new ResponseTimeInfo(0, colorOfThemeBackground1);

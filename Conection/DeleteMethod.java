@@ -99,12 +99,17 @@ public class DeleteMethod {
                 httpDelete.addHeader(deleteRequest.getAuthInfo()[0], deleteRequest.getAuthInfo()[1]);
             }
 
+            Long start = new Date().getTime();
             CloseableHttpResponse httpResponse = httpClient.execute(httpDelete);
+            Long end = new Date().getTime();
 
             System.out.println("DELETE Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
-
             requestResponse.setStatusCode(httpResponse.getStatusLine().getStatusCode());
+            Long content_lengh = httpResponse.getEntity().getContentLength();
+            Long time_taken = end - start;
+            requestResponse.setContentSize(content_lengh);
+            requestResponse.setTimeTaken(time_taken);
 
 
 

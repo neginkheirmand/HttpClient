@@ -25,6 +25,7 @@ import org.apache.http.message.BasicNameValuePair;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -197,11 +198,21 @@ public class PatchMethod {
             }
 
 
+            Long start = new Date().getTime();
             //Execute the patch request
             CloseableHttpResponse httpResponse = httpClient.execute(httpPatch);
+            Long end = new Date().getTime();
+
             System.out.println("PATCH Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
             requestResponse.setStatusCode(httpResponse.getStatusLine().getStatusCode());
+            Long content_lengh = httpResponse.getEntity().getContentLength();
+            Long time_taken = end - start;
+            requestResponse.setContentSize(content_lengh);
+            requestResponse.setTimeTaken(time_taken);
+
+
+
 
 
             try {

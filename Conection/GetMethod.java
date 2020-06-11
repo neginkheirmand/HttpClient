@@ -102,12 +102,18 @@ public class GetMethod {
                 httpGet.addHeader(getRequest.getAuthInfo()[0], getRequest.getAuthInfo()[1]);
             }
 
-
+            Long start = new Date().getTime();
             CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
+            Long end = new Date().getTime();
+
 
             System.out.println("GET Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
             requestResponse.setStatusCode(httpResponse.getStatusLine().getStatusCode());
+            Long content_lengh = httpResponse.getEntity().getContentLength();
+            Long time_taken = end - start;
+            requestResponse.setContentSize(content_lengh);
+            requestResponse.setTimeTaken(time_taken);
 
 
             //but did not close the reader container

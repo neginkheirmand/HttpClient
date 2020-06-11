@@ -96,12 +96,19 @@ public class OptionMethod {
                 httpOption.addHeader(optionRequest.getAuthInfo()[0], optionRequest.getAuthInfo()[1]);
             }
 
-
+            Long start = new Date().getTime();
             CloseableHttpResponse httpResponse = httpClient.execute(httpOption);
+            Long end = new Date().getTime();
+
 
             System.out.println("OPTION Response Status:: "
                     + httpResponse.getStatusLine().getStatusCode());
             requestResponse.setStatusCode(httpResponse.getStatusLine().getStatusCode());
+            Long content_lengh = httpResponse.getEntity().getContentLength();
+            Long time_taken = end - start;
+            requestResponse.setContentSize(content_lengh);
+            requestResponse.setTimeTaken(time_taken);
+
 
 
             // print result

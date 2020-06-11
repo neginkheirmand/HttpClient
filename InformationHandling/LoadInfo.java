@@ -195,6 +195,9 @@ public class LoadInfo {
 
             ois.close();
             fis.close();
+        } catch (InvalidClassException  exc){
+            exc.printStackTrace();
+            System.out.println("the file containing the info of the last run is not found");
         } catch(StreamCorruptedException exception){
             exception.printStackTrace();
             System.out.println("the file containing the info of the last run is not found");

@@ -15,6 +15,8 @@ public class Response implements Serializable {
     private boolean outputContainer = false;
     private int statusCode;
     private Map<String, List<String>> responseHeader = null ;
+    private Long contentSize = 0L;
+    private Long timeTaken = 0L;
 
 
 
@@ -46,6 +48,14 @@ public class Response implements Serializable {
         return output;
     }
 
+    public Long getContentSize() {
+        return contentSize;
+    }
+
+    public Long getTimeTaken() {
+        return timeTaken;
+    }
+
     public boolean isOutputContainer() {
         return outputContainer;
     }
@@ -68,6 +78,14 @@ public class Response implements Serializable {
 
     public void setOutput(String output) {
         this.output = output;
+    }
+
+    public void setContentSize(Long contentSize) {
+        this.contentSize = contentSize;
+    }
+
+    public void setTimeTaken(Long timeTaken) {
+        this.timeTaken = timeTaken;
     }
 
     public void setOutputContainer(boolean outputContainer) {
