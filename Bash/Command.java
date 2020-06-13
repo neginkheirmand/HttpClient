@@ -11,24 +11,35 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * This class created a command
+ *
+ * @author  Negin Kheirmand (98310023 - neginkheirmand@gmail.com)
+ * @version 1.0
+ */
 public class Command implements Serializable {
+    //the arraylist with the number of option in each block
     private ArrayList<Integer> numCommand;
+    //the arraylist with the string of option in each block
     private ArrayList<String> strCommand;
+    //the arraylist of the saved requests
     private static ArrayList<Command> savedRequests = new ArrayList<>();
+    //the request for each command
     private Request request;
+    //if the request should show the headers
     private boolean showHeaders =false;
     private boolean commandLine = true;
 
-    //the last command was a list command
-
-
+    /**
+     * constructor of the class
+     * @param input
+     * @param commandLine
+     */
     public Command(String input, boolean commandLine) {
         //must set Request field later in the do command method
         request = new Request();
         this.commandLine = commandLine;
 
-//        this.numCommand = numCommand;
-//        this.strCommand = strCommand;
         Options option =new Options();
         option.identifyRequestOptions(input);
         if(commandLine){
@@ -41,19 +52,35 @@ public class Command implements Serializable {
     }
 
 
-
+    /**
+     * getter method for the num array list
+     * @return
+     */
     public ArrayList<Integer> getNumCommand() {
         return numCommand;
     }
 
+
+    /**
+     * getter method for the string array list
+     * @return
+     */
     public ArrayList<String> getStrCommand() {
         return strCommand;
     }
 
+    /**
+     * getter method for the request
+     * @return the request
+     */
     public Request getRequest() {
         return request;
     }
 
+    /**
+     * some prequisites for the request
+     * @return true if the request can be done
+     */
     private boolean canApply() {
         if (numCommand.size() == 0) {
             return false;
@@ -65,6 +92,9 @@ public class Command implements Serializable {
         return true;
     }
 
+    /**
+     * this method executes the command in the first level
+     */
     private void doCommand() {
         if (!canApply()) {
             return;
@@ -86,6 +116,9 @@ public class Command implements Serializable {
         doMethod(this);
     }
 
+    /**
+     * this method lists the saved request
+     */
     private void list() {
         String cross = "\033[0;31m" + "\u274C" + "\033[0m";
         String tick = "\033[0;32m" + "\u2713" + "\033[0m";
@@ -149,6 +182,10 @@ public class Command implements Serializable {
 
     }
 
+
+    /**
+     * this method fires the saved request
+     */
     private void fire() {
         for (int i = 2; i < numCommand.size(); i++) {
             try {
@@ -165,6 +202,9 @@ public class Command implements Serializable {
         }
     }
 
+    /**
+     * this removes one of the requests from the saved requests arraylist
+     */
     private void remove(){
         for (int i = 2; i < numCommand.size(); i++) {
             try {
@@ -182,6 +222,10 @@ public class Command implements Serializable {
         }
     }
 
+    /**
+     * this method executes the request in a second level
+     * @param commandToDo
+     */
     private static void doMethod(Command commandToDo) {
 
         //the first word in the command was curl
@@ -481,6 +525,13 @@ public class Command implements Serializable {
         }
     }
 
+    /**
+     * this method gives the auth
+     * @param auth
+     * @param commandToDo
+     * @return an string [] with 3 houses the first one is the "Authorization" string , the second one
+     * is the token and the third declares if the auth should be used or not
+     */
     private static String[] getAuthInfo(String auth, Command commandToDo){
         String[] authInfo= new String[3];
         authInfo[0] = "Authorization";
@@ -499,10 +550,18 @@ public class Command implements Serializable {
         return authInfo;
     }
 
+    /**
+     * getter method for this command
+     * @return
+     */
     private boolean getCommand(){
         return commandLine;
     }
 
+    /**
+     * this method return the number of body-defiying options in the command
+     * @return
+     */
     private int numBodyType(){
         int num=0;
         for(int i=0; i<numCommand.size(); i++){
@@ -513,11 +572,19 @@ public class Command implements Serializable {
         return num;
     }
 
+    /**
+     * getter method for the command to see if the -i option is specified or not
+     * @return
+     */
     public boolean getShowHeaders() {
         return showHeaders;
     }
 
-    //still not sure if it actually works with ;
+    /**
+     * this method splits the header string given in the consule
+     * @param input
+     * @return
+     */
     private ArrayList<String[]> splitHeader(String input){
 //        System.out.println("[0]="+input.charAt(0));
 //        System.out.println("[n-1]="+input.charAt(input.length()-1));
@@ -669,7 +736,11 @@ public class Command implements Serializable {
         return headers;
     }
 
-    //still not sure if it actually works with &
+    /**
+     * this method splits the data string given in the consule
+     * @param input
+     * @return
+     */
     private ArrayList<String[]> splitData(String input){
         ArrayList<String[]> dataInfo = new ArrayList<>();
         if(!commandLine) {
@@ -810,12 +881,19 @@ public class Command implements Serializable {
         return dataInfo;
     }
 
+    /**
+     * creates a name for the output file
+     * @return the name created
+     */
     public static String getNameOfOutputFile(){
         SimpleDateFormat formatter = new SimpleDateFormat("ss--MM--hh--dd-MM-yyyy");
         Date date = new Date();
         return "output_["+formatter.format(date)+"]";
     }
 
+    /**
+     * this method saves the info of the requests done with the -S option
+     */
     public static void saveInfo(){
         try {
             File container = new File((new File(".")).getAbsolutePath()+"\\src\\InformationHandling\\SavedInformation\\SizeList.ser");
@@ -850,11 +928,14 @@ public class Command implements Serializable {
             }
         } catch (IOException i) {
             System.out.println("was not able to save info");
-            i.printStackTrace();
         }
     }
 
 
+    /**
+     * this method loads the info of the requests done with the -S option
+     * for the start of the run
+     */
     public static void loadIndo(){
         try {
 
@@ -882,20 +963,16 @@ public class Command implements Serializable {
             }
 
         } catch (InvalidClassException  exc){
-            exc.printStackTrace();
             System.out.println("the file containing the info of the last run is not found");
             savedRequests= new ArrayList<>();
         } catch(StreamCorruptedException exception){
-            exception.printStackTrace();
             System.out.println("the file containing the info of the last run is not found");
             savedRequests= new ArrayList<>();
         } catch (IOException ioe) {
-            ioe.printStackTrace();
             System.out.println("could not load the info");
             savedRequests= new ArrayList<>();
             return;
         } catch (ClassNotFoundException c) {
-            c.printStackTrace();
             System.out.println("could not load the info");
             savedRequests= new ArrayList<>();
             return;

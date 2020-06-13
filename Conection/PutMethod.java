@@ -78,7 +78,6 @@ public class PutMethod {
 
         try {
 
-
             if(putRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
                 MultiPartPut multiPartPut = new MultiPartPut(putRequest);
                 multiPartPut.multipartPutRequest(outPutFile, followRedirect, showresponseHeaders);

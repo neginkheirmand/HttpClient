@@ -166,7 +166,6 @@ public class PatchMethod {
                             .build();
                     httpPatch.setEntity(entity);
 
-                    System.out.println("+"+httpPatch.getHeaders("Content-Type"));
                 }
 
             }
@@ -184,9 +183,6 @@ public class PatchMethod {
             Long time_taken = end - start;
             requestResponse.setContentSize(content_lengh);
             requestResponse.setTimeTaken(time_taken);
-
-
-
 
 
             try {
