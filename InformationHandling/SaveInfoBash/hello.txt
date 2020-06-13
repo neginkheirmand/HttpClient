@@ -1,17 +1,1 @@
-{
-  "args": {}, 
-  "data": "", 
-  "files": {}, 
-  "form": {}, 
-  "headers": {
-    "Accept-Encoding": "gzip,deflate", 
-    "Header1": "Value1", 
-    "Header3": "Value3", 
-    "Host": "httpbin.org", 
-    "User-Agent": "Apache-HttpClient/4.5.12 (Java/11.0.6)", 
-    "X-Amzn-Trace-Id": "Root=1-5ee0d1d3-12a0b579f4d55e63b89f745b"
-  }, 
-  "json": null, 
-  "origin": "2.177.53.192", 
-  "url": "http://httpbin.org/delete"
-}
+bfevaghv 

@@ -7,6 +7,7 @@ public class TestWithScanner {
 
     public static void main(String[] args) {
         Options newOptionIdentifier = new Options();
+        Command.loadIndo();
         while(true) {
             String input="";
             try {
@@ -15,6 +16,7 @@ public class TestWithScanner {
             }catch (java.lang.IndexOutOfBoundsException exception){
                 System.out.println("Please enter valid input");
             }
+            Command.saveInfo();
         }
     }
 }

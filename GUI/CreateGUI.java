@@ -1311,7 +1311,7 @@ public class CreateGUI {
         setRequestTabedPane.setBackground(colorOfThemeBackground2);
         setRequestTabedPane.setForeground(colorOfThemeBackground1);
         //now the panels
-        JPanel body = new JPanel();
+        JPanel body = new BodyMessage();
         body.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
         body.setBackground(colorOfThemeBackground2);
 //        JScrollPane bodyContainer = new JScrollPane();
@@ -1496,26 +1496,26 @@ public class CreateGUI {
      * @param timesChanged the number of times the check box is changed
      */
     private void createBodyTab(JPanel body, int bodyType, int timesChanged) {
-
+//
         Dimension sizeOfNow = mainFrame.getSize();
         Point locationOfNow = mainFrame.getLocationOnScreen();
-        body.setLayout(new GridBagLayout());
-        if(indexOfRequest>-1 && indexOfRequest< savedRequests.size()){
-            System.out.println("request exist");
-            if(savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.PUT) ||
-                    savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.POST) ||
-                    savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.PATCH) ){
-                System.out.println("request has saved info");
-                new BodyMessage(this, savedRequests.get(indexOfRequest), colorOfThemeBackground1, colorOfThemeBackground2, colorOfThemeForground);
-            }else{
-                System.out.println("request does not have saved info");
-                new BodyMessage(savedRequests.get(indexOfRequest));
-            }
-        }else{
-            System.out.println("request doesnt exist");
-            new BodyMessage();
-        }
-        /*
+//        body.setLayout(new GridBagLayout());
+//        if(indexOfRequest>-1 && indexOfRequest< savedRequests.size()){
+//            System.out.println("request exist");
+//            if(savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.PUT) ||
+//                    savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.POST) ||
+//                    savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.PATCH) ){
+//                System.out.println("request has saved info");
+//                new BodyMessage(this, savedRequests.get(indexOfRequest), colorOfThemeBackground1, colorOfThemeBackground2, colorOfThemeForground);
+//            }else{
+//                System.out.println("request does not have saved info");
+//                new BodyMessage(savedRequests.get(indexOfRequest));
+//            }
+//        }else{
+//            System.out.println("request doesnt exist");
+//            new BodyMessage();
+//        }
+
         if (timesChanged > 0) {
             try {
 //                Component toRemove = body.getComponent(timesChanged-1);
@@ -1703,7 +1703,6 @@ public class CreateGUI {
             mainFrame.pack();
 
         }
-        */
         mainFrame.revalidate();
         mainFrame.repaint();
         mainFrame.pack();

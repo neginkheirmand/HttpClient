@@ -81,13 +81,7 @@ public class PutMethod {
 
             if(putRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
                 MultiPartPut multiPartPut = new MultiPartPut(putRequest);
-                try {
-                    multiPartPut.multipartPutRequest(outPutFile, followRedirect, showresponseHeaders);
-                }catch (ParseException exception){
-                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problems in setting the request");
-                }catch (IOException exception){
-                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problems in setting the request");
-                }
+                multiPartPut.multipartPutRequest(outPutFile, followRedirect, showresponseHeaders);
                 return;
             }
 

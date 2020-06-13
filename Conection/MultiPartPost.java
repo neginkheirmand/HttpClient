@@ -1,49 +1,9 @@
 package Conection;
 
-//import org.apache.hc.client5.http.classic.methods.HttpPost;
-//import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
-//import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-//import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-//import org.apache.hc.client5.http.impl.classic.HttpClients;
-//import org.apache.hc.core5.http.ContentType;
-//import org.apache.hc.core5.http.HttpEntity;
-//
-//import java.io.File;
-//import java.io.IOException;
-//
-//public class MultiPartPost {
-//    public static void main(String[] args) {
-//        try {
-//            CloseableHttpClient client = HttpClients.createDefault();
-//            HttpPost httpPost = new HttpPost("http://apapi.haditabatabaei.ir/tests/post/formdata");
-//
-//            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-//            builder.addTextBody("username", "John");
-//            builder.addTextBody("password", "pass");
-//            builder.addBinaryBody(
-//                    "file", new File("test.txt"), ContentType.APPLICATION_OCTET_STREAM, "file.ext");
-//
-//            HttpEntity multipart = builder.build();
-//            httpPost.setEntity(multipart);
-//
-//            System.out.println("1");
-//            CloseableHttpResponse response = client.execute(httpPost);
-//            System.out.println("2");
-//            client.close();
-//            System.out.println("3");
-////        }catch (IOException exception){
-////            System.out.println("ioexception");
-//        }
-//    }
-//}
-
 import Bash.Response;
 import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 import GUI.TYPE;
-import org.apache.commons.logging.Log;
-import org.apache.http.Header;
-import org.apache.http.NameValuePair;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -53,227 +13,25 @@ import java.text.ParseException;
 import java.util.*;
 
 public class MultiPartPost {
-    Request postRequest;
+    private Request postRequest;
 
     public MultiPartPost(Request postRequest) {
         this.postRequest = postRequest;
     }
 
-    public void multipartPostRequest(String outPutFile, boolean followRedirect, boolean showresponseHeaders) throws ParseException, IOException {
-        if (postRequest == null || postRequest.getUrl() == null || postRequest.getUrl().length() == 0) {
-            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with the request, try again");
-            return;
-        }
-        HttpURLConnection connection = null;
-        DataOutputStream outputStream = null;
-        InputStream inputStream = null;
-
-        String twoHyphens = "--";
-        String boundary = "*****" + Long.toString(System.currentTimeMillis()) + "*****";
-        String lineEnd = "\r\n";
-
-        String result = "";
-
-        int bytesRead, bytesAvailable, bufferSize;
-        byte[] buffer;
-        int maxBufferSize = 1024 * 1024;
-
-//        String name = getName(filepath);
-        try {
-//            File file = new File(filepath);
-//            FileInputStream fileInputStream = new FileInputStream(file);
-
-            String urlStr=postRequest.getUrl()+"?";
-            if( postRequest.getQueryInfo()!=null && postRequest.getQueryInfo().size()!=0){
-                for(int i=0; i<postRequest.getQueryInfo().size(); i++){
-                    if(postRequest.getQueryInfo().get(i)[2].equals("true")){
-                        urlStr+=postRequest.getQueryInfo().get(i)[0]+"="+postRequest.getQueryInfo().get(i)[1];
-                    }
-                    if(i!=postRequest.getQueryInfo().size()-1){
-                        urlStr+="&";
-                    }
-                }
-            }
-            URL url = new URL(urlStr);
-
-
-
-            connection = (HttpURLConnection) url.openConnection();
-
-            connection.setFollowRedirects(followRedirect);
-
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            connection.setUseCaches(false);
-
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Connection", "Keep-Alive");
-            connection.setRequestProperty("User-Agent", "Multipart HTTP Client 1.0");
-            connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-
-            //the headers
-            if (postRequest.getHeaderInfo() != null && postRequest.getHeaderInfo().size() != 0) {
-                for (int i = 0; i < postRequest.getHeaderInfo().size(); i++) {
-                    if (postRequest.getHeaderInfo().get(i)[2].equals("true")) {
-                        connection.setRequestProperty(postRequest.getHeaderInfo().get(i)[0], postRequest.getHeaderInfo().get(i)[1]);
-                    }
-                }
-            }
-
-            //the auth
-            if (postRequest.getAuth() && postRequest.getAuthInfo() != null && (postRequest.getAuthInfo()[2]).equals("true")) {
-                connection.setRequestProperty(postRequest.getAuthInfo()[0], postRequest.getAuthInfo()[1]);
-
-            }
-
-            outputStream = new DataOutputStream(connection.getOutputStream());
-
-            if (postRequest.getFormDataInfo() != null && ((ArrayList<String[]>) postRequest.getFormDataInfo()).size() != 0) {
-                for (int i = 0; i < ((ArrayList<String[]>) postRequest.getFormDataInfo()).size(); i++) {
-                    if (((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[2].equals("true")) {
-                        outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-                        outputStream.writeBytes("Content-Disposition: form-data; name=\"" + ((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[0] + "\"" + lineEnd);
-                        outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
-                        outputStream.writeBytes(lineEnd);
-                        outputStream.writeBytes(((ArrayList<String[]>) postRequest.getFormDataInfo()).get(i)[1]);
-                        outputStream.writeBytes(lineEnd);
-                    }
-                }
-
-                outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-            }
-            inputStream = connection.getInputStream();
-            result = this.convertStreamToString(inputStream);
-
-            System.out.println();
-
-            Response requestResponse = new Response(null, "", true, "", 0);
-            if (outPutFile == null || outPutFile.length() == 0) {
-                requestResponse.setOutputContainer(false);
-            } else {
-                requestResponse.setOutputContainer(true);
-            }
-
-            int status = connection.getResponseCode();
-            System.out.println("POST Response Status:: " + status);
-            requestResponse.setStatusCode(status);
-
-            //-i option
-            if (showresponseHeaders) {
-                Map<String, List<String>> map = connection.getHeaderFields();
-                requestResponse.setResponseHeader(map);
-                for (String key : map.keySet()) {
-                    System.out.println(key + ":");
-
-                    List<String> values = map.get(key);
-
-                    for (String aValue : values) {
-                        System.out.println(aValue);
-                    }
-                }
-            }
-
-            requestResponse.setOutput(result);
-            if (outPutFile == null || outPutFile.length() == 0) {
-
-                if (result.length() == 0) {
-                    System.out.println("empty response");
-                } else {
-                    System.out.println(result);
-                }
-            } else {
-                File outputContainer;
-                if ((outPutFile.charAt(outPutFile.length() - 4) + outPutFile.charAt(outPutFile.length() - 3) + outPutFile.charAt(outPutFile.length() - 2) +
-                        outPutFile.charAt(outPutFile.length() - 1) + "").equals(".txt")) {
-                    outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile);
-                } else {
-                    outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile + ".txt");
-                }
-
-                requestResponse.setPathOutputFile(outputContainer.getAbsolutePath());
-                //the next method sees if the parenrs of the file exist if not creates it and returnts true if already existed and false if created it
-                outputContainer.getParentFile().mkdirs();
-                if (!outputContainer.createNewFile()) {
-                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "unable to create output file");
-                    System.out.println("A file with this name already exist, do you want to over-write on it? <Y/n>");
-                    String overWrite = "" + (new Scanner(System.in)).nextLine();
-
-                    while (!overWrite.equals("Y") && !overWrite.equals("n")) {
-                        overWrite = "" + (new Scanner(System.in)).nextLine();
-                    }
-
-                    if (overWrite.equals("Y")) {
-                        FileWriter fileWriter = new FileWriter(outputContainer);
-                        fileWriter.write(result.toString());
-                        fileWriter.close();
-                    } else {
-                        System.out.println("retry again with a new name");
-                    }
-                } else {
-
-                    FileWriter fileWriter = new FileWriter(outputContainer);
-                    fileWriter.write(result);
-                    fileWriter.close();
-                }
-            }
-
-
-//            fileInputStream.close();
-            inputStream.close();
-            outputStream.flush();
-            outputStream.close();
-
-            postRequest.setResponse(requestResponse);
-            return;
-        } catch (Exception e) {
-//            Log.e("MultipartRequest", "Multipart Form Upload Error");
-            e.printStackTrace();
-            System.out.println("error");
-            return;
-        }
-    }
-
-    private String convertStreamToString(InputStream is) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
-    }
-
 
     public static void bufferOutFormData(ArrayList<String[]> body, String boundary, BufferedOutputStream bufferedOutputStream) throws IOException {
-        for(int i=0; i<body.size(); i++){
+        for (int i = 0; i < body.size(); i++) {
             bufferedOutputStream.write(("--" + boundary + "\r\n").getBytes());
             if (body.get(i)[0].contains("file")) {
-                System.out.println("tryng to upload file with index"+i);
-                if(new File(body.get(i)[1]).isFile()){
-                    System.out.println("exists");
-                }
                 bufferedOutputStream.write(("Content-Disposition: form-data; filename=\"" + (new File(body.get(i)[1])).getName() + "\"\r\nContent-Type: Auto\r\n\r\n").getBytes());
-                System.out.println("Content-Disposition: form-data; filename=\"" + (new File(body.get(i)[1])).getName() + "\"\r\nContent-Type: Auto\r\n\r\n");
                 try {
                     BufferedInputStream tempBufferedInputStream = new BufferedInputStream(new FileInputStream(new File(body.get(i)[1])));
                     byte[] filesBytes = tempBufferedInputStream.readAllBytes();
                     bufferedOutputStream.write(filesBytes);
                     bufferedOutputStream.write("\r\n".getBytes());
-                    System.out.println("DONE UPLOADING");
                 } catch (IOException e) {
                     System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problem uploading the file");
-                    e.printStackTrace();
                 }
             } else {
                 bufferedOutputStream.write(("Content-Disposition: form-data; name=\"" + body.get(i)[0] + "\"\r\n\r\n").getBytes());
@@ -285,59 +43,213 @@ public class MultiPartPost {
         bufferedOutputStream.close();
     }
 
-    public static void formData(Request request) {
+    public static void formData(Request request, String outPutFile, boolean followRedirects, boolean showHeaders) {
+        BufferedInputStream bufferedInputStream;
         try {
-            if(request==null){
+            if (request == null) {
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "invalid request");
                 return;
             }
-            if(request.getUrl()==null || request.getUrl().length()==0){
-                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "invalid url, please enter url");
+            if (request.getUrl() == null || request.getUrl().length() == 0) {
+                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "invalid url");
                 return;
             }
-            URL url = new URL(request.getUrl());
+            String query = "";
+            if (request.getQueryInfo() != null && request.getQueryInfo().size() != 0) {
+                query += "?";
+                for (int i = 0; i < request.getQueryInfo().size(); i++) {
+                    if (request.getQueryInfo().get(i)[2].equals("true")) {
+                        query += request.getQueryInfo().get(i)[0] + "=" + request.getQueryInfo().get(i)[1];
+                    }
+                    if (i != request.getQueryInfo().size()) {
+                        query += "&";
+                    }
+                }
+            }
+            URL url = new URL(request.getUrl() + query);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            String boundary = System.currentTimeMillis() + "";
-            if(request.getTypeOfRequest().equals(TYPE.POST)) {
-                connection.setRequestMethod("POST");
-            }else if(request.getTypeOfRequest().equals((TYPE.PUT))){
-                connection.setRequestMethod("PUT");
+            if(followRedirects) {
+                connection.setInstanceFollowRedirects(true);
             }else{
+                connection.setInstanceFollowRedirects(false);
+            }
+            String boundary = System.currentTimeMillis() + "";
+            if (request.getTypeOfRequest().equals(TYPE.POST)) {
+                connection.setRequestMethod("POST");
+            } else if (request.getTypeOfRequest().equals((TYPE.PUT))) {
+                connection.setRequestMethod("PUT");
+            } else {
                 return;
             }
             connection.setDoOutput(true);
 //            connection.setRequestProperty("accept", "");
             connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+
+            //the headers
+            if (request.getHeaderInfo() != null && request.getHeaderInfo().size() != 0) {
+                for (int i = 0; i < request.getHeaderInfo().size(); i++) {
+                    if (request.getHeaderInfo().get(i)[2].equals("true")) {
+                        connection.setRequestProperty(request.getHeaderInfo().get(i)[0], request.getHeaderInfo().get(i)[1]);
+                    }
+                }
+            }
+
+            //the auth
+//            [0]= Authorization
+//            [1]= the token
+//            [2]= true or false
+            if (request.getAuthInfo() != null && request.getAuthInfo()[0] != null && request.getAuthInfo()[1] != null && request.getAuthInfo()[2].equals("true")) {
+                connection.setRequestProperty(request.getAuthInfo()[0], request.getAuthInfo()[1]);
+            }
+
             BufferedOutputStream outputStream = new BufferedOutputStream(connection.getOutputStream());
             bufferOutFormData((ArrayList<String[]>) request.getFormDataInfo(), boundary, outputStream);
             outputStream.flush();
-            outputStream.close();
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(connection.getInputStream());
-            System.out.println(new String(bufferedInputStream.readAllBytes()));
-            System.out.println(connection.getResponseCode());
-            System.out.println(connection.getHeaderFields());
-            bufferedInputStream.close();
-        } catch (java.net.MalformedURLException exc){
+            if(outputStream!=null){
+                outputStream.close();
+            }
+            int statusCode = connection.getResponseCode();
+            System.out.println("POST Response Status:: " + statusCode);
+
+            if(statusCode<400) {
+                System.out.println("Response Headers");
+                Map<String, List<String>> map = connection.getHeaderFields();
+                String contentType = "";
+                for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+                    if(entry!=null && entry.getKey()!=null) {
+                        if (showHeaders) {
+                            System.out.println("Key : " + entry.getKey()
+                                    + " ,Value : " + entry.getValue());
+                        }
+                        if (entry.getKey().contains("Content-Type")) {
+                            contentType = entry.getValue().toString();
+                        }
+                    }
+                }
+
+                if (outPutFile == null || outPutFile.length() == 0) {
+                    bufferedInputStream = new BufferedInputStream(connection.getInputStream());
+                    System.out.println(new String(bufferedInputStream.readAllBytes()));
+                    System.out.println(connection.getResponseCode());
+                    System.out.println(connection.getHeaderFields());
+                    if(bufferedInputStream!=null) {
+                        bufferedInputStream.close();
+                    }
+
+                } else {
+                    //if the -O option is used
+                    String posFix = "";
+                    if (contentType.contains("image/png")) {
+                        posFix = ".png";
+                    } else if (contentType.contains("text/html")) {
+                        posFix = ".html";
+                    } else if (contentType.contains("application/json")) {
+                        posFix = ".json";
+                    } else {
+                        posFix = ".txt";
+                    }
+                    File outputContainer;
+                    if (outPutFile.contains(posFix)) {
+                        outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile);
+                    } else {
+                        outputContainer = new File(new File(".").getAbsolutePath() + "\\src\\InformationHandling\\SaveInfoBash\\" + outPutFile + posFix);
+                    }
+
+                    //the next method sees if the parents of the file exist if not creates it and returns true if already existed and false if created it
+                    outputContainer.getParentFile().mkdirs();
+                    if (!outputContainer.createNewFile()) {
+                        System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "unable to create output file");
+                        System.out.println("A file with this name already exist, do you want to over-write on it? <Y/n>");
+                        String overWrite = "" + (new Scanner(System.in)).nextLine();
+
+                        while (!overWrite.equals("Y") && !overWrite.equals("n")) {
+                            overWrite = "" + (new Scanner(System.in)).nextLine();
+                        }
+
+                        if (overWrite.equals("Y")) {
+
+                            BufferedReader reader;
+                            try {
+                                reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                            } catch (NullPointerException nullPointerException) {
+                                System.out.println("empty Response  ");
+                                return;
+                            }
+
+                            String inputLine;
+                            StringBuffer response = new StringBuffer();
+
+                            while ((inputLine = reader.readLine()) != null) {
+                                response.append(inputLine + "\n");
+                            }
+                            if(reader!=null) {
+                                reader.close();
+                            }
+                            FileWriter fileWriter = new FileWriter(outputContainer);
+                            fileWriter.write(response.toString());
+                            fileWriter.close();
+                        } else {
+                            System.out.println("retry again with a new name");
+                        }
+                    } else {
+
+                        BufferedReader reader;
+                        try {
+                            reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                        } catch (NullPointerException nullPointerException) {
+                            System.out.println("Empty Response     ");
+                            return;
+                        }
+
+                        String inputLine;
+                        StringBuffer response = new StringBuffer();
+
+                        while ((inputLine = reader.readLine()) != null) {
+                            response.append(inputLine + "\n");
+                        }
+                        if(reader!=null) {
+                            reader.close();
+                        }
+
+                        FileWriter fileWriter = new FileWriter(outputContainer);
+                        fileWriter.write(response.toString());
+                        fileWriter.close();
+                    }
+                }
+            }else{
+                bufferedInputStream = new BufferedInputStream(connection.getErrorStream());
+                System.out.println(new String(bufferedInputStream.readAllBytes()));
+                System.out.println(connection.getResponseCode());
+                System.out.println(connection.getHeaderFields());
+                if(bufferedInputStream!=null) {
+                    bufferedInputStream.close();
+                }
+            }
+            connection.disconnect();
+        } catch (java.net.MalformedURLException exc) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "incorrect url");
+
         } catch (ProtocolException e) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "invalid request method");
+
         } catch (IOException e) {
             System.out.println("\033[0;31m" + "Error" + "\033[0m" + " Cannot make this request");
+
         }
     }
 
 
-
     public static void main(String[] args) {
         Request postRequest = new Request("name", TYPE.POST, "https://webhook.site/d476bb71-fb13-4ceb-ab31-7923e71d3b18", MESSAGEBODY_TYPE.MULTIPART_FORM);
+//        Request postRequest = new Request("name", TYPE.POST, "http://apapi.haditabatabaei.ir/tests/post/formdata", MESSAGEBODY_TYPE.MULTIPART_FORM);
 //        Request postRequest = new Request("name", TYPE.POST, "http://httpbin.org/post", MESSAGEBODY_TYPE.MULTIPART_FORM);
         ArrayList<String[]> bodyContainer = new ArrayList<>();
         String[] data1 = {"key1", "Value1", "true"};
-        String[] data2 = {"file", "C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\InformationHandling\\SaveInfoBash\\output_[01--06--08--10-06-2020].html", "true"};
+//        String[] data2 = {"file", "C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\InformationHandling\\SaveInfoBash\\hello.txt", "true"};
         String[] data3 = {"key3", "Value3", "true"};
         String[] data4 = {"key4", "Value4", "true"};
         bodyContainer.add(data1);
-        bodyContainer.add(data2);
+//        bodyContainer.add(data2);
         bodyContainer.add(data3);
         bodyContainer.add(data4);
         postRequest.setFormDataInfo(bodyContainer);
@@ -359,18 +271,9 @@ public class MultiPartPost {
         queryParams.add(param2);
         postRequest.setQueryInfo(queryParams);
 
-//        MultiPartPost mpp = new MultiPartPost(postRequest);
-//        try {
-//            mpp.multipartPostRequest("output", true, true);
-//        }catch (Exception exception){
-//            System.out.println("exception~");
-//        }
 
-
-        System.out.println("done with that, Now:");
-        formData(postRequest);
+        formData(postRequest, "hello.txt", true, true);
     }
-
 
 
 }

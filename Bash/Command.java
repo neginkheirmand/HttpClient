@@ -6,8 +6,7 @@ import GUI.TYPE;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.Serializable;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -100,12 +99,12 @@ public class Command implements Serializable {
             System.out.printf("\033[0;31m" + (i + 1) + "\033[0m" + ". url:");
             //printing th url
             if (savedRequests.get(i).getRequest().getUrl()==null || savedRequests.get(i).getRequest().getUrl().length() == 0) {
-                System.out.printf("\033[0;31m" + " no url saved\033[0m");
+                System.out.printf("\033[0;31m" + " no url saved"+"\033[0m");
             } else {
-                System.out.printf(savedRequests.get(i).getRequest().getUrl()+"\033[0m");
+                System.out.printf(savedRequests.get(i).getRequest().getUrl());
             }
 
-            System.out.printf("| ");
+            System.out.printf("\033[0m"+"   | ");
 
             //now the headers:
             System.out.printf("headers: ");
@@ -118,6 +117,8 @@ public class Command implements Serializable {
                         System.out.printf(cross +"  ");
                     }
                 }
+            }else{
+                System.out.printf(" None ");
             }
 
             System.out.printf("| ");
@@ -132,6 +133,8 @@ public class Command implements Serializable {
                         System.out.printf(cross+"  ");
                     }
                 }
+            }else{
+                System.out.printf(" None ");
             }
 
             System.out.printf("| ");
@@ -139,8 +142,6 @@ public class Command implements Serializable {
 
             if(!Options.isGetterRequest(savedRequests.get(i).numCommand, savedRequests.get(i).strCommand )) {
                 System.out.printf("| ");
-
-
                 System.out.printf("FormData: " + MESSAGEBODY_TYPE.getName(savedRequests.get(i).getRequest().getTypeOfData()));
             }
             System.out.println();
@@ -180,6 +181,7 @@ public class Command implements Serializable {
             }
         }
     }
+
     private static void doMethod(Command commandToDo) {
 
         //the first word in the command was curl
@@ -301,9 +303,8 @@ public class Command implements Serializable {
                 String nameOfOutputFile = "";
                 if(i==commandToDo.getNumCommand().size()-1 || commandToDo.getNumCommand().get(i+1)!=-1){
                     //its the last one so the name of the file will be chosen automatically
-                    SimpleDateFormat formatter = new SimpleDateFormat("ss--MM--hh--dd-MM-yyyy");
-                    Date date = new Date();
-                    nameOfOutputFile="output_["+formatter.format(date)+"]";
+
+                    nameOfOutputFile = getNameOfOutputFile();
 
                 }else{
                     //the chosen name by the user
@@ -472,7 +473,10 @@ public class Command implements Serializable {
             commandToDo.getNumCommand().remove(indexSave);
             commandToDo.getStrCommand().remove(indexSave);
         }
-        if(commandToDo.getRequest()!=null) {
+        if(commandToDo.getNumCommand().size()==2 && commandToDo.getNumCommand().get(1)==3){
+            return;
+        }
+        if(commandToDo.getRequest()!=null ) {
             new Executer(commandToDo.getRequest(), commandToDo);
         }
     }
@@ -804,6 +808,107 @@ public class Command implements Serializable {
             }
         }
         return dataInfo;
+    }
+
+    public static String getNameOfOutputFile(){
+        SimpleDateFormat formatter = new SimpleDateFormat("ss--MM--hh--dd-MM-yyyy");
+        Date date = new Date();
+        return "output_["+formatter.format(date)+"]";
+    }
+
+    public static void saveInfo(){
+        try {
+            File container = new File((new File(".")).getAbsolutePath()+"\\src\\InformationHandling\\SavedInformation\\SizeList.ser");
+
+            container.getParentFile().mkdirs();
+            container.createNewFile();
+
+            //write down the number of requests
+            FileOutputStream fileOut =
+                    new FileOutputStream(container);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(savedRequests.size());
+
+            out.close();
+            fileOut.close();
+            //close the file
+
+            for(int i=0; i<savedRequests.size(); i++){
+                File requestContainer = new File((new File(".")).getAbsolutePath()+"\\src\\InformationHandling\\SavedInformation\\Request"+i+".ser");
+
+                requestContainer.getParentFile().mkdirs();
+                requestContainer.createNewFile();
+
+                //write down the number of requests
+                FileOutputStream fileOutPut =
+                        new FileOutputStream(requestContainer);
+                ObjectOutputStream output = new ObjectOutputStream(fileOutPut);
+                output.writeObject(savedRequests.get(i));
+
+                output.close();
+                fileOutPut.close();
+            }
+        } catch (IOException i) {
+            System.out.println("was not able to save info");
+            i.printStackTrace();
+        }
+    }
+
+
+    public static void loadIndo(){
+        try {
+
+            File container = new File((new File(".")).getAbsolutePath()+"\\src\\InformationHandling\\SavedInformation\\SizeList.ser");
+
+            FileInputStream fis = new FileInputStream(container);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+
+            int sizeSavedrequests = (int) ois.readObject();
+
+            ois.close();
+            fis.close();
+            savedRequests = new ArrayList<>();
+            for(int i=0; i<sizeSavedrequests; i++){
+                File requestContainer = new File((new File(".")).getAbsolutePath()+"\\src\\InformationHandling\\SavedInformation\\Request"+i+".ser");
+
+                FileInputStream fileInputStream = new FileInputStream(requestContainer);
+                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+                Command commandContainer= (Command) objectInputStream.readObject();
+                savedRequests.add(commandContainer);
+
+                objectInputStream.close();
+                fileInputStream.close();
+            }
+
+        } catch (InvalidClassException  exc){
+            exc.printStackTrace();
+            System.out.println("the file containing the info of the last run is not found");
+            savedRequests= new ArrayList<>();
+        } catch(StreamCorruptedException exception){
+            exception.printStackTrace();
+            System.out.println("the file containing the info of the last run is not found");
+            savedRequests= new ArrayList<>();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            System.out.println("could not load the info");
+            savedRequests= new ArrayList<>();
+            return;
+        } catch (ClassNotFoundException c) {
+            c.printStackTrace();
+            System.out.println("could not load the info");
+            savedRequests= new ArrayList<>();
+            return;
+        }
+        for(int i=0; i<savedRequests.size(); i++){
+            if(savedRequests.get(i)==null){
+                savedRequests.remove(i);
+                if(i>0){
+                    i--;
+                }
+            }
+        }
+
     }
 
 }

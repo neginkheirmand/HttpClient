@@ -24,8 +24,7 @@ public class BodyMessage extends JPanel {
      * for requests with no body message
      * @param request
      */
-    public BodyMessage(Request request) {
-        super();
+    public void createBodyMessage(Request request) {
         this.request = request;
         //in case the method of the request does not support body message
         String methodRequest = request.getTypeOfRequest().toString();
@@ -44,8 +43,7 @@ public class BodyMessage extends JPanel {
     /**
      * if no request is selected
      */
-    public BodyMessage(CreateGUI gui, Request request, Color colorOfThemeBackground1, Color colorOfThemeBackground2, String colorOfThemeForground){
-        super();
+    public void createBodyMessage(CreateGUI gui, Request request, Color colorOfThemeBackground1, Color colorOfThemeBackground2, String colorOfThemeForground){
         this.request=request;
         JPanel thisBody = this;
         thisBody.setLayout(new GridBagLayout());

@@ -4,8 +4,6 @@ import Bash.Response;
 import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
 import GUI.TYPE;
-import org.apache.hc.client5.http.entity.mime.HttpMultipartMode;
-import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -148,30 +146,6 @@ public class PatchMethod {
                     return;
                 }
             } else if (patchRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
-                List<NameValuePair> body = null;
-//                httpPost.setHeader("Content-Type", "multipart/form-data; boundary="+ "*****" + Long.toString(System.currentTimeMillis()) + "*****");
-                if (patchRequest.getFormDataInfo() != null) {
-                    body = new ArrayList<NameValuePair>();
-                    for (int i = 0; i < ((ArrayList<String[]>) patchRequest.getFormDataInfo()).size(); i++) {
-                        if (((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[2].equals("true") &&
-                                ((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[0] != null &&
-                                ((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[1] != null) {
-                            body.add(new BasicNameValuePair(((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[0],
-                                    ((ArrayList<String[]>) patchRequest.getFormDataInfo()).get(i)[1]));
-                        }
-                    }
-//                    InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
-                    HttpEntity entity = EntityBuilder.create()
-                            .setContentType(ContentType.MULTIPART_FORM_DATA)
-                            .setParameters(body)
-//                            .setStream(new BufferedInputStream())
-                            .build();
-
-                    httpPatch.setEntity(entity);
-
-                }
-
-            }else if (patchRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
                 List<NameValuePair> body = null;
 //                httpPost.setHeader("Content-Type", "multipart/form-data; boundary="+ "*****" + Long.toString(System.currentTimeMillis()) + "*****");
                 if (patchRequest.getFormDataInfo() != null) {

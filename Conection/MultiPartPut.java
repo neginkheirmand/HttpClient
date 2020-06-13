@@ -1,42 +1,5 @@
 package Conection;
 
-//import org.apache.hc.client5.http.classic.methods.HttpPost;
-//import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
-//import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-//import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-//import org.apache.hc.client5.http.impl.classic.HttpClients;
-//import org.apache.hc.core5.http.ContentType;
-//import org.apache.hc.core5.http.HttpEntity;
-//
-//import java.io.File;
-//import java.io.IOException;
-//
-//public class MultiPartPost {
-//    public static void main(String[] args) {
-//        try {
-//            CloseableHttpClient client = HttpClients.createDefault();
-//            HttpPost httpPost = new HttpPost("http://apapi.haditabatabaei.ir/tests/post/formdata");
-//
-//            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-//            builder.addTextBody("username", "John");
-//            builder.addTextBody("password", "pass");
-//            builder.addBinaryBody(
-//                    "file", new File("test.txt"), ContentType.APPLICATION_OCTET_STREAM, "file.ext");
-//
-//            HttpEntity multipart = builder.build();
-//            httpPost.setEntity(multipart);
-//
-//            System.out.println("1");
-//            CloseableHttpResponse response = client.execute(httpPost);
-//            System.out.println("2");
-//            client.close();
-//            System.out.println("3");
-////        }catch (IOException exception){
-////            System.out.println("ioexception");
-//        }
-//    }
-//}
-
 import Bash.Response;
 import GUI.MESSAGEBODY_TYPE;
 import GUI.Request;
@@ -57,7 +20,7 @@ public class MultiPartPut {
         this.putRequest = putRequest;
     }
 
-    public void multipartPutRequest(String outPutFile, boolean followRedirect, boolean showresponseHeaders) throws ParseException, IOException {
+    public void multipartPutRequest(String outPutFile, boolean followRedirect, boolean showresponseHeaders){
         if (putRequest == null || putRequest.getUrl() == null || putRequest.getUrl().length() == 0) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with the request, try again");
             return;
@@ -127,12 +90,25 @@ public class MultiPartPut {
             if (putRequest.getFormDataInfo() != null && ((ArrayList<String[]>) putRequest.getFormDataInfo()).size() != 0) {
                 for (int i = 0; i < ((ArrayList<String[]>) putRequest.getFormDataInfo()).size(); i++) {
                     if (((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[2].equals("true")) {
-                        outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-                        outputStream.writeBytes("Content-Disposition: form-data; name=\"" + ((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[0] + "\"" + lineEnd);
-                        outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
-                        outputStream.writeBytes(lineEnd);
-                        outputStream.writeBytes(((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[1]);
-                        outputStream.writeBytes(lineEnd);
+                        if(((ArrayList<String[]>)putRequest.getFormDataInfo()).get(i)[0].contains("file")){
+                            outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+                            outputStream.write(("Content-Disposition: form-data; filename=\"" + (new File(((ArrayList<String[]>)putRequest.getFormDataInfo()).get(i)[1])).getName() + "\"\r\nContent-Type: Auto\r\n\r\n").getBytes());
+                            try {
+                                BufferedInputStream tempBufferedInputStream = new BufferedInputStream(new FileInputStream(new File( ((ArrayList<String[]>)putRequest.getFormDataInfo()).get(i)[1])));
+                                byte[] filesBytes = tempBufferedInputStream.readAllBytes();
+                                outputStream.write(filesBytes);
+                                outputStream.write("\r\n".getBytes());
+                            } catch (IOException e) {
+                                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problem uploading the file");
+                            }
+                        }else {
+                            outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+                            outputStream.writeBytes("Content-Disposition: form-data; name=\"" + ((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[0] + "\"" + lineEnd);
+                            outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
+                            outputStream.writeBytes(lineEnd);
+                            outputStream.writeBytes(((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[1]);
+                            outputStream.writeBytes(lineEnd);
+                        }
                     }
                 }
 
@@ -252,9 +228,10 @@ public class MultiPartPut {
 
     public static void main(String[] args) {
         Request putRequest = new Request("name", TYPE.PUT, "https://webhook.site/d476bb71-fb13-4ceb-ab31-7923e71d3b18", MESSAGEBODY_TYPE.MULTIPART_FORM);
+//        Request putRequest = new Request("name", TYPE.PUT, "http://apapi.haditabatabaei.ir/tests/put/formdata/100", MESSAGEBODY_TYPE.MULTIPART_FORM);
         ArrayList<String[]> formdata = new ArrayList<>();
         String[] data1 = {"key1", "Value1", "true"};
-        String[] data2 = {"key2", "Value2", "true"};
+        String[] data2 = {"file", "C:\\Users\\venus\\Desktop\\uni\\barnameneVC pishrafte\\ProjeMid\\src\\InformationHandling\\SaveInfoBash\\hello.txt", "true"};
         String[] data3 = {"key3", "Value3", "true"};
         String[] data4 = {"key4", "Value4", "true"};
         formdata.add(data1);
