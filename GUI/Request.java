@@ -4,8 +4,7 @@ import Bash.Response;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
-
+import java.util.IllegalFormatConversionException;
 
 
 /**
@@ -285,6 +284,24 @@ public class Request implements java.io.Serializable {
     public void setTypeOfBody(MESSAGEBODY_TYPE bodyType){
         if(bodyType!=null) {
             typeOfData = bodyType;
+            if (bodyType.equals(MESSAGEBODY_TYPE.BINARY) || bodyType.equals(MESSAGEBODY_TYPE.JSON)) {
+                if (!(formDataInfo instanceof String)) {
+                    formDataInfo = "";
+                }
+            } else if (bodyType.equals(MESSAGEBODY_TYPE.MULTIPART_FORM) || bodyType.equals(MESSAGEBODY_TYPE.FORM_URL)) {
+                try {
+                    if (formDataInfo == null || ((ArrayList<String[]>) formDataInfo).size() == 0) {
+                        formDataInfo = new ArrayList<String[]>();
+                    }
+                } catch (IllegalFormatConversionException exc) {
+                    formDataInfo = new ArrayList<String[]>();
+                } catch (ClassCastException exception) {
+                    formDataInfo = new ArrayList<String[]>();
+                }
+            }
+
+        }else{
+            System.out.println("watf");
         }
     }
 

@@ -1,5 +1,7 @@
 package GUI;
 
+import GUI.BodyMessage.BodyMessage;
+import GUI.BodyMessage.JsonPanel;
 import GUI.Header.HeaderPanel;
 import GUI.Query.QueryPanel;
 import InformationHandling.LoadInfo;
@@ -1312,16 +1314,15 @@ public class CreateGUI {
         JPanel body = new JPanel();
         body.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
         body.setBackground(colorOfThemeBackground2);
+//        JScrollPane bodyContainer = new JScrollPane();
         setRequestTabedPane.add("", new JScrollPane(body));
 
         Object dataTypes[][] = {
-        {
-            new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\url-icon.png"), "Form Url Encoded"},
+            {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\url-icon.png"), "Form Url Encoded"},
             {new Font("Serif", Font.BOLD, 15), new java.awt.Color(255, 161, 20),new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\json-icon-1.png") , "JSON"},
             {new Font("Serif", Font.BOLD, 15), Color.BLACK, null, "SEPARATOR"},
             {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\binary-file-icon1.png"), "Binary File"},
             {new Font("Serif", Font.BOLD, 15), colorOfThemeBackground1, new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\multipartform-icon.png"), "Multi-Part Form"}
-
         };
         //the costume renderer for the JcomboBox containing the methods for sending the data
         ListCellRenderer renderer = new CellRendererForBodyComboBox();
@@ -1364,6 +1365,7 @@ public class CreateGUI {
                 if(indexOfRequest<savedRequests.size() && indexOfRequest>-1){
                     savedRequests.get(indexOfRequest).setTypeOfBody(MESSAGEBODY_TYPE.getFormByIndex(dataType.getSelectedIndex()));
                 }
+                //now we are sure we have the type of the body message set correctly
                 createBodyTab(body, dataType.getSelectedIndex(), timesBodyTypeComboBoxChanged);
                 timesBodyTypeComboBoxChanged++;
                 mainFrame.revalidate();
@@ -1494,7 +1496,26 @@ public class CreateGUI {
      * @param timesChanged the number of times the check box is changed
      */
     private void createBodyTab(JPanel body, int bodyType, int timesChanged) {
+
+        Dimension sizeOfNow = mainFrame.getSize();
+        Point locationOfNow = mainFrame.getLocationOnScreen();
         body.setLayout(new GridBagLayout());
+        if(indexOfRequest>-1 && indexOfRequest< savedRequests.size()){
+            System.out.println("request exist");
+            if(savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.PUT) ||
+                    savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.POST) ||
+                    savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.PATCH) ){
+                System.out.println("request has saved info");
+                new BodyMessage(this, savedRequests.get(indexOfRequest), colorOfThemeBackground1, colorOfThemeBackground2, colorOfThemeForground);
+            }else{
+                System.out.println("request does not have saved info");
+                new BodyMessage(savedRequests.get(indexOfRequest));
+            }
+        }else{
+            System.out.println("request doesnt exist");
+            new BodyMessage();
+        }
+        /*
         if (timesChanged > 0) {
             try {
 //                Component toRemove = body.getComponent(timesChanged-1);
@@ -1520,8 +1541,6 @@ public class CreateGUI {
         constraints.weighty = 1;
         constraints.anchor = GridBagConstraints.PAGE_START;
         constraints.fill = GridBagConstraints.BOTH;
-        Dimension sizeOfNow = mainFrame.getSize();
-        Point locationOfNow = mainFrame.getLocationOnScreen();
 
         if (bodyType == 0) {
             //its "From URL Encoded
@@ -1539,7 +1558,7 @@ public class CreateGUI {
 
         } else if (bodyType == 1) {
             //its "JSON"
-            JTextArea bodyReqJSON = new JTextArea();
+            JTextField bodyReqJSON = new JTextField();
             bodyReqJSON.setSize(new Dimension(600, 900));
             bodyReqJSON.setPreferredSize(new Dimension(600, 900));
             bodyReqJSON.setFont(new Font("DialogInput", Font.PLAIN, 15));
@@ -1547,6 +1566,7 @@ public class CreateGUI {
             bodyReqJSON.setBackground(colorOfThemeBackground2);
             bodyReqJSON.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
             body.add(bodyReqJSON, constraints);
+//            new JsonPanel( colorOfThemeBackground1, colorOfThemeBackground2, this, body);
         } else if (bodyType == 3) {
             //its "Binary File"
             JLabel description = new JLabel("SELECTED FILE");
@@ -1570,6 +1590,27 @@ public class CreateGUI {
             selectedFile.setPreferredSize(new Dimension(150, 30));
             selectedFile.setFont(new Font("Serif", Font.BOLD, 20));
             selectedFile.setEditable(false);
+            selectedFile.getDocument().addDocumentListener(new DocumentListener() {
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    updateLabel(e);
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    updateLabel(e);
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    updateLabel(e);
+                }
+
+                private void updateLabel(DocumentEvent e) {
+                    System.out.println("the file container changed path to *"+selectedFile.getText()+"*");
+                }
+            });
             JScrollPane fileScrollPane = new JScrollPane(selectedFile);
             constraints.gridy = 1;
             constraints.gridwidth = 2;
@@ -1621,7 +1662,7 @@ public class CreateGUI {
                     int returnVal = fileChooser.showOpenDialog(mainFrame);
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         System.out.println("You chose to open this file: " + fileChooser.getSelectedFile().getName());
-                        selectedFile.setText(fileChooser.getSelectedFile().getName());
+                        selectedFile.setText(fileChooser.getSelectedFile().getAbsolutePath());
                     } else {
                         System.out.println("didnt want to open the file");
                     }
@@ -1662,6 +1703,7 @@ public class CreateGUI {
             mainFrame.pack();
 
         }
+        */
         mainFrame.revalidate();
         mainFrame.repaint();
         mainFrame.pack();
