@@ -1,6 +1,6 @@
 package GUI;
 
-import Bash.Executer;
+import GUI.Query.QueryPanel;
 import InformationHandling.LoadInfo;
 import InformationHandling.SaveInfo;
 
@@ -9,8 +9,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -1032,6 +1030,7 @@ public class CreateGUI {
                     savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
                     //format of body
                     savedRequests.get(indexOfRequest).setTypeOfData(((JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)).getSelectedIndex());
+
                 }
                 updateFrame();
             }
@@ -1059,6 +1058,14 @@ public class CreateGUI {
                     //format of body
                     savedRequests.get(indexOfRequest).setTypeOfData((  (JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(0) ).getSelectedIndex());
 
+                    System.out.println("gona print the query params of this request");
+                    if(indexOfRequest!=-1 && indexOfRequest< savedRequests.size()){
+                        ArrayList<String[]> queryP = savedRequests.get(indexOfRequest).getQueryInfo();
+                        for(int i=0; i<queryP.size(); i++){
+                            //important
+                            System.out.println(i+") k="+ queryP.get(i)[0]+"v="+ queryP.get(i)[1]);
+                        }
+                    }
                 }
                 updateFrame();
             }
@@ -1423,7 +1430,7 @@ public class CreateGUI {
         authType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+
                 if (indexOfRequest > -1 && indexOfRequest < savedRequests.size()) {
                     if(authType.getSelectedIndex()==0) {
                         savedRequests.get(indexOfRequest).setAuth(true);
@@ -1446,24 +1453,23 @@ public class CreateGUI {
             }
         }
         setRequestTabedPane.setTabComponentAt(1, authType);
-
-
-        JPanel query = new JPanel();
+        QueryPanel query;
+        if(indexOfRequest!=-1 && indexOfRequest<savedRequests.size()) {
+            if(savedRequests.get(indexOfRequest).getQueryInfo()==null || savedRequests.get(indexOfRequest).getQueryInfo().size()==0){
+                //doesnt have any so we create one for it and
+                query = new QueryPanel(colorOfThemeBackground1, colorOfThemeBackground2, savedRequests.get(indexOfRequest), this, colorOfThemeForground);
+            }else {
+                //its the first run, we need a constructor for this class that supports taking in info
+                query = new QueryPanel(colorOfThemeBackground1, colorOfThemeBackground2, this, colorOfThemeForground, savedRequests.get(indexOfRequest));
+            }
+        }else{
+            query = new QueryPanel();
+        }
         query.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
         query.setBackground(colorOfThemeBackground2);
         query.setLayout(new GridBagLayout());
-        setRequestTabedPane.add("Query", new JScrollPane(query, VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+        setRequestTabedPane.add("Query", new JScrollPane(query, VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
         //query tab its basically the same as the header tab
-
-        GridBagConstraints queryTabConstraints = new GridBagConstraints();
-        queryTabConstraints.gridx = 0;
-        queryTabConstraints.gridy = 0;
-        queryTabConstraints.weightx = 0;
-        queryTabConstraints.weighty = 0;
-        queryTabConstraints.fill = GridBagConstraints.HORIZONTAL;
-        queryTabConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
-        queryTabConstraints.insets = new Insets(5,0,0,5);
-        createQueryTab(query, queryTabConstraints);
 
         JPanel header = new JPanel();
         header.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
@@ -1718,21 +1724,25 @@ public class CreateGUI {
         nameTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
+                update();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
+                update();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                if(!nameTextField.getText().equals("New Name")){
+                update();
+            }
+
+            public void update(){
+//                if(!nameTextField.getText().equals("New Name")){
                     if(indexOfRequest<savedRequests.size()&&indexOfRequest>-1) {
-                        if(savedRequests.get(indexOfRequest).getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
-                            ((ArrayList<String[]>)savedRequests.get(indexOfRequest).getFormDataInfo()).get(constraints.gridy)[0]=nameTextField.getText();
-                        }
+
                     }
-                }
+//                }
             }
         });
         newKeyValuePair.add(nameTextField);
@@ -1807,9 +1817,9 @@ public class CreateGUI {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("user clicked on the trash JButton");
                 body.remove(newKeyValuePair);
-                if(constraints.gridy<((ArrayList<String[]>) savedRequests.get(indexOfRequest).getFormDataInfo()).size()) {
-                    ((ArrayList<String[]>) savedRequests.get(indexOfRequest).getFormDataInfo()).remove(constraints.gridy);
-                }
+//                if(constraints.gridy<((ArrayList<String[]>) savedRequests.get(indexOfRequest).getFormDataInfo()).size()) {
+//                    ((ArrayList<String[]>) savedRequests.get(indexOfRequest).getFormDataInfo()).remove(constraints.gridy);
+//                }
                 if (constraints.gridy == 0) {
                     createFormData(body, constraints);
                 }
@@ -1820,7 +1830,7 @@ public class CreateGUI {
         newKeyValuePair.add(trash);
         body.add(newKeyValuePair, constraints);
 
-        System.out.println("the index of form data is"+constraints.gridy+"  and the data"+nameTextField.getText()+"   and the value"+valueTextField.getText());
+
     }
 
     /**
@@ -1931,17 +1941,6 @@ public class CreateGUI {
         mainFrame.setLocation(locationOfNow);
     }
 
-    /**
-     * the third tab which is the query tab is created in this method
-     * @param query panel to be added the components at
-     * @param constraints the constraints in which should be added
-     */
-    public void createQueryTab(JPanel query, GridBagConstraints constraints) {
-        JPanel newNameValuePair = new KeyValuePair(this, query, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, constraints);
-        query.add(newNameValuePair, constraints);
-
-
-    }
 
     /**
      * the forth tab which is the query tab is created in this method
@@ -2424,51 +2423,6 @@ public class CreateGUI {
 
                 //inja bayad update konim
                 updateFrame();
-            }
-        });
-        create.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode()==KeyEvent.VK_ENTER){
-
-                    String nameNewRequest="new Request";
-                    nameNewRequest = nameTextField.getText();
-                    newRequest.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
-
-                    Request newRequest = new Request(nameNewRequest, TYPE.GET, "https://api.myproduct.com/v1/users", MESSAGEBODY_TYPE.FORM_URL);
-//                nameNewRequest="new Request";
-                    newRequest.setSaved(false);
-
-                    //since we are creating a new Request with the default format of FORM URL
-                    ArrayList<String[]> formDataInfo = new ArrayList<>();
-                    String[] formDataPair ={"new name1","new value1","true"};
-                    formDataInfo.add(formDataPair);
-                    newRequest.setFormDataInfo(formDataInfo);
-
-                    ArrayList<String[]> queryInfo = new ArrayList<>();
-                    String[] queryPair = {"new name2", "new value2", "false"};
-                    queryInfo.add(queryPair);
-                    newRequest.setQueryInfo(queryInfo);
-
-                    ArrayList<String[]> headerInfo = new ArrayList<>();
-                    String[] headerPair = {"new header 3", "new value 3", "true"};
-                    headerInfo.add(headerPair);
-                    newRequest.setQueryInfo(headerInfo);
-                    savedRequests.add(newRequest);
-
-                    //inja bayad update konim
-                    updateFrame();
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-
             }
         });
         create.setBackground(colorOfThemeBackground2);

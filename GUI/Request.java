@@ -322,8 +322,15 @@ public class Request implements java.io.Serializable {
         return nameOutPutContainer;
     }
 
+    /**
+     * use it only once
+     * @param list
+     */
     public static void setListOfrequests(ArrayList<Request> list){
         listOfrequests = list;
+        for (int i=0; i<list.size(); i++) {
+            list.get(i).setRequestGuiHandler(new RequestGuiHandler());
+        }
     }
 
     public static ArrayList<Request> getListOfrequests(){
@@ -333,6 +340,10 @@ public class Request implements java.io.Serializable {
 
     public RequestGuiHandler getRequestGuiHandler() {
         return requestGuiHandler;
+    }
+
+    public void setRequestGuiHandler(RequestGuiHandler requestGuiHandler) {
+        this.requestGuiHandler = requestGuiHandler;
     }
 
     public static void main(String[] args) {
