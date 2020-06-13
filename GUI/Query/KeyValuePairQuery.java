@@ -60,7 +60,7 @@ public class KeyValuePairQuery extends JPanel {
                 if (params.indexOf(thisJPanel) == params.size()-1) {
                     GridBagConstraints newGridConstraints = new GridBagConstraints();
                     newGridConstraints.gridx = 0;
-                    newGridConstraints.gridy = params.indexOf(thisJPanel)+1;
+                    newGridConstraints.gridy = params.indexOf(thisJPanel) + 1;
                     newGridConstraints.weightx = 1;
                     newGridConstraints.weighty = 0;
                     newGridConstraints.fill = GridBagConstraints.HORIZONTAL;

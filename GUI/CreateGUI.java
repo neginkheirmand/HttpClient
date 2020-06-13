@@ -1,5 +1,6 @@
 package GUI;
 
+import GUI.Header.HeaderPanel;
 import GUI.Query.QueryPanel;
 import InformationHandling.LoadInfo;
 import InformationHandling.SaveInfo;
@@ -1467,31 +1468,19 @@ public class CreateGUI {
         }
         query.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
         query.setBackground(colorOfThemeBackground2);
-        query.setLayout(new GridBagLayout());
+//        query.setLayout(new GridBagLayout());
         setRequestTabedPane.add("Query", new JScrollPane(query, VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
         //query tab its basically the same as the header tab
 
-        JPanel header = new JPanel();
-        header.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
+        JPanel header;
+        if(indexOfRequest<savedRequests.size() && indexOfRequest>-1){
+            header = new HeaderPanel(colorOfThemeBackground1, colorOfThemeBackground2, this, colorOfThemeForground, savedRequests.get(indexOfRequest));
+        }else{
+            header = new HeaderPanel();
+        }
         header.setBackground(colorOfThemeBackground2);
-        header.setLayout(new GridBagLayout());
-        setRequestTabedPane.add("Header", new JScrollPane(header));
-        GridBagConstraints headerConstraints = new GridBagConstraints();
-        headerConstraints.gridx = 0;
-        headerConstraints.gridy = 0;
-        headerConstraints.weightx = 0;
-        headerConstraints.weighty = 0;
-//        headerConstraints.ipadx = 0;
-//        headerConstraints.ipady = 0;
-        headerConstraints.insets = new Insets(0, 0, 0, 0);
-        headerConstraints.fill = GridBagConstraints.HORIZONTAL;
-        headerConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
-        createHeaderTab(header, headerConstraints);
+        setRequestTabedPane.add("Header", new JScrollPane(header, VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 
-        JPanel docs = new JPanel();
-        docs.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
-        docs.setBackground(colorOfThemeBackground2);
-        setRequestTabedPane.add("Docs", docs);
 
         insomniaPanelHandler.setFifthPanel(setRequestTabedPane);
         mainFrame.add(insomniaPanelHandler.getFifthPanel(), insomniaPanelHandler.getFifthPanelConstraints());
@@ -1942,97 +1931,6 @@ public class CreateGUI {
     }
 
 
-    /**
-     * the forth tab which is the query tab is created in this method
-     * @param header
-     * @param constraints
-     */
-    private void createHeaderTab(JPanel header, GridBagConstraints constraints) {
-
-
-        //we create the first Jpanel containing the pair of key and value
-        //if the user clicks on it this method should be called again with the same constaints but the gridx+1
-//
-        JPanel newKeyValuePair = new JPanel();
-//        newKeyValuePair.setPreferredSize(new Dimension());
-        newKeyValuePair.setLayout(new FlowLayout());
-        newKeyValuePair.setBackground(colorOfThemeBackground2);
-//        //first component the 3 lines
-        icons[20]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\3-grey-lines1-icon.png");
-        JLabel _3_lines = new JLabel(icons[20]);
-        newKeyValuePair.add(_3_lines);
-        //then the JTextField for the Header
-        JTextField headerTextField = new JTextField("New Header");
-        headerTextField.setPreferredSize(new Dimension(150, 35));
-        headerTextField.setFont(new Font("Serif", Font.PLAIN, 15));
-        headerTextField.setForeground(colorOfThemeBackground1);
-        headerTextField.setBackground(colorOfThemeBackground2);
-        headerTextField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, colorOfThemeBackground1));
-//        boolean alreadyCreated = false;
-        headerTextField.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                headerTextField.setText(" ");
-                System.out.println("clicked on the header");
-//                //and add a new Pair of Header and values
-                GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
-                newGridConstraints.gridy = constraints.gridy + 1;
-                createHeaderTab(header, newGridConstraints);
-                mainFrame.revalidate();
-                mainFrame.repaint();
-            }
-        });
-        newKeyValuePair.add(headerTextField);
-        //then the JTextField for the value
-        JTextField valueTextField = new JTextField("New Value");
-        valueTextField.setPreferredSize(new Dimension(150, 35));
-        valueTextField.setFont(new Font("Serif", Font.PLAIN, 15));
-        valueTextField.setForeground(colorOfThemeBackground1);
-        valueTextField.setBackground(colorOfThemeBackground2);
-        valueTextField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, colorOfThemeBackground1));
-        valueTextField.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                valueTextField.setText(" ");
-                System.out.println("clicked on the value");
-                //and add a new Pair of Header and values
-                GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
-                newGridConstraints.gridy = constraints.gridy + 1;
-//                newGridConstraints.weightx=1;
-//                newGridConstraints.weighty=1;
-//                constraints.weightx=0;
-//                constraints.weighty=0;
-                createHeaderTab(header, newGridConstraints);
-                mainFrame.revalidate();
-                mainFrame.repaint();
-            }
-        });
-        newKeyValuePair.add(valueTextField);
-        //now the JCheckBox
-        JCheckBox checkBox = new JCheckBox(" ", true);
-        checkBox.setBackground(colorOfThemeBackground2);
-        checkBox.setOpaque(false);
-        newKeyValuePair.add(checkBox);
-        //now the trash icon Button
-        icons[21]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\delete-icon1.png");
-        JButton trash = new JButton(icons[21]);
-        trash.setBackground(colorOfThemeBackground2);
-        trash.setOpaque(false);
-        trash.setPreferredSize(new Dimension(18, 18));
-        trash.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("user clicked on the trash JButton");
-                header.remove(newKeyValuePair);
-                if (constraints.gridy == 0) {
-                    createHeaderTab(header, constraints);
-                }
-                mainFrame.revalidate();
-                mainFrame.repaint();
-            }
-        });
-        newKeyValuePair.add(trash);
-        header.add(newKeyValuePair, constraints);
-    }
 
     /**
      * this method is called so that the down part of the third panel containing info about the answer is created
