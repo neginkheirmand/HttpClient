@@ -74,14 +74,6 @@ public class  PostMethod {
 
         try {
             if(postRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
-//                MultiPartPost multiPartPost = new MultiPartPost(postRequest);
-//                try {
-////                    multiPartPost.multipartPostRequest(outPutFile, followRedirect, showresponseHeaders);
-//                }catch (ParseException exception){
-//                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problems in setting the request");
-//                }catch (IOException exception){
-//                    System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problems in setting the request");
-//                }
                 MultiPartPost.formData(postRequest, outPutFile, followRedirect, showresponseHeaders);
                 return;
             }

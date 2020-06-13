@@ -166,38 +166,6 @@ public class PutMethod {
                     return;
                 }
             }
-            /*
-            else if (putRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
-                List<NameValuePair> body = null;
-                System.out.println(0);
-//                httpPost.setHeader("Content-Type", "multipart/form-data; boundary="+ "*****" + Long.toString(System.currentTimeMillis()) + "*****");
-                if (putRequest.getFormDataInfo() != null) {
-                    System.out.println(1);
-                    body = new ArrayList<NameValuePair>();
-                    for (int i = 0; i < ((ArrayList<String[]>) putRequest.getFormDataInfo()).size(); i++) {
-                        if (((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[2].equals("true") &&
-                                ((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[0] != null &&
-                                ((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[1] != null) {
-                            body.add(new BasicNameValuePair(((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[0],
-                                    ((ArrayList<String[]>) putRequest.getFormDataInfo()).get(i)[1]));
-                        }
-                    }
-                    System.out.println(12);
-//                    InputStream targetStream = new ByteArrayInputStream(initialString.getBytes());
-                    HttpEntity entity = EntityBuilder.create()
-                            .setContentType(ContentType.MULTIPART_FORM_DATA)
-                            .setParameters(body)
-//                            .setStream(new BufferedInputStream())
-                            .build();
-
-                    System.out.println(123);
-                    httpPut.setEntity(entity);
-
-                }
-
-            }
-
-            */
 
             //Execute the put request
             Long start = new Date().getTime();
