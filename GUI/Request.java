@@ -225,17 +225,16 @@ public class Request implements java.io.Serializable {
      * @return auth of the request
      */
     public void setAuth(boolean auth) {
-        /*
-        if(auth) {
+
+        if(!this.auth) {
             authInfo = new String[3];
             authInfo[0]="Authorization";
             authInfo[1]="";
             authInfo[2]="true";
-        }else{
+        }else if(!auth){
             authInfo=null;
         }
 
-         */
         this.auth = auth;
     }
 
@@ -296,27 +295,27 @@ public class Request implements java.io.Serializable {
     //costume methods
 
     public void setTypeOfBody(MESSAGEBODY_TYPE bodyType){
-//        if(bodyType!=null) {
+        if(bodyType!=null) {
             typeOfData = bodyType;
-//            if (bodyType.equals(MESSAGEBODY_TYPE.BINARY) || bodyType.equals(MESSAGEBODY_TYPE.JSON)) {
-//                if (!(formDataInfo instanceof String)) {
-//                    formDataInfo = "";
-//                }
-//            } else if (bodyType.equals(MESSAGEBODY_TYPE.MULTIPART_FORM) || bodyType.equals(MESSAGEBODY_TYPE.FORM_URL)) {
-//                try {
-//                    if (formDataInfo == null || ((ArrayList<String[]>) formDataInfo).size() == 0) {
-//                        formDataInfo = new ArrayList<String[]>();
-//                    }
-//                } catch (IllegalFormatConversionException exc) {
-//                    formDataInfo = new ArrayList<String[]>();
-//                } catch (ClassCastException exception) {
-//                    formDataInfo = new ArrayList<String[]>();
-//                }
-//            }
+            if (bodyType.equals(MESSAGEBODY_TYPE.BINARY) || bodyType.equals(MESSAGEBODY_TYPE.JSON)) {
+                if (!(formDataInfo instanceof String)) {
+                    formDataInfo = "";
+                }
+            } else if (bodyType.equals(MESSAGEBODY_TYPE.MULTIPART_FORM) || bodyType.equals(MESSAGEBODY_TYPE.FORM_URL)) {
+                try {
+                    if (formDataInfo == null || ((ArrayList<String[]>) formDataInfo).size() == 0) {
+                        formDataInfo = new ArrayList<String[]>();
+                    }
+                } catch (IllegalFormatConversionException exc) {
+                    formDataInfo = new ArrayList<String[]>();
+                } catch (ClassCastException exception) {
+                    formDataInfo = new ArrayList<String[]>();
+                }
+            }
 
-//        }else{
-//            System.out.println("watf");
-//        }
+        }else{
+            System.out.println("watf");
+        }
     }
 
     public boolean isBearerTokenEnabled(){
@@ -404,7 +403,7 @@ public class Request implements java.io.Serializable {
                 ArrayList<String[] >data = (ArrayList<String[]>) getFormDataInfo();
                 System.out.println("FORM DATA :");
                 for(int i=0; i<data.size(); i++){
-                    System.out.println("         "+data.get(i)[0]+"   "+ data.get(i)[0]+ "   "+ data.get(i)[2]);
+                    System.out.println(i+"         "+data.get(i)[0]+"   "+ data.get(i)[0]+ "   "+ data.get(i)[2]);
                 }
             } else {
                 System.out.println(getFormDataInfo().toString());

@@ -56,10 +56,10 @@ public class CreateGUI {
     private boolean sideBar = true;
     private ImageIcon[] icons = new ImageIcon[26];
 
-    private int indexOfRequest = 0 ;
+    private static int indexOfRequest = -1 ;
 
     //an array list holding all the requests
-    private ArrayList<Request> savedRequests = null;
+    private static ArrayList<Request> savedRequests = null;
 
     //for fixing the auth tab
     private String authBox = "";
@@ -1396,7 +1396,6 @@ public class CreateGUI {
                 if(indexOfRequest<savedRequests.size() && indexOfRequest>-1){
                     //ba method payin faghat type body ro save mikonim
                     savedRequests.get(indexOfRequest).setTypeOfBody(MESSAGEBODY_TYPE.getFormByIndex(dataType.getSelectedIndex()));
-
                 }
                 //now we are sure we have the type of the body message set correctly
                 createBodyTab(body, dataType.getSelectedIndex(), timesBodyTypeComboBoxChanged);
@@ -1542,6 +1541,16 @@ public class CreateGUI {
         Point locationOfNow = mainFrame.getLocationOnScreen();
         body.setLayout(new GridBagLayout());
 
+
+        if (timesChanged > 0) {
+            try {
+                body.removeAll();
+                body.setLayout(new GridBagLayout());
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println(e.getStackTrace());
+            }
+        }
+
         if(indexOfRequest<savedRequests.size() && indexOfRequest>-1){
             if(!savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.PATCH) &&
                     !savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.POST) &&
@@ -1572,14 +1581,6 @@ public class CreateGUI {
 //            new BodyMessage();
 //        }
 
-        if (timesChanged > 0) {
-            try {
-                body.removeAll();
-                body.setLayout(new GridBagLayout());
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println(e.getStackTrace());
-            }
-        }
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -1621,7 +1622,7 @@ public class CreateGUI {
                     savedRequests.get(indexOfRequest).setFormDataInfo("");
                 }
 
-            JTextField bodyReqJSON = new JTextField(start);
+            JTextArea bodyReqJSON = new JTextArea(start);
             bodyReqJSON.setSize(new Dimension(600, 900));
             bodyReqJSON.setPreferredSize(new Dimension(600, 900));
             bodyReqJSON.setFont(new Font("DialogInput", Font.PLAIN, 15));
@@ -2014,7 +2015,21 @@ public class CreateGUI {
         Dimension sizeOfNow = mainFrame.getSize();
         Point locationOfNow = mainFrame.getLocationOnScreen();
 
+        if(indexOfRequest<0 || indexOfRequest>=savedRequests.size()){
+            JLabel empty;
+            if(savedRequests.size()==0){
+                empty=new JLabel("Please create a new Request and select it");
+            }else {
+                empty = new JLabel("Please select a request");
+            }
+            auth.add(empty);
+            return;
+        }
+
         if (authType == 0) {
+            if(savedRequests.get(indexOfRequest).getAuthInfo()==null){
+                savedRequests.get(indexOfRequest).setAuthInfo(new String[3]);
+            }
             //its "Bearer Token" form
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
@@ -2088,7 +2103,17 @@ public class CreateGUI {
             gbc.gridx = 1;
             auth.add(tokenTextField, gbc);
             //the Enabled Option
-            JCheckBox enabledCheckBox = new JCheckBox("Enabled", true);
+            boolean isEnabled = true;
+            if(indexOfRequest<savedRequests.size() && indexOfRequest> -1){
+                if(savedRequests.get(indexOfRequest).getAuthInfo()[2]!=null && savedRequests.get(indexOfRequest).getAuthInfo()[2].equals("true")){
+                    isEnabled =true;
+                }else if(savedRequests.get(indexOfRequest).getAuthInfo()[2]!=null && savedRequests.get(indexOfRequest).getAuthInfo()[2].equals("false")){
+                    isEnabled=false;
+                }else{
+                    System.out.println("\033[0;31m"+" its else");
+                }
+            }
+            JCheckBox enabledCheckBox = new JCheckBox("Enabled", isEnabled);
             enabledCheckBox.setOpaque(false);
             enabledCheckBox.addActionListener(new ActionListener() {
                 @Override
@@ -2492,20 +2517,6 @@ public class CreateGUI {
                 newRequest.setSaved(false);
 
                 //since we are creating a new Request with the default format of FORM URL
-                ArrayList<String[]> formDataInfo = new ArrayList<>();
-                String[] formDataPair ={"new name1","new value1","true"};
-                formDataInfo.add(formDataPair);
-                newRequest.setFormDataInfo(formDataInfo);
-
-                ArrayList<String[]> queryInfo = new ArrayList<>();
-                String[] queryPair = {"new name2", "new value2", "false"};
-                queryInfo.add(queryPair);
-                newRequest.setQueryInfo(queryInfo);
-
-                ArrayList<String[]> headerInfo = new ArrayList<>();
-                String[] headerPair = {"new header 3", "new value 3", "true"};
-                headerInfo.add(headerPair);
-                newRequest.setQueryInfo(headerInfo);
                 savedRequests.add(newRequest);
 
                 //inja bayad update konim
@@ -2552,6 +2563,12 @@ public class CreateGUI {
             preferences.add("light");
         }
         saveInfo.savePreferences(preferences);
+    }
+
+    public static void checkIndexRequest(){
+        if(savedRequests.size()==0){
+            indexOfRequest=-1;
+        }
     }
 
     public JFrame getMainFrame(){

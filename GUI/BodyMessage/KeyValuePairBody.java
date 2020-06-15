@@ -118,12 +118,14 @@ public class KeyValuePairBody extends JPanel {
         trash.setPreferredSize(new Dimension(18, 18));
         trash.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("user clicked on the trash JButton");
                 //remove component from the panel
                 body.remove(newKeyValuePair);
                 //remove component from the array list
                 body.getBodyData().remove(newKeyValuePair);
 
+                if(body.getBodyData().indexOf(newKeyValuePair)== body.getBodyData().size()-1){
+                    body.createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true);
+                }
                 body.setBodyToRequest();
                 gui.getMainFrame().revalidate();
                 gui.getMainFrame().repaint();

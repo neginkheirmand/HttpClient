@@ -18,6 +18,7 @@ public class Response implements Serializable {
     private Long contentSize = 0L;
     private Long timeTaken = 0L;
 
+//should we add a JPanel to its fields??
 
 
     public Response(Header[] responseHeaders, String output, boolean outputContainer, String pathOutputFile, int statuscode) {
