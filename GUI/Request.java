@@ -16,6 +16,8 @@ import java.util.IllegalFormatConversionException;
 
 
 public class Request implements java.io.Serializable {
+    private static final long serialVersionUID = 4L;
+
     //the name of the request
     private String nameOfRequest="";
     //the type of the request
@@ -67,9 +69,9 @@ public class Request implements java.io.Serializable {
         if(typeOfData.equals(MESSAGEBODY_TYPE.FORM_URL)){
             this.formDataInfo = (ArrayList<String[]>) new ArrayList<String[]>();
         }else if(typeOfData.equals(MESSAGEBODY_TYPE.JSON)){
-            this.formDataInfo = (String) "enter JSON format";
+            this.formDataInfo = "";
         }else if(typeOfData.equals(MESSAGEBODY_TYPE.BINARY)){
-            this.formDataInfo = (String) "basically the path of the file";
+            this.formDataInfo = "";
         }
     }
 
@@ -206,7 +208,7 @@ public class Request implements java.io.Serializable {
         }
 
         this.typeOfData = MESSAGEBODY_TYPE.getFormByIndex(indexOfFormat) ;
-
+//
 //        if(typeOfData.equals(MESSAGEBODY_TYPE.FORM_URL)){
 //            formDataInfo = new ArrayList<String []>();
 //        }else if(typeOfData.equals(MESSAGEBODY_TYPE.JSON)){
@@ -375,6 +377,43 @@ public class Request implements java.io.Serializable {
         this.requestGuiHandler = requestGuiHandler;
     }
 
+    public void print(){
+        System.out.println("the name "+nameOfRequest);
+        System.out.println("the url "+url);
+        if(queryInfo!=null) {
+            for (int i = 0; i < queryInfo.size(); i++) {
+                System.out.println("query  "+ i + "   " + queryInfo.get(i)[0]+"  "+queryInfo.get(i)[1]+"  "+queryInfo.get(i)[2]);
+            }
+        }else{
+            System.out.println("no querys ");
+        }
+
+        System.out.println("the type of request "+ typeOfRequest);
+        System.out.println("the method of request "+ typeOfData);
+
+        if(headerInfo!=null) {
+            for (int i = 0; i < headerInfo.size(); i++) {
+                System.out.println("header "+ i +"   "+ headerInfo.get(i)[0]+"  "+headerInfo.get(i)[1]+"  "+headerInfo.get(i)[2]);
+            }
+        }else{
+            System.out.println("no headers ");
+        }
+        System.out.println("the data");
+        if(typeOfRequest.equals(TYPE.PUT) || typeOfRequest.equals(TYPE.PATCH) || typeOfRequest.equals(TYPE.POST) ) {
+            if (typeOfData.equals(MESSAGEBODY_TYPE.MULTIPART_FORM) || typeOfData.equals(MESSAGEBODY_TYPE.FORM_URL)) {
+                ArrayList<String[] >data = (ArrayList<String[]>) getFormDataInfo();
+                System.out.println("FORM DATA :");
+                for(int i=0; i<data.size(); i++){
+                    System.out.println("         "+data.get(i)[0]+"   "+ data.get(i)[0]+ "   "+ data.get(i)[2]);
+                }
+            } else {
+                System.out.println(getFormDataInfo().toString());
+            }
+        }
+
+    }
+
+    /*
     public static void main(String[] args) {
         Request newRequest = new Request("nameNewRequest" , TYPE.GET, "https://api.myproduct.com/v1/users", MESSAGEBODY_TYPE.FORM_URL);
         newRequest.setSaved(false);
@@ -397,4 +436,5 @@ public class Request implements java.io.Serializable {
 //        System.out.println(newRequest.formDataInfo.getClass());
 
     }
+    */
 }

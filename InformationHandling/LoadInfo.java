@@ -196,19 +196,15 @@ public class LoadInfo {
             ois.close();
             fis.close();
         } catch (InvalidClassException  exc){
-            exc.printStackTrace();
             System.out.println("the file containing the info of the last run is not found");
         } catch(StreamCorruptedException exception){
-            exception.printStackTrace();
             System.out.println("the file containing the info of the last run is not found");
             couldReadWithOutProblems = false;
         } catch (IOException ioe) {
-            ioe.printStackTrace();
             System.out.println("could not load the info");
             couldReadWithOutProblems = false;
             return;
         } catch (ClassNotFoundException c) {
-            c.printStackTrace();
             System.out.println("could not load the info");
             couldReadWithOutProblems = false;
             return;

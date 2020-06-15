@@ -1,3 +1,6 @@
+
+
+/*
 package GUI.BodyMessage;
 
 import GUI.CreateGUI;
@@ -148,3 +151,4 @@ public class BinaryFilePanel {
 
     }
 }
+*/

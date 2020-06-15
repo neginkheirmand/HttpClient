@@ -1,7 +1,6 @@
 package GUI;
 
 import GUI.BodyMessage.BodyMessage;
-import GUI.BodyMessage.JsonPanel;
 import GUI.BodyMessage.KeyValuePairBody;
 import GUI.Header.HeaderPanel;
 import GUI.Query.QueryPanel;
@@ -1032,6 +1031,11 @@ public class CreateGUI {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.out.println("gonna print the requests:");
+                for(int i=0; i<savedRequests.size(); i++){
+                    savedRequests.get(i).print();
+                    System.out.println();
+                }
                 System.out.println("saved");
                 if(indexOfRequest>=0&&indexOfRequest<savedRequests.size()) {
                     savedRequests.get(indexOfRequest).setSaved(true);
@@ -1332,7 +1336,13 @@ public class CreateGUI {
         setRequestTabedPane.setBackground(colorOfThemeBackground2);
         setRequestTabedPane.setForeground(colorOfThemeBackground1);
         //now the panels
-        JPanel body = new JPanel();
+        JPanel body;
+        if(indexOfRequest>-1 && indexOfRequest<savedRequests.size()){
+            body= new BodyMessage(savedRequests.get(indexOfRequest));
+        }else{
+            body = new BodyMessage(null);
+        }
+
         body.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
         body.setBackground(colorOfThemeBackground2);
 //        JScrollPane bodyContainer = new JScrollPane();
@@ -1564,16 +1574,7 @@ public class CreateGUI {
 
         if (timesChanged > 0) {
             try {
-//                Component toRemove = body.getComponent(timesChanged-1);
-//                toRemove.setVisible(false);
-//                toRemove.setMaximumSize(new Dimension(0,0));
-//                toRemove.setPreferredSize(new Dimension(0,0));
-//                toRemove.setMinimumSize(new Dimension(0,0));
                 body.removeAll();
-//            GridBagLayout layout = (GridBagLayout) body.getLayout();
-//            GridBagConstraints gbc = layout.getConstraints(toRemove);
-//                body.remove(0);
-//                body.remove(timesChanged-1);
                 body.setLayout(new GridBagLayout());
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println(e.getStackTrace());
@@ -1597,7 +1598,7 @@ public class CreateGUI {
             constraints1.weighty=0;
             constraints1.fill=GridBagConstraints.HORIZONTAL;
             constraints1.anchor=GridBagConstraints.FIRST_LINE_START;
-            createFormData(body, constraints1, null, null, true);
+            createFormData(body,/* constraints1,*/ null, null, true);
             mainFrame.revalidate();
             mainFrame.repaint();
             mainFrame.pack();
@@ -1605,7 +1606,6 @@ public class CreateGUI {
         } else if (bodyType == 1) {
             //its "JSON"
             String start="";
-            if(indexOfRequest<savedRequests.size() && indexOfRequest>-1){
                 if(savedRequests.get(indexOfRequest).getTypeOfData().equals(MESSAGEBODY_TYPE.JSON)){
                     Object obj = savedRequests.get(indexOfRequest).getFormDataInfo();
                     if(obj == null){
@@ -1620,7 +1620,7 @@ public class CreateGUI {
                     savedRequests.get(indexOfRequest).setTypeOfBody(MESSAGEBODY_TYPE.JSON);
                     savedRequests.get(indexOfRequest).setFormDataInfo("");
                 }
-            }
+
             JTextField bodyReqJSON = new JTextField(start);
             bodyReqJSON.setSize(new Dimension(600, 900));
             bodyReqJSON.setPreferredSize(new Dimension(600, 900));
@@ -1824,7 +1824,7 @@ public class CreateGUI {
             constraints1.weighty = 0;
             constraints1.fill = GridBagConstraints.HORIZONTAL;
             constraints1.anchor = GridBagConstraints.FIRST_LINE_START;
-            createFormData(body, constraints1, null, null, true);
+            createFormData(body,/* constraints1,*/ null, null, true);
             mainFrame.revalidate();
             mainFrame.repaint();
             mainFrame.pack();
@@ -1842,9 +1842,9 @@ public class CreateGUI {
      * this method creates the second tab of the panel created in the method before
      * @param body the in which the components are added at
      */
-    private void createFormData(JPanel body , GridBagConstraints constraints, String name, String value, boolean isEnabled){
+    private void createFormData(JPanel body /*, GridBagConstraints constraints*/, String name, String value, boolean isEnabled){
 
-
+/*
         JPanel newKeyValuePair = new JPanel();
 //        newKeyValuePair.setPreferredSize(new Dimension());
         newKeyValuePair.setLayout(new FlowLayout());
@@ -1919,10 +1919,6 @@ public class CreateGUI {
                     //and add a new Pair of Header and values
                     GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
                     newGridConstraints.gridy = constraints.gridy + 1;
-//                newGridConstraints.weightx=1;
-//                newGridConstraints.weighty=1;
-//                constraints.weightx=0;
-//                constraints.weighty=0;
                     createFormData(body, newGridConstraints, null, null, true);
                     mainFrame.revalidate();
                     mainFrame.repaint();
@@ -1993,12 +1989,9 @@ public class CreateGUI {
         });
         newKeyValuePair.add(trash);
         body.add(newKeyValuePair, constraints);
-//        if( savedRequests.get(indexOfRequest).getFormDataInfo()==null || ((ArrayList)savedRequests.get(indexOfRequest).getFormDataInfo()).size()==0  ){
-//            new KeyValuePairBody(this, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true, bodyData, body, savedRequests.get(indexOfRequest));
-//            return;
-//        }
-        //the request has Ar
+ */
 
+        ((BodyMessage)body).createBodyMessage(this, colorOfThemeBackground1, colorOfThemeBackground2, colorOfThemeForground);
 
 
     }
@@ -2275,19 +2268,6 @@ public class CreateGUI {
         header.setLayout(new GridBagLayout());
         createStaticHeaderTab(header);
 
-
-        //next Panel is the Cookie Panel
-        JPanel cookie = new JPanel();
-        cookie.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
-        cookie.setBackground(colorOfThemeBackground2);
-        queryHistoryPanel.add("Cookie", cookie);
-
-        //next Panel is the Timeline Panel
-
-        JPanel timeline = new JPanel();
-        timeline.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
-        timeline.setBackground(colorOfThemeBackground2);
-        queryHistoryPanel.add("Timeline", timeline);
 
         insomniaPanelHandler.setSixthPanel(queryHistoryPanel);
         mainFrame.add(insomniaPanelHandler.getSixthPanel(), insomniaPanelHandler.getSixthPanelConstraints());

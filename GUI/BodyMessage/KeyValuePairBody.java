@@ -21,10 +21,10 @@ public class KeyValuePairBody extends JPanel {
     JTextField info;
     JCheckBox enabled;
 
-    public KeyValuePairBody(CreateGUI gui, Color colorOfThemeBackground2, Color colorOfThemeBackground1, String colorOfThemeForground, String name, String value, boolean checkboxBoolean, ArrayList<KeyValuePairBody> keyValuePairBody, JPanel body, Request request) {
+    public KeyValuePairBody(CreateGUI gui, Color colorOfThemeBackground2, Color colorOfThemeBackground1, String colorOfThemeForground, String name, String value, boolean checkboxBoolean, BodyMessage body) {
         super();
         //adding to the arraylist
-        keyValuePairBody.add(this);
+        body.getBodyData().add(this);
 
         JPanel newKeyValuePair = this;
         //newKeyValuePair.setPreferredSize(new Dimension());
@@ -56,11 +56,10 @@ public class KeyValuePairBody extends JPanel {
                     nameTextField.setText(" ");
                 }
                 System.out.println("clicked on the header");
-                if (keyValuePairBody.indexOf(newKeyValuePair) == keyValuePairBody.size() - 1) {
+                if (body.getBodyData().indexOf(newKeyValuePair) == body.getBodyData().size() - 1) {
                     //and add a new Pair of Header and values
-
-                    new KeyValuePairBody(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true, keyValuePairBody, body, request);
-                    setInfoToRequest(keyValuePairBody, request);
+                    body.createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true);
+                    body.setBodyToRequest();
                     gui.getMainFrame().revalidate();
                     gui.getMainFrame().repaint();
                 }
@@ -88,10 +87,10 @@ public class KeyValuePairBody extends JPanel {
                     valueTextField.setText(" ");
                 }
                 System.out.println("clicked on the value");
-                if (keyValuePairBody.indexOf(newKeyValuePair) == keyValuePairBody.size() - 1) {
+                if (body.getBodyData().indexOf(newKeyValuePair) == body.getBodyData().size() - 1) {
                     //and add a new Pair of Header and values
-                    new KeyValuePairBody(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true, keyValuePairBody, body, request);
-                    setInfoToRequest(keyValuePairBody, request);
+                    body.createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true);
+                    body.setBodyToRequest();
                     gui.getMainFrame().revalidate();
                     gui.getMainFrame().repaint();
                 }
@@ -107,7 +106,7 @@ public class KeyValuePairBody extends JPanel {
         checkBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setInfoToRequest(keyValuePairBody, request);
+                body.setBodyToRequest();
             }
         });
         this.enabled = checkBox;
@@ -123,9 +122,9 @@ public class KeyValuePairBody extends JPanel {
                 //remove component from the panel
                 body.remove(newKeyValuePair);
                 //remove component from the array list
-                keyValuePairBody.remove(newKeyValuePair);
+                body.getBodyData().remove(newKeyValuePair);
 
-                setInfoToRequest(keyValuePairBody, request);
+                body.setBodyToRequest();
                 gui.getMainFrame().revalidate();
                 gui.getMainFrame().repaint();
             }
@@ -151,7 +150,7 @@ public class KeyValuePairBody extends JPanel {
             }
 
             public void update() {
-                setInfoToRequest(keyValuePairBody, request);
+                body.setBodyToRequest();
             }
         });
 
@@ -173,20 +172,11 @@ public class KeyValuePairBody extends JPanel {
             }
 
             private void update() {
-                setInfoToRequest(keyValuePairBody, request);
+                body.setBodyToRequest();
             }
 
         });
 
-        //ading to the panel
-        GridBagConstraints constraints1 = new GridBagConstraints();
-        constraints1.gridy = keyValuePairBody.indexOf(newKeyValuePair);
-        constraints1.gridx = 0;
-        constraints1.weightx = 0;
-        constraints1.weighty = 0;
-        constraints1.fill = GridBagConstraints.HORIZONTAL;
-        constraints1.anchor = GridBagConstraints.FIRST_LINE_START;
-        body.add(this, constraints1);
     }
 
     public JTextField getBody() {
@@ -199,32 +189,5 @@ public class KeyValuePairBody extends JPanel {
 
     public JCheckBox getEnabled() {
         return enabled;
-    }
-
-    private void setInfoToRequest(ArrayList<KeyValuePairBody> keyValuePairBody, Request request) {
-        if (request == null || keyValuePairBody == null) {
-            return;
-        }
-
-        if (!request.getTypeOfData().equals(MESSAGEBODY_TYPE.FORM_URL) || !request.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
-            return;
-        }
-
-        ArrayList<String[]> bodyData = new ArrayList<>();
-        for (int i = 0; i < keyValuePairBody.size(); i++) {
-            if (keyValuePairBody.get(i).getBody().getText().equals("New Name") && keyValuePairBody.get(i).getBody().getText().equals("New value")) {
-                continue;
-            }
-            String info[] = null;
-            if (keyValuePairBody.get(i).getEnabled().isSelected()) {
-                String[] str = {keyValuePairBody.get(i).getBody().getText(), keyValuePairBody.get(i).getInfo().getText(), "true"};
-                info = str;
-            } else {
-                String[] str = {keyValuePairBody.get(i).getBody().getText(), keyValuePairBody.get(i).getInfo().getText(), "false"};
-                info = str;
-            }
-            bodyData.add(info);
-        }
-
     }
 }

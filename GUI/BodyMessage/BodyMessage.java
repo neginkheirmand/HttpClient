@@ -6,116 +6,86 @@ import GUI.Request;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
 
 public class BodyMessage extends JPanel {
     //this class is meant to handle the body message in case there is any
     //can handle multipart form data and form url encoded
     ArrayList<KeyValuePairBody> bodyData = new ArrayList<>();
-    String jsonContainer;
-    String pathOfFile;
 
     Request request = null;
 
-    /**
-     * for requests with no body message
-     * @param request
-     */
-    public void createBodyMessage(Request request) {
-        this.request = request;
-        //in case the method of the request does not support body message
-        String methodRequest = request.getTypeOfRequest().toString();
-        JLabel empty = new JLabel("The "+methodRequest+" can't have body message.");
-        this.add(empty);
-    }
-
-    /**
-     * if no request is selected
-     */
-    public BodyMessage(){
+    public BodyMessage(Request request) {
         super();
-        this.add(new JLabel("Please choose one of the requests"));
+        this.request = request;
     }
 
     /**
      * if no request is selected
      */
-    public void createBodyMessage(CreateGUI gui, Request request, Color colorOfThemeBackground1, Color colorOfThemeBackground2, String colorOfThemeForground){
-        this.request=request;
+    public void createBodyMessage(CreateGUI gui, Color colorOfThemeBackground1, Color colorOfThemeBackground2, String colorOfThemeForground) {
         JPanel thisBody = this;
         thisBody.setLayout(new GridBagLayout());
-        if(request.getTypeOfData().equals(MESSAGEBODY_TYPE.FORM_URL) || request.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
-            if(request.getFormDataInfo()==null || ((ArrayList<String[]>)request.getFormDataInfo()).size()==0){
-                //create a new one
-                createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true, true);
-            }else{
-                //load the existing ones
-                for(int i=0; i<((ArrayList<String[]>)request.getFormDataInfo()).size();i++) {
-                    if(((ArrayList<String[]>)request.getFormDataInfo()).get(i)[2].equals("true")) {
-                        createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[0], ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[1], true, true);
-                    }else{
-                        createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[0], ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[1], false, true);
-                    }
+
+        try {
+
+        if (request.getFormDataInfo() == null || ((ArrayList<String[]>) request.getFormDataInfo()).size() == 0) {
+            //create a new one
+            createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true);
+        } else {
+            //load the existing ones
+            for (int i = 0; i < ((ArrayList<String[]>) request.getFormDataInfo()).size(); i++) {
+                if (((ArrayList<String[]>) request.getFormDataInfo()).get(i)[2].equals("true")) {
+                    createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[0], ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[1], true);
+                } else {
+                    createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[0], ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[1], false);
                 }
-                createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true, true);
             }
-        }else if(request.getTypeOfData().equals(MESSAGEBODY_TYPE.JSON)) {
-            new JsonPanel(colorOfThemeBackground1, colorOfThemeBackground2, gui, this, ((String)request.getFormDataInfo()));
-        }else if(request.getTypeOfData().equals(MESSAGEBODY_TYPE.BINARY)) {
-            new BinaryFilePanel(this, colorOfThemeBackground1, colorOfThemeBackground2, colorOfThemeForground, gui, ((String)request.getFormDataInfo()));
+            createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true);
+        }
+        } catch (java.lang.ClassCastException exception) {
+            request.setFormDataInfo(new ArrayList<String[]>());
+            createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true);
         }
     }
 
+    public void createNewKeyValue(CreateGUI gui, Color colorOfThemeBackground2, Color colorOfThemeBackground1, String colorOfThemeForground, String body, String data, boolean isEnabled) {
+          KeyValuePairBody newPair = new KeyValuePairBody(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, body, data, isEnabled, this);
 
-    public void createNewKeyValue(CreateGUI gui, Color colorOfThemeBackground2, Color colorOfThemeBackground1, String colorOfThemeForground, String body, String data, boolean isEnabled, boolean deleteComponents){
-//          new KeyValuePairBody(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, this, body, data, isEnabled, deleteComponents);
+        //ading to the panel
+        GridBagConstraints constraints1 = new GridBagConstraints();
+        constraints1.gridy = bodyData.indexOf(newPair);
+        constraints1.gridx = 0;
+        constraints1.weightx = 0;
+        constraints1.weighty = 0;
+        constraints1.fill = GridBagConstraints.HORIZONTAL;
+        constraints1.anchor = GridBagConstraints.FIRST_LINE_START;
+        this.add(newPair, constraints1);
     }
 
 
     public void setBodyToRequest() {
-        if (request == null) {
-            System.out.println("Please choose a request");
-            return;
-        }
-        //first we se what is the type of request
-        if (request.getTypeOfData().equals(MESSAGEBODY_TYPE.FORM_URL) || request.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
-            ArrayList<String[]> bodyInfo = new ArrayList<>();
-            for (int i = 0; i < bodyData.size(); i++) {
-                String name = bodyData.get(i).getBody().getText();
-                String value = bodyData.get(i).getInfo().getText();
-                String[] newPair;
-                if (bodyData.get(i).getEnabled().isSelected()) {
-                    String[] pair = {name, value, "true"};
-                    newPair = pair;
-                } else {
-                    String[] pair = {name, value, "false"};
-                    newPair = pair;
-                }
-                if (!name.equals("New Name") && !value.equals("New value")) {
-                    bodyInfo.add(newPair);
-                }
+        ArrayList<String[]> bodyInfo = new ArrayList<>();
+        for (int i = 0; i < bodyData.size(); i++) {
+            String name = bodyData.get(i).getBody().getText();
+            String value = bodyData.get(i).getInfo().getText();
+            String[] newPair;
+            if (bodyData.get(i).getEnabled().isSelected()) {
+                String[] pair = {name, value, "true"};
+                newPair = pair;
+            } else {
+                String[] pair = {name, value, "false"};
+                newPair = pair;
             }
-            request.setFormDataInfo(bodyInfo);
-        } else if (request.getTypeOfData().equals(MESSAGEBODY_TYPE.BINARY)) {
-            request.setFormDataInfo(pathOfFile);
-        } else if (request.getTypeOfData().equals(MESSAGEBODY_TYPE.JSON)) {
-            request.setFormDataInfo(jsonContainer);
+            if (!name.equals("New Name") || !value.equals("New value")) {
+                bodyInfo.add(newPair);
+            }
         }
+        request.setFormDataInfo(bodyInfo);
     }
 
 
     public ArrayList<KeyValuePairBody> getBodyData() {
         return bodyData;
-    }
-
-    public void setJsonContainer(String  jsonContainer) {
-        this.jsonContainer = jsonContainer;
-    }
-
-    public void setPathOfFile(String pathOfFile) {
-        this.pathOfFile = pathOfFile;
     }
 }
