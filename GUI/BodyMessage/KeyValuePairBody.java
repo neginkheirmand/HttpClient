@@ -2,6 +2,7 @@ package GUI.BodyMessage;
 
 import GUI.CreateGUI;
 import GUI.MESSAGEBODY_TYPE;
+import GUI.Request;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -14,38 +15,21 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 
-public class KeyValuePairBody extends JPanel{
+public class KeyValuePairBody extends JPanel {
     CreateGUI gui;
     JTextField body;
     JTextField info;
     JCheckBox enabled;
 
-    public KeyValuePairBody(CreateGUI gui, Color colorOfThemeBackground2, Color colorOfThemeBackground1, String colorOfThemeForground, BodyMessage bodyMessage, String name, String value, boolean checkboxBoolean, boolean deleteAll) {
+    public KeyValuePairBody(CreateGUI gui, Color colorOfThemeBackground2, Color colorOfThemeBackground1, String colorOfThemeForground, String name, String value, boolean checkboxBoolean, ArrayList<KeyValuePairBody> keyValuePairBody, JPanel body, Request request) {
         super();
-        if(deleteAll) {
-            //remove all the components
-            bodyMessage.removeAll();
-        }
-        //create constraints to add this new component
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridy = bodyMessage.getBodyData().indexOf(this);
-        constraints.gridx = 0;
-        constraints.weightx = 0;
-        constraints.weighty = 0;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
-        //add this to the arraylist of body message
-        bodyMessage.getBodyData().add(this);
-
+        //adding to the arraylist
+        keyValuePairBody.add(this);
 
         JPanel newKeyValuePair = this;
         //newKeyValuePair.setPreferredSize(new Dimension());
         newKeyValuePair.setLayout(new FlowLayout());
         newKeyValuePair.setBackground(colorOfThemeBackground2);
-
-        //add this component to the body panel
-        bodyMessage.add(this, constraints);
-
 
 
         //first component the 3 lines
@@ -53,9 +37,9 @@ public class KeyValuePairBody extends JPanel{
         newKeyValuePair.add(_3_lines);
         //then the JTextField for the Header
         JTextField nameTextField;
-        if( name==null ) {
+        if (name == null) {
             nameTextField = new JTextField("New Name");
-        }else{
+        } else {
             nameTextField = new JTextField(name);
         }
         this.body = nameTextField;
@@ -72,10 +56,11 @@ public class KeyValuePairBody extends JPanel{
                     nameTextField.setText(" ");
                 }
                 System.out.println("clicked on the header");
-                if (bodyMessage.getBodyData().indexOf(newKeyValuePair) == bodyMessage.getBodyData().size() - 1) {
+                if (keyValuePairBody.indexOf(newKeyValuePair) == keyValuePairBody.size() - 1) {
                     //and add a new Pair of Header and values
-                    bodyMessage.createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, "New Name", "New value", true, false);
-                    bodyMessage.setBodyToRequest();
+
+                    new KeyValuePairBody(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true, keyValuePairBody, body, request);
+                    setInfoToRequest(keyValuePairBody, request);
                     gui.getMainFrame().revalidate();
                     gui.getMainFrame().repaint();
                 }
@@ -85,9 +70,9 @@ public class KeyValuePairBody extends JPanel{
         //then the JTextField for the value
 
         JTextField valueTextField;
-        if(value == null) {
+        if (value == null) {
             valueTextField = new JTextField("New value");
-        }else {
+        } else {
             valueTextField = new JTextField(value);
         }
         this.info = valueTextField;
@@ -103,10 +88,10 @@ public class KeyValuePairBody extends JPanel{
                     valueTextField.setText(" ");
                 }
                 System.out.println("clicked on the value");
-                if (bodyMessage.getBodyData().indexOf(newKeyValuePair) == bodyMessage.getBodyData().size() - 1) {
+                if (keyValuePairBody.indexOf(newKeyValuePair) == keyValuePairBody.size() - 1) {
                     //and add a new Pair of Header and values
-                    bodyMessage.createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, "New Name", "New value", true, false);
-                    bodyMessage.setBodyToRequest();
+                    new KeyValuePairBody(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true, keyValuePairBody, body, request);
+                    setInfoToRequest(keyValuePairBody, request);
                     gui.getMainFrame().revalidate();
                     gui.getMainFrame().repaint();
                 }
@@ -122,14 +107,10 @@ public class KeyValuePairBody extends JPanel{
         checkBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (checkBox.isSelected()) {
-                    bodyMessage.setBodyToRequest();
-                } else {
-                    bodyMessage.setBodyToRequest();
-                }
+                setInfoToRequest(keyValuePairBody, request);
             }
         });
-        this.enabled=checkBox;
+        this.enabled = checkBox;
         newKeyValuePair.add(checkBox);
         //now the trash icon Button
         JButton trash = new JButton(new ImageIcon((new File(".").getAbsolutePath()) + "\\src\\GUI\\resource" + colorOfThemeForground + "\\delete-icon1.png"));
@@ -142,14 +123,15 @@ public class KeyValuePairBody extends JPanel{
                 //remove component from the panel
                 body.remove(newKeyValuePair);
                 //remove component from the array list
-                bodyMessage.getBodyData().remove(this);
-                bodyMessage.setBodyToRequest();
+                keyValuePairBody.remove(newKeyValuePair);
+
+                setInfoToRequest(keyValuePairBody, request);
                 gui.getMainFrame().revalidate();
                 gui.getMainFrame().repaint();
             }
         });
         newKeyValuePair.add(trash);
-        body.add(newKeyValuePair, constraints);
+//        body.add(newKeyValuePair, constraints);
 
 
         nameTextField.getDocument().addDocumentListener(new DocumentListener() {
@@ -169,7 +151,7 @@ public class KeyValuePairBody extends JPanel{
             }
 
             public void update() {
-                bodyMessage.setBodyToRequest();
+                setInfoToRequest(keyValuePairBody, request);
             }
         });
 
@@ -190,13 +172,22 @@ public class KeyValuePairBody extends JPanel{
                 update();
             }
 
-            private void update(){
-                bodyMessage.setBodyToRequest();
+            private void update() {
+                setInfoToRequest(keyValuePairBody, request);
             }
 
         });
-    }
 
+        //ading to the panel
+        GridBagConstraints constraints1 = new GridBagConstraints();
+        constraints1.gridy = keyValuePairBody.indexOf(newKeyValuePair);
+        constraints1.gridx = 0;
+        constraints1.weightx = 0;
+        constraints1.weighty = 0;
+        constraints1.fill = GridBagConstraints.HORIZONTAL;
+        constraints1.anchor = GridBagConstraints.FIRST_LINE_START;
+        body.add(this, constraints1);
+    }
 
     public JTextField getBody() {
         return body;
@@ -208,5 +199,32 @@ public class KeyValuePairBody extends JPanel{
 
     public JCheckBox getEnabled() {
         return enabled;
+    }
+
+    private void setInfoToRequest(ArrayList<KeyValuePairBody> keyValuePairBody, Request request) {
+        if (request == null || keyValuePairBody == null) {
+            return;
+        }
+
+        if (!request.getTypeOfData().equals(MESSAGEBODY_TYPE.FORM_URL) || !request.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
+            return;
+        }
+
+        ArrayList<String[]> bodyData = new ArrayList<>();
+        for (int i = 0; i < keyValuePairBody.size(); i++) {
+            if (keyValuePairBody.get(i).getBody().getText().equals("New Name") && keyValuePairBody.get(i).getBody().getText().equals("New value")) {
+                continue;
+            }
+            String info[] = null;
+            if (keyValuePairBody.get(i).getEnabled().isSelected()) {
+                String[] str = {keyValuePairBody.get(i).getBody().getText(), keyValuePairBody.get(i).getInfo().getText(), "true"};
+                info = str;
+            } else {
+                String[] str = {keyValuePairBody.get(i).getBody().getText(), keyValuePairBody.get(i).getInfo().getText(), "false"};
+                info = str;
+            }
+            bodyData.add(info);
+        }
+
     }
 }

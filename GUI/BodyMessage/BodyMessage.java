@@ -71,7 +71,7 @@ public class BodyMessage extends JPanel {
 
 
     public void createNewKeyValue(CreateGUI gui, Color colorOfThemeBackground2, Color colorOfThemeBackground1, String colorOfThemeForground, String body, String data, boolean isEnabled, boolean deleteComponents){
-          new KeyValuePairBody(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, this, body, data, isEnabled, deleteComponents);
+//          new KeyValuePairBody(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, this, body, data, isEnabled, deleteComponents);
     }
 
 

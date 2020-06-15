@@ -57,11 +57,14 @@ public class QueryPanel extends JPanel {
         ArrayList<String[]> loadedQueryParams = request.getQueryInfo();
         for(int i=0; i<loadedQueryParams.size(); i++) {
             if (loadedQueryParams.get(i)[2].equals("true")) {
+                queryTabConstraints.gridy=i;
                 loadQueryTab(queryTabConstraints, gui, colorOfThemeBackground1, colorOfThemeBackground2, colorOfThemeForground, loadedQueryParams.get(i)[0], loadedQueryParams.get(i)[1], true);
             }else{
+                queryTabConstraints.gridy=i;
                 loadQueryTab(queryTabConstraints, gui, colorOfThemeBackground1, colorOfThemeBackground2, colorOfThemeForground, loadedQueryParams.get(i)[0], loadedQueryParams.get(i)[1], false);
             }
         }
+        queryTabConstraints.gridy = queryTabConstraints.gridy+1;
         loadQueryTab(queryTabConstraints, gui, colorOfThemeBackground1, colorOfThemeBackground2, colorOfThemeForground, null, null, false);
 
     }

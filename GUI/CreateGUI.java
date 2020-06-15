@@ -2,6 +2,7 @@ package GUI;
 
 import GUI.BodyMessage.BodyMessage;
 import GUI.BodyMessage.JsonPanel;
+import GUI.BodyMessage.KeyValuePairBody;
 import GUI.Header.HeaderPanel;
 import GUI.Query.QueryPanel;
 import InformationHandling.LoadInfo;
@@ -60,6 +61,16 @@ public class CreateGUI {
 
     //an array list holding all the requests
     private ArrayList<Request> savedRequests = null;
+
+    //for fixing the auth tab
+    private String authBox = "";
+    private boolean authEnabled = true;
+
+    //for fixing the message body
+    private String jsonContainer ="";
+    private String pathContainer = "";
+    private ArrayList<KeyValuePairBody> bodyData = new ArrayList<>();
+
 
     /**
      * the constructor of the class, here the frame is created and each one of its characteristics will be created by calling other methods
@@ -828,6 +839,7 @@ public class CreateGUI {
         }else{
             return false;
         }
+
     }
 
     /**
@@ -1022,13 +1034,18 @@ public class CreateGUI {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("saved");
                 if(indexOfRequest>=0&&indexOfRequest<savedRequests.size()) {
-
                     savedRequests.get(indexOfRequest).setSaved(true);
                     savedRequests.get(indexOfRequest).setUrl(addressField.getText());
                     if (((JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)).getSelectedIndex() == 0) {
                         savedRequests.get(indexOfRequest).setAuth(true);
+                        String[] authInfoThisRequest = {"Authorization", authBox, "true"};
+                        savedRequests.get(indexOfRequest).setAuthInfo(authInfoThisRequest);
+                        System.out.println("auth box ="+authBox);
                     } else {
                         savedRequests.get(indexOfRequest).setAuth(false);
+                        String[] authInfoThisRequest = {"Authorization", authBox, "false"};
+                        System.out.println("auth box ="+authBox);
+                        savedRequests.get(indexOfRequest).setAuthInfo(authInfoThisRequest);
                     }
                     savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
                     //format of body
@@ -1036,6 +1053,7 @@ public class CreateGUI {
 
                 }
                 updateFrame();
+                System.out.println(authBox);
             }
 
         };
@@ -1285,6 +1303,7 @@ public class CreateGUI {
             protoTypeButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    bodyData = new ArrayList<>();
                     indexOfRequest = ((RequestButton)protoTypeButton).getIndexOfRequest();
                     updateFrame();
                 }
@@ -1297,6 +1316,8 @@ public class CreateGUI {
 
         }
     }
+
+
 
     /**
      * this method is method is called so that the panel containing the information about an request is created
@@ -1311,7 +1332,7 @@ public class CreateGUI {
         setRequestTabedPane.setBackground(colorOfThemeBackground2);
         setRequestTabedPane.setForeground(colorOfThemeBackground1);
         //now the panels
-        JPanel body = new BodyMessage();
+        JPanel body = new JPanel();
         body.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
         body.setBackground(colorOfThemeBackground2);
 //        JScrollPane bodyContainer = new JScrollPane();
@@ -1363,7 +1384,9 @@ public class CreateGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(indexOfRequest<savedRequests.size() && indexOfRequest>-1){
+                    //ba method payin faghat type body ro save mikonim
                     savedRequests.get(indexOfRequest).setTypeOfBody(MESSAGEBODY_TYPE.getFormByIndex(dataType.getSelectedIndex()));
+
                 }
                 //now we are sure we have the type of the body message set correctly
                 createBodyTab(body, dataType.getSelectedIndex(), timesBodyTypeComboBoxChanged);
@@ -1435,10 +1458,16 @@ public class CreateGUI {
             public void actionPerformed(ActionEvent e) {
 
                 if (indexOfRequest > -1 && indexOfRequest < savedRequests.size()) {
-                    if(authType.getSelectedIndex()==0) {
+                    if (authType.getSelectedIndex() == 0) {
+                        if (!savedRequests.get(indexOfRequest).getAuth()) {
+                            authBox = "";
+                        }
                         savedRequests.get(indexOfRequest).setAuth(true);
-                    }else{
+                        authEnabled=true;
+                    } else {
                         savedRequests.get(indexOfRequest).setAuth(false);
+                        authBox = "";
+                        authEnabled=false;
                     }
                 }
                 createAuthTab(auth, authType.getSelectedIndex(), timesAuthTypeComboBoxChanged);
@@ -1456,6 +1485,8 @@ public class CreateGUI {
             }
         }
         setRequestTabedPane.setTabComponentAt(1, authType);
+
+
         QueryPanel query;
         if(indexOfRequest!=-1 && indexOfRequest<savedRequests.size()) {
             if(savedRequests.get(indexOfRequest).getQueryInfo()==null || savedRequests.get(indexOfRequest).getQueryInfo().size()==0){
@@ -1499,14 +1530,29 @@ public class CreateGUI {
 //
         Dimension sizeOfNow = mainFrame.getSize();
         Point locationOfNow = mainFrame.getLocationOnScreen();
-//        body.setLayout(new GridBagLayout());
+        body.setLayout(new GridBagLayout());
+
+        if(indexOfRequest<savedRequests.size() && indexOfRequest>-1){
+            if(!savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.PATCH) &&
+                    !savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.POST) &&
+                    !savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.PUT) ){
+                JLabel empty = new JLabel("Only put, post and patch request can have body message");
+                body.add(empty, new GridBagConstraints());
+                return;
+            }
+        }else{
+            JLabel empty = new JLabel("Please select a request");
+            body.add(empty, new GridBagConstraints());
+            return;
+        }
+
 //        if(indexOfRequest>-1 && indexOfRequest< savedRequests.size()){
 //            System.out.println("request exist");
 //            if(savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.PUT) ||
 //                    savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.POST) ||
 //                    savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.PATCH) ){
 //                System.out.println("request has saved info");
-//                new BodyMessage(this, savedRequests.get(indexOfRequest), colorOfThemeBackground1, colorOfThemeBackground2, colorOfThemeForground);
+//                b(this, savedRequests.get(indexOfRequest), colorOfThemeBackground1, colorOfThemeBackground2, colorOfThemeForground);
 //            }else{
 //                System.out.println("request does not have saved info");
 //                new BodyMessage(savedRequests.get(indexOfRequest));
@@ -1551,20 +1597,61 @@ public class CreateGUI {
             constraints1.weighty=0;
             constraints1.fill=GridBagConstraints.HORIZONTAL;
             constraints1.anchor=GridBagConstraints.FIRST_LINE_START;
-            createFormData(body, constraints1);
+            createFormData(body, constraints1, null, null, true);
             mainFrame.revalidate();
             mainFrame.repaint();
             mainFrame.pack();
 
         } else if (bodyType == 1) {
             //its "JSON"
-            JTextField bodyReqJSON = new JTextField();
+            String start="";
+            if(indexOfRequest<savedRequests.size() && indexOfRequest>-1){
+                if(savedRequests.get(indexOfRequest).getTypeOfData().equals(MESSAGEBODY_TYPE.JSON)){
+                    Object obj = savedRequests.get(indexOfRequest).getFormDataInfo();
+                    if(obj == null){
+                        savedRequests.get(indexOfRequest).setFormDataInfo("");
+                    }else if(obj instanceof String){
+                        start = (String) obj;
+                        System.out.println(obj);
+                    }else{
+                        savedRequests.get(indexOfRequest).setFormDataInfo("");
+                    }
+                }else{
+                    savedRequests.get(indexOfRequest).setTypeOfBody(MESSAGEBODY_TYPE.JSON);
+                    savedRequests.get(indexOfRequest).setFormDataInfo("");
+                }
+            }
+            JTextField bodyReqJSON = new JTextField(start);
             bodyReqJSON.setSize(new Dimension(600, 900));
             bodyReqJSON.setPreferredSize(new Dimension(600, 900));
             bodyReqJSON.setFont(new Font("DialogInput", Font.PLAIN, 15));
             bodyReqJSON.setForeground(colorOfThemeBackground1);
             bodyReqJSON.setBackground(colorOfThemeBackground2);
             bodyReqJSON.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
+            bodyReqJSON.getDocument().addDocumentListener(new DocumentListener() {
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    updateLabel(e);
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    updateLabel(e);
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    updateLabel(e);
+                }
+
+                private void updateLabel(DocumentEvent e) {
+                    jsonContainer = bodyReqJSON.getText();
+                    if(indexOfRequest>-1 && indexOfRequest< savedRequests.size()){
+                        savedRequests.get(indexOfRequest).setFormDataInfo(jsonContainer);
+                    }
+                }
+            });
             body.add(bodyReqJSON, constraints);
 //            new JsonPanel( colorOfThemeBackground1, colorOfThemeBackground2, this, body);
         } else if (bodyType == 3) {
@@ -1583,6 +1670,32 @@ public class CreateGUI {
             body.add(description, constraints);
 
             JTextArea selectedFile = new JTextArea("No file selected");
+
+            if(indexOfRequest<savedRequests.size() && indexOfRequest>-1) {
+                if(savedRequests.get(indexOfRequest).getTypeOfData().equals(MESSAGEBODY_TYPE.BINARY)) {
+                    try{
+                        if( ((String) savedRequests.get(indexOfRequest).getFormDataInfo()).length()!=0) {
+                            selectedFile.setText((String) savedRequests.get(indexOfRequest).getFormDataInfo());
+                            pathContainer = selectedFile.getText();
+                        }else{
+                            selectedFile.setText("No file selected");
+                            pathContainer = "";
+                        }
+                    }catch (java.lang.ClassCastException exception){
+                        savedRequests.get(indexOfRequest).setFormDataInfo("");
+                        selectedFile.setText("No file selected");
+                        pathContainer = "";
+                    }
+                }else{
+                    savedRequests.get(indexOfRequest).setTypeOfBody(MESSAGEBODY_TYPE.BINARY);
+                    selectedFile.setText("No file selected");
+                    savedRequests.get(indexOfRequest).setFormDataInfo("");
+                    pathContainer = "";
+                }
+            }else{
+                selectedFile.setText("No file selected");
+                pathContainer = "";
+            }
             selectedFile.setOpaque(true);
             selectedFile.setForeground(colorOfThemeBackground1);
             selectedFile.setBackground(new java.awt.Color(73, 73, 73));
@@ -1608,7 +1721,11 @@ public class CreateGUI {
                 }
 
                 private void updateLabel(DocumentEvent e) {
-                    System.out.println("the file container changed path to *"+selectedFile.getText()+"*");
+                    if(!selectedFile.getText().equals("No file selected") && selectedFile.getText().length()!=0){
+                        pathContainer = selectedFile.getText();
+                    }else {
+                        pathContainer = "";
+                    }
                 }
             });
             JScrollPane fileScrollPane = new JScrollPane(selectedFile);
@@ -1623,21 +1740,27 @@ public class CreateGUI {
             constraints.gridx = 0;
             constraints.gridy = 2;
             constraints.anchor = GridBagConstraints.FIRST_LINE_START;
-            icons[14]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\reset-icon.png");
-            JButton resetFile = new JButton("Resest File", icons[14]);
+            JButton resetFile = new JButton("Reset File", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\reset-icon.png"));
             resetFile.setBackground(colorOfThemeBackground2);
             resetFile.setForeground(colorOfThemeBackground1);
             resetFile.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1));
-            resetFile.setEnabled(false);
+            if(selectedFile.getText().equals("No file selected") || selectedFile.getText().length()==0){
+                resetFile.setEnabled(false);
+            }else{
+                resetFile.setEnabled(true);
+            }
             resetFile.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("file reseeted");
+                    System.out.println("file reseted");
                     resetFile.setEnabled(false);
                     resetFile.setForeground(new java.awt.Color(94, 94, 94));
                     resetFile.setFont(new Font("Serif", Font.BOLD, 20));
                     resetFile.setBackground(colorOfThemeBackground2);
                     selectedFile.setText("No file selected");
+                    if(indexOfRequest<savedRequests.size() && indexOfRequest>-1){
+                        savedRequests.get(indexOfRequest).setFormDataInfo("");
+                    }
                 }
             });
             body.add(resetFile, constraints);
@@ -1663,10 +1786,14 @@ public class CreateGUI {
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         System.out.println("You chose to open this file: " + fileChooser.getSelectedFile().getName());
                         selectedFile.setText(fileChooser.getSelectedFile().getAbsolutePath());
+                        pathContainer = selectedFile.getText();
+                        if(indexOfRequest>-1 && indexOfRequest<savedRequests.size()) {
+                            savedRequests.get(indexOfRequest).setFormDataInfo(fileChooser.getSelectedFile().getAbsolutePath());
+                        }
                     } else {
                         System.out.println("didnt want to open the file");
                     }
-                    if (selectedFile.getText().equals("No file selected")) {
+                    if (selectedFile.getText().equals("No file selected") || selectedFile.getText().length()==0) {
                         resetFile.setEnabled(false);
                         resetFile.setForeground(new java.awt.Color(94, 94, 94));
                         resetFile.setFont(new Font("Serif", Font.BOLD, 20));
@@ -1697,7 +1824,7 @@ public class CreateGUI {
             constraints1.weighty = 0;
             constraints1.fill = GridBagConstraints.HORIZONTAL;
             constraints1.anchor = GridBagConstraints.FIRST_LINE_START;
-            createFormData(body, constraints1);
+            createFormData(body, constraints1, null, null, true);
             mainFrame.revalidate();
             mainFrame.repaint();
             mainFrame.pack();
@@ -1714,22 +1841,22 @@ public class CreateGUI {
     /**
      * this method creates the second tab of the panel created in the method before
      * @param body the in which the components are added at
-     * @param constraints the constraints in which should be added
      */
-    private void createFormData(JPanel body, GridBagConstraints constraints){
+    private void createFormData(JPanel body , GridBagConstraints constraints, String name, String value, boolean isEnabled){
 
-        //we create the first Jpanel containing the pair of key and value
-        //if the user clicks on it this method should be called again with the same constaints but the gridx+1
-//
+
         JPanel newKeyValuePair = new JPanel();
 //        newKeyValuePair.setPreferredSize(new Dimension());
         newKeyValuePair.setLayout(new FlowLayout());
         newKeyValuePair.setBackground(colorOfThemeBackground2);
-//        //first component the 3 lines
+        //first component the 3 lines
         JLabel _3_lines = new JLabel(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\3-purple-lines-icon.png"));
         newKeyValuePair.add(_3_lines);
         //then the JTextField for the Header
         JTextField nameTextField = new JTextField("New Name");
+        if(name!=null){
+            nameTextField.setText(name);
+        }
         nameTextField.setPreferredSize(new Dimension(150, 35));
         nameTextField.setFont(new Font("Serif", Font.PLAIN, 15));
         nameTextField.setForeground(colorOfThemeBackground1);
@@ -1745,7 +1872,7 @@ public class CreateGUI {
 //                //and add a new Pair of Header and values
                     GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
                     newGridConstraints.gridy = constraints.gridy + 1;
-                    createFormData(body, newGridConstraints);
+                    createFormData(body, newGridConstraints, null, null, true);
                     mainFrame.revalidate();
                     mainFrame.repaint();
                 }
@@ -1796,7 +1923,7 @@ public class CreateGUI {
 //                newGridConstraints.weighty=1;
 //                constraints.weightx=0;
 //                constraints.weighty=0;
-                    createFormData(body, newGridConstraints);
+                    createFormData(body, newGridConstraints, null, null, true);
                     mainFrame.revalidate();
                     mainFrame.repaint();
                 }
@@ -1851,7 +1978,14 @@ public class CreateGUI {
 //                    ((ArrayList<String[]>) savedRequests.get(indexOfRequest).getFormDataInfo()).remove(constraints.gridy);
 //                }
                 if (constraints.gridy == 0) {
-                    createFormData(body, constraints);
+                    GridBagConstraints constraints1 = new GridBagConstraints();
+                    constraints1.gridy=0;
+                    constraints1.gridx=0;
+                    constraints1.weightx=0;
+                    constraints1.weighty=0;
+                    constraints1.fill=GridBagConstraints.HORIZONTAL;
+                    constraints1.anchor=GridBagConstraints.FIRST_LINE_START;
+                    createFormData(body, constraints1, null, null, true);
                 }
                 mainFrame.revalidate();
                 mainFrame.repaint();
@@ -1859,6 +1993,12 @@ public class CreateGUI {
         });
         newKeyValuePair.add(trash);
         body.add(newKeyValuePair, constraints);
+//        if( savedRequests.get(indexOfRequest).getFormDataInfo()==null || ((ArrayList)savedRequests.get(indexOfRequest).getFormDataInfo()).size()==0  ){
+//            new KeyValuePairBody(this, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true, bodyData, body, savedRequests.get(indexOfRequest));
+//            return;
+//        }
+        //the request has Ar
+
 
 
     }
@@ -1874,19 +2014,8 @@ public class CreateGUI {
         auth.setLayout(new GridBagLayout());
         if (timesChanged > 0) {
             try {
-//                Component toRemove = auth.getComponent(timesChanged-1);
-//                toRemove.setVisible(false);
-//                toRemove.setMaximumSize(new Dimension(0,0));
-//                toRemove.setPreferredSize(new Dimension(0,0));
-//                toRemove.setMinimumSize(new Dimension(0,0));
                 auth.removeAll();
-//            GridBagLayout layout = (GridBagLayout) body.getLayout();
-//            GridBagConstraints gbc = layout.getConstraints(toRemove);
-//                body.remove(0);
-//                body.remove(timesChanged-1);
-//                auth.setLayout(new GridBagLayout());
             } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("");
             }
         }
         Dimension sizeOfNow = mainFrame.getSize();
@@ -1897,13 +2026,13 @@ public class CreateGUI {
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
             gbc.gridy = 0;
-            gbc.weightx = 1;
-            gbc.weighty = 1;
+            gbc.weightx = 0;
+            gbc.weighty = 0;
             gbc.insets = new Insets(5, 30, 5, 15);
             gbc.ipady = 0;
             gbc.ipadx = 0;
             gbc.anchor = GridBagConstraints.PAGE_START;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.fill = GridBagConstraints.BOTH;
 
             //token label
             JLabel tokenLabel = new JLabel("Token");
@@ -1913,43 +2042,82 @@ public class CreateGUI {
             tokenLabel.setPreferredSize(new Dimension(50, 20));
             auth.add(tokenLabel, gbc);
             //token text field
-            JTextField tokenTextField = new JTextField();
+            String authOfThisRequest = "";
+            if(indexOfRequest>-1 && indexOfRequest <savedRequests.size()){
+                if(savedRequests.get(indexOfRequest).getAuthInfo()[1]!=null && savedRequests.get(indexOfRequest).getAuthInfo()[1].length()!=0){
+                    authOfThisRequest =savedRequests.get(indexOfRequest).getAuthInfo()[1];
+                    System.out.println("auth of this request"+authBox);
+                }
+            }
+            JTextField tokenTextField = new JTextField(authOfThisRequest);
             tokenTextField.setOpaque(false);
             tokenTextField.setForeground(colorOfThemeBackground1);
             tokenTextField.setBackground(colorOfThemeBackground2);
             tokenTextField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, colorOfThemeBackground1));
             tokenTextField.setPreferredSize(new Dimension(150, 20));
+
+            tokenTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    updateLabel(e);
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    updateLabel(e);
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    updateLabel(e);
+                }
+
+                private void updateLabel(DocumentEvent e) {
+                    if(indexOfRequest<savedRequests.size() && indexOfRequest>-1) {
+                        authBox = tokenTextField.getText();
+                        String[] authInfo = null;
+                        if(authEnabled){
+                            String[] authinf = {"Authorization", authBox, "true"};
+                            authInfo=authinf;
+                        }else{
+                            String[] authInf = {"Authorization", authBox, "false"};
+                            authInfo=authInf;
+                        }
+                        savedRequests.get(indexOfRequest).setAuth(true);
+                        savedRequests.get(indexOfRequest).setAuthInfo(authInfo);
+                        System.out.println(savedRequests.get(indexOfRequest).getAuthInfo()[1]);
+                    }else{
+                        authBox="";
+                    }
+                }
+            });
             gbc.gridx = 1;
             auth.add(tokenTextField, gbc);
-            //next line we have the Prefix
-            icons[16]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\question-mark-icon.png");
-            JLabel prefix = new JLabel("Prefix", icons[16], JLabel.LEFT);
-            prefix.setToolTipText("Prefix to use when sending the Authorization eader. Deafaults to Bearer");
-            prefix.setForeground(colorOfThemeBackground1);
-            prefix.setBackground(colorOfThemeBackground2);
-            prefix.setOpaque(false);
-            gbc.gridx = 0;
-            gbc.gridy = 1;
-            gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-            auth.add(prefix, gbc);
-            //prefix text field
-            JTextField prefixTextField = new JTextField();
-            prefixTextField.setOpaque(false);
-            prefixTextField.setForeground(colorOfThemeBackground1);
-            prefixTextField.setBackground(colorOfThemeBackground2);
-            prefixTextField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, colorOfThemeBackground1));
-            prefixTextField.setPreferredSize(new Dimension(150, 20));
-            gbc.gridx = 1;
-            auth.add(prefixTextField, gbc);
             //the Enabled Option
             JCheckBox enabledCheckBox = new JCheckBox("Enabled", true);
             enabledCheckBox.setOpaque(false);
+            enabledCheckBox.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (enabledCheckBox.isSelected()) {
+                        authEnabled = true;
+                    } else {
+                        authEnabled = false;
+                    }
+                    if(indexOfRequest<savedRequests.size() && indexOfRequest>-1){
+                        savedRequests.get(indexOfRequest).setAuth(enabledCheckBox.isSelected());
+                    }
+                }
+            });
             gbc.gridx = 1;
             gbc.gridy = 2;
             auth.add(enabledCheckBox, gbc);
 
         } else if (authType == 2) {
             //no authentication
+            authBox="";
+            authEnabled=false;
             auth.removeAll();
             auth.setLayout(new GridBagLayout());
             GridBagConstraints constraints = new GridBagConstraints();

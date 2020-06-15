@@ -13,7 +13,7 @@ public class JsonPanel {
 
     public JsonPanel( Color colorOfThemeBackground1, Color colorOfThemeBackground2, CreateGUI gui, BodyMessage bodyMessage, String json){
         //first we delete all the component of the body previously added
-        bodyMessage.removeAll();
+//        bodyMessage.removeAll();
         this.guiEnviornment = gui;
         this.bodyMessage = bodyMessage;
         GridBagConstraints constraints = new GridBagConstraints();

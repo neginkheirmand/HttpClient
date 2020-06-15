@@ -910,8 +910,8 @@ public class Command implements Serializable {
             out.close();
             fileOut.close();
             //close the file
-
-            for(int i=0; i<savedRequests.size(); i++){
+            int i;
+            for(i=0; i<savedRequests.size(); i++){
                 File requestContainer = new File((new File(".")).getAbsolutePath()+"\\src\\InformationHandling\\SavedInformation\\Request"+i+".ser");
 
                 requestContainer.getParentFile().mkdirs();
@@ -925,6 +925,14 @@ public class Command implements Serializable {
 
                 output.close();
                 fileOutPut.close();
+            }
+
+            while (true){
+                File f =new File((new File(".")).getAbsolutePath()+"\\src\\InformationHandling\\SavedInformation\\Request"+i+".ser");
+                if(!f.delete()){
+                    break;
+                }
+                i++;
             }
         } catch (IOException i) {
             System.out.println("was not able to save info");
@@ -960,6 +968,8 @@ public class Command implements Serializable {
 
                 objectInputStream.close();
                 fileInputStream.close();
+                //now we have to delete the file
+                new File((new File(".")).getAbsolutePath()+"\\src\\InformationHandling\\SavedInformation\\Request"+i+".ser").delete();
             }
 
         } catch (InvalidClassException  exc){

@@ -4,11 +4,18 @@ import Conection.*;
 import GUI.Request;
 import GUI.TYPE;
 
+
+/**
+ * This class executes a command
+ *
+ * @author  Negin Kheirmand (98310023 - neginkheirmand@gmail.com)
+ * @version 1.0
+ */
 public class Executer {
 
 
     /**
-     * this
+     * constructor of the class
      * @param request
      * @param command
      */
@@ -39,6 +46,11 @@ public class Executer {
 
     }
 
+
+    /**
+     * constructor of the class
+     * @param request
+     */
     public Executer(Request request){
         System.out.println("url : "+request.getUrl());
 
