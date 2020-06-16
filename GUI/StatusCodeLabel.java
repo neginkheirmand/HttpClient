@@ -30,9 +30,11 @@ public class StatusCodeLabel extends JLabel{
             this.setBackground(yellow);
 //        }else if(status>=200 && status<300){
         }else if(status>=200 && status<207){
+            this.setPreferredSize(new Dimension(80, 35));
             this.setBackground(green);
 //        }else if(status>=300 && status<400){
         }else if(status>=300 && status<309){
+            this.setPreferredSize(new Dimension(100, 35));
             this.setBackground(blue);
 //        }else if(status>=400 && status<500){
         }else if(status>=400 && status<418){
@@ -44,7 +46,6 @@ public class StatusCodeLabel extends JLabel{
             this.setBackground(red);
         }
 
-        this.setPreferredSize(new Dimension(80, 35));
         this.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));
         this.setForeground(Color.white);
         this.setFont(new Font("Serif", Font.BOLD, 15));

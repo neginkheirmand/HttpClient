@@ -1,0 +1,2 @@
+<html><body><h1>Moved</h1><p>Please click here <a href="https://us.yahoo.com">us.yahoo.com</a>.</p></body></html>
+

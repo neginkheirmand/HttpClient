@@ -103,6 +103,11 @@ public class CreateGUI {
                 //the follow redirect
                 if(preferences.get(0).equals("true")){
                     checkBoxFollowRedirect=true;
+                    if(savedRequests!=null){
+                        for(int i=0; i<savedRequests.size(); i++){
+                            savedRequests.get(i).setFollowRedirect(true);
+                        }
+                    }
                 }else{
                     checkBoxFollowRedirect=false;
                 }
@@ -600,6 +605,12 @@ public class CreateGUI {
                 }else{
                     followRedirect.setText("Follow Redirect is not enabled");
                     checkBoxFollowRedirect=false;
+                }
+
+                if(savedRequests!=null){
+                    for(int i=0; i<savedRequests.size(); i++){
+                        savedRequests.get(i).setFollowRedirect(followRedirect.isSelected());
+                    }
                 }
             }
         });
@@ -1130,6 +1141,7 @@ public class CreateGUI {
         }else {
             //its OK
             if (savedRequests.get(indexOfRequest).getResponse() != null) {
+                System.out.println("size: "+savedRequests.get(indexOfRequest).getResponse().getContentSize());
                 contentSizeLabel = new ResponseSizeInfo(savedRequests.get(indexOfRequest).getResponse().getContentSize(), colorOfThemeBackground1);
             } else {
                 contentSizeLabel = new ResponseSizeInfo(0L, colorOfThemeBackground1);

@@ -75,6 +75,7 @@ public class Executer {
             System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Problem with the request, try again");
             return;
         }
+        System.out.println("the follow redirect"+ request.getFollowRedirect());
 
     }
 
