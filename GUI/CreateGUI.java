@@ -1011,11 +1011,6 @@ public class CreateGUI {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("gonna print the requests:");
-                for(int i=0; i<savedRequests.size(); i++){
-                    savedRequests.get(i).print();
-                    System.out.println();
-                }
                 System.out.println("saved");
                 if(indexOfRequest>=0&&indexOfRequest<savedRequests.size()) {
                     savedRequests.get(indexOfRequest).setSaved(true);

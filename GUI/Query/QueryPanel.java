@@ -91,8 +91,10 @@ public class QueryPanel extends JPanel {
     }
 
     public QueryPanel(){
+        GridBagConstraints grid = new GridBagConstraints();
+        grid.fill= GridBagConstraints.BOTH;
         JLabel empty = new JLabel("Please select a request");
-        this.add(empty);
+        this.add(empty, grid);
     }
 
     /**
