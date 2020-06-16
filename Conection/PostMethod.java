@@ -224,6 +224,7 @@ public class  PostMethod {
                     System.out.println(response.toString());
                 } else {
                     //if the -O option is used
+                    System.out.println("the name of Output file is"+ outPutFile);
                     String posFix = GetMethod.getContentType(headers, outPutFile);
                     File outputContainer;
                     if (GetMethod.getPosFix(outPutFile).length() == 0) {
@@ -314,7 +315,7 @@ public class  PostMethod {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in finding available Port, Please check Your internet connection");
         } catch (IOException exception) {
             //the methods: execute/ getContent / readLine / close
-            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file ");
+            System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file1 ");
         } catch (NullPointerException exception) {
             System.out.println("\033[0;31m" + "Error" + "\033[0m");
         } catch (URISyntaxException e) {
@@ -339,7 +340,7 @@ public class  PostMethod {
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem in finding available Port, Please check Your internet connection");
             } catch (IOException exception) {
                 //the methods: execute/ getContent / readLine / close
-                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file ");
+                System.out.println("\033[0;31m" + "Error:" + "\033[0m" + " Problem with writing in file2 ");
             } catch (NullPointerException exception) {
                 System.out.println("\033[0;31m" + "Error" + "\033[0m");
             }

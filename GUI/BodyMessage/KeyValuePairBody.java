@@ -53,7 +53,7 @@ public class KeyValuePairBody extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (nameTextField.getText().equals("New Name")) {
-                    nameTextField.setText(" ");
+                    nameTextField.setText("");
                 }
                 System.out.println("clicked on the header");
                 if (body.getBodyData().indexOf(newKeyValuePair) == body.getBodyData().size() - 1) {
@@ -84,7 +84,7 @@ public class KeyValuePairBody extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (valueTextField.getText().equals("New value")) {
-                    valueTextField.setText(" ");
+                    valueTextField.setText("");
                 }
                 System.out.println("clicked on the value");
                 if (body.getBodyData().indexOf(newKeyValuePair) == body.getBodyData().size() - 1) {

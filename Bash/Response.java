@@ -9,12 +9,12 @@ import java.util.Map;
 public class Response implements Serializable {
     //the headers of the response
     private Header[] responseHeaders = null;
+    private Map<String, List<String>> responseHeader = null ;
     //can be the path of the file in which the output is
     private String pathOutputFile = "";
     private String output = "";
     private boolean outputContainer = false;
     private int statusCode;
-    private Map<String, List<String>> responseHeader = null ;
     private Long contentSize = 0L;
     private Long timeTaken = 0L;
 

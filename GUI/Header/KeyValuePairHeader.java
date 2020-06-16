@@ -50,7 +50,7 @@ public class KeyValuePairHeader extends JPanel{
             public void mouseClicked(MouseEvent e) {
                 System.out.println("on header");
                 if(headerTextField.getText().equals("New Header")) {
-                    headerTextField.setText(" ");
+                    headerTextField.setText("");
                 }
                 //and add a new Pair of Header and values
                 System.out.println(" headerPanel.getHeaders().indexOf(newKeyValuePair) ="+headerPanel.getHeaders().indexOf(newKeyValuePair));
@@ -93,7 +93,7 @@ public class KeyValuePairHeader extends JPanel{
             public void mouseClicked(MouseEvent e) {
                 System.out.println("on value");
                 if(valueTextField.getText().equals("New Value")) {
-                    valueTextField.setText(" ");
+                    valueTextField.setText("");
                 }
                 //and add a new Pair of Header and values
                 if(headerPanel.getHeaders().indexOf(newKeyValuePair)==headerPanel.getHeaders().size()-1) {

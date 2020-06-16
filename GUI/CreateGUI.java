@@ -1,5 +1,7 @@
 package GUI;
 
+import Bash.Command;
+import Bash.Executer;
 import GUI.BodyMessage.BodyMessage;
 import GUI.BodyMessage.KeyValuePairBody;
 import GUI.Header.HeaderPanel;
@@ -951,15 +953,18 @@ public class CreateGUI {
         secondUpPart.add(addressField);
 
         JButton sendButton = new JButton("Send");
-
-/*
-        sendButton.setToolTipText("Ctrl + T");
         sendButton.setEnabled(true);
-        Action sendAction = new AbstractAction("Send") {
 
+        sendButton.setBackground(Color.white);
+        sendButton.setPreferredSize(new Dimension(100, 48));
+        sendButton.setForeground(new java.awt.Color(166, 166, 166));
+        sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(indexOfRequest>=0 && indexOfRequest<savedRequests.size()) {
+//                if(e==sendAction.)
+                System.out.println("\033[0;31m"+"doing the action"+"\033[0m");
+
+                if(indexOfRequest>=0&&indexOfRequest<savedRequests.size()) {
                     System.out.println("sent");
                     //got execute the request
                     //first we set everything and then we execute it
@@ -970,54 +975,29 @@ public class CreateGUI {
                     if (((JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)).getSelectedIndex() == 0) {
                         savedRequests.get(indexOfRequest).setAuth(true);
                         //and the auth, you got take it and set it
+                        //the auth is saved
                     } else {
                         savedRequests.get(indexOfRequest).setAuth(false);
                     }
                     //the type of request
                     savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
-                    //format of body type
-                    savedRequests.get(indexOfRequest).setTypeOfData(((JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)).getSelectedIndex());
+                    if(savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.PUT)
+                            || savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.POST)
+                            || savedRequests.get(indexOfRequest).getTypeOfRequest().equals(TYPE.PATCH)) {
+                        //format of body type
+                        savedRequests.get(indexOfRequest).setTypeOfData(((JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(0)).getSelectedIndex());
+                        //and the info of the data has already been set
+                    }
+                    //should give a name to the output file container
+                    savedRequests.get(indexOfRequest).setNameOutPutContainer(Command.getNameOfOutputFile());
+                    //the next statement can take a while so should be done inside the swing worker
                     Executer methodExecuter = new Executer( savedRequests.get(indexOfRequest) );
                 }
                 updateFrame();
-            }
 
-        };
 
-        sendAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control T"));
-        saveButton.setAction(sendAction);
-        saveButton.getInputMap(WHEN_IN_FOCUSED_WINDOW).put( (KeyStroke)sendAction.getValue(Action.ACCELERATOR_KEY),"myAction");
-
-        saveButton.setBackground(Color.white);
-        saveButton.setPreferredSize(new Dimension(100, 48));
-        saveButton.setForeground(new java.awt.Color(166, 166, 166));
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(indexOfRequest>=0&&indexOfRequest<savedRequests.size()) {
-                    savedRequests.get(indexOfRequest).setSaved(true);
-                    savedRequests.get(indexOfRequest).setUrl(addressField.getText());
-                    if (((JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(1)).getSelectedIndex() == 0) {
-                        savedRequests.get(indexOfRequest).setAuth(true);
-                    } else {
-                        savedRequests.get(indexOfRequest).setAuth(false);
-                    }
-                    savedRequests.get(indexOfRequest).setTypeOfRequest(method.getSelectedIndex());
-                    //format of body
-                    savedRequests.get(indexOfRequest).setTypeOfData((  (JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(0) ).getSelectedIndex());
-
-                }
-                updateFrame();
             }
         });
-
-        saveButton.getActionMap().put("myAction", sendAction);
-
-*/
-
-        sendButton.setBackground(Color.white);
-        sendButton.setPreferredSize(new Dimension(100, 48));
-        sendButton.setForeground(new java.awt.Color(166, 166, 166));
 
         secondUpPart.add(sendButton);
 
@@ -1117,7 +1097,6 @@ public class CreateGUI {
         thirdUpPart.setMaximumSize(new Dimension(200, 60));
         thirdUpPart.setBounds(new Rectangle(200, 60));
         thirdUpPart.setBorder(BorderFactory.createLineBorder(new java.awt.Color(218, 218, 218)));
-
 
         //badan bayad time, hajmesh va code status esh ro bedast biyari
 

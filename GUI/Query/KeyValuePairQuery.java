@@ -54,7 +54,7 @@ public class KeyValuePairQuery extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (nameTextField.getText().equals(" New Name")) {
-                    nameTextField.setText(" ");
+                    nameTextField.setText("");
                 }
                 System.out.println("index of this ="+params.indexOf(thisJPanel)+"  and the size of params="+params.size());
                 if (params.indexOf(thisJPanel) == params.size()-1) {
@@ -89,7 +89,7 @@ public class KeyValuePairQuery extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (valueTextField.getText().equals("New Value")) {
-                    valueTextField.setText(" ");
+                    valueTextField.setText("");
                     System.out.println("clicked on the value");
                 }
                 if (params.indexOf(thisJPanel) == params.size()-1) {
@@ -254,7 +254,7 @@ public class KeyValuePairQuery extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (nameTextField.getText().equals(" New Name")) {
-                    nameTextField.setText(" ");
+                    nameTextField.setText("");
                 }
                 System.out.println("index of this ="+params.indexOf(thisJPanel)+"  and the size of params="+params.size());
                 if (params.indexOf(thisJPanel) == params.size()-1) {
@@ -294,7 +294,7 @@ public class KeyValuePairQuery extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (valueTextField.getText().equals("New Value")) {
-                    valueTextField.setText(" ");
+                    valueTextField.setText("");
                 }
                 if (params.indexOf(thisJPanel) == params.size()-1) {
                     GridBagConstraints newGridConstraints = new GridBagConstraints();
