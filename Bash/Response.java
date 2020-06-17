@@ -64,10 +64,16 @@ public class Response implements Serializable {
     }
 
     public String[][] getStandardFormHeaders() {
+        if(standardFormHeaders==null){
+            String[][] str ={{"",""}};
+            standardFormHeaders = str;
+        }
         return standardFormHeaders;
     }
 
     public void setStandardFormHeaders(String[][] standardFormHeaders) {
+        this.responseHeaders=null;
+        this.responseHeader=null;
         this.standardFormHeaders = standardFormHeaders;
     }
 

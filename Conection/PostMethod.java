@@ -75,6 +75,7 @@ public class  PostMethod {
         try {
             if(postRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
                 postRequest.setResponse(requestResponse);
+                System.out.println();
                 MultiPartPost.formData(postRequest, outPutFile, followRedirect, showresponseHeaders);
                 return;
             }
@@ -104,7 +105,6 @@ public class  PostMethod {
                 }
                 httpPost = new HttpPost(builder.build());
                 if (queryParams != null) {
-                    System.out.println("setting params");
                     httpPost.setParams(queryParams);
                 }
             } else {

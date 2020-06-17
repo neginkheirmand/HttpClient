@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public class BodyMessage extends JPanel {
     //this class is meant to handle the body message in case there is any
     //can handle multipart form data and form url encoded
-    ArrayList<KeyValuePairBody> bodyData = new ArrayList<>();
+    private ArrayList<KeyValuePairBody> bodyData = new ArrayList<>();
 
-    Request request = null;
+    private Request request = null;
 
     public BodyMessage(Request request) {
         super();
@@ -29,20 +29,21 @@ public class BodyMessage extends JPanel {
 
         try {
 
-        if (request.getFormDataInfo() == null || ((ArrayList<String[]>) request.getFormDataInfo()).size() == 0) {
-            //create a new one
-            createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true);
-        } else {
-            //load the existing ones
-            for (int i = 0; i < ((ArrayList<String[]>) request.getFormDataInfo()).size(); i++) {
-                if (((ArrayList<String[]>) request.getFormDataInfo()).get(i)[2].equals("true")) {
-                    createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[0], ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[1], true);
-                } else {
-                    createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[0], ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[1], false);
+            if (request.getFormDataInfo() == null || ((ArrayList<String[]>) request.getFormDataInfo()).size() == 0) {
+                //create a new one
+                bodyData= new ArrayList<>();
+                createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true);
+            } else {
+                //load the existing ones
+                for (int i = 0; i < ((ArrayList<String[]>) request.getFormDataInfo()).size(); i++) {
+                    if (((ArrayList<String[]>) request.getFormDataInfo()).get(i)[2].equals("true")) {
+                        createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[0], ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[1], true);
+                    } else {
+                        createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[0], ((ArrayList<String[]>) request.getFormDataInfo()).get(i)[1], false);
+                    }
                 }
+                createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true);
             }
-            createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true);
-        }
         } catch (java.lang.ClassCastException exception) {
             request.setFormDataInfo(new ArrayList<String[]>());
             createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true);
@@ -52,7 +53,7 @@ public class BodyMessage extends JPanel {
     public void createNewKeyValue(CreateGUI gui, Color colorOfThemeBackground2, Color colorOfThemeBackground1, String colorOfThemeForground, String body, String data, boolean isEnabled) {
           KeyValuePairBody newPair = new KeyValuePairBody(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, body, data, isEnabled, this);
 
-        //ading to the panel
+        //adding to the panel
         GridBagConstraints constraints1 = new GridBagConstraints();
         constraints1.gridy = bodyData.indexOf(newPair);
         constraints1.gridx = 0;

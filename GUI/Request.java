@@ -203,9 +203,18 @@ public class Request implements java.io.Serializable {
 
         if(this.typeOfData.equals(MESSAGEBODY_TYPE.JSON) && MESSAGEBODY_TYPE.getFormByIndex(indexOfFormat).equals(MESSAGEBODY_TYPE.BINARY)){
             formDataInfo = "";
+            System.out.println(1);
         }else if(this.typeOfData.equals(MESSAGEBODY_TYPE.BINARY) && MESSAGEBODY_TYPE.getFormByIndex(indexOfFormat).equals(MESSAGEBODY_TYPE.JSON)){
             formDataInfo = "";
+            System.out.println(2);
+        }else if(this.typeOfData.equals(MESSAGEBODY_TYPE.MULTIPART_FORM) && MESSAGEBODY_TYPE.getFormByIndex(indexOfFormat).equals(MESSAGEBODY_TYPE.FORM_URL)){
+            formDataInfo = new ArrayList<String[]>();
+            System.out.println(3);
+        }else if(this.typeOfData.equals(MESSAGEBODY_TYPE.FORM_URL) && MESSAGEBODY_TYPE.getFormByIndex(indexOfFormat).equals(MESSAGEBODY_TYPE.MULTIPART_FORM)){
+            formDataInfo = new ArrayList<String[]>();
+            System.out.println(4);
         }
+
 
         this.typeOfData = MESSAGEBODY_TYPE.getFormByIndex(indexOfFormat) ;
 //

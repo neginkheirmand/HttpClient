@@ -38,10 +38,9 @@ public class HeaderPanel extends JPanel{
         if(request.getHeaderInfo()==null || request.getHeaderInfo().size() == 0){
             createHeaderTab( headerConstraints, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, gui, null, null, true);
         }else {
-            System.out.println("has some headers");
             ArrayList<String[]> headers = request.getHeaderInfo();
             for (int i = 0; i < headers.size(); i++) {
-                System.out.println("h= "+headers.get(i)[0]+" v="+headers.get(i)[1]);
+//                System.out.println("h= "+headers.get(i)[0]+" v="+headers.get(i)[1]);
                 headerConstraints.gridy=i;
                 if (headers.get(i)[2].equals("true")) {
                     createHeaderTab( headerConstraints, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, gui, headers.get(i)[0], headers.get(i)[1], true);

@@ -118,29 +118,31 @@ public class MultiPartPut {
 
             System.out.println();
             Response requestResponse = new Response(null, "", true, "", 0);
-            if (outPutFile == null || outPutFile.length() == 0) {
+            if(outPutFile==null || outPutFile.length()==0) {
                 requestResponse.setOutputContainer(false);
-            } else {
+            }else{
                 requestResponse.setOutputContainer(true);
             }
+
             int status = connection.getResponseCode();
             System.out.println("PUT Response Status::  " + status);
+            System.out.println("Status Setled:  "+status);
             requestResponse.setStatusCode(status);
             requestResponse.setTimeTaken(end - start);
-
+            System.out.println("the time settled : "+(end-start));
             Long sizeOfContent = connection.getContentLength()+ 0L;
             if(sizeOfContent==-1L){
                 sizeOfContent=0L;
             }
             requestResponse.setContentSize(sizeOfContent);
-
+            System.out.println("the size of content settled. is : "+sizeOfContent);
 
 
             //-i option
             if (showresponseHeaders) {
                 Map<String, List<String>> map = connection.getHeaderFields();
                 requestResponse.setResponseHeader(map);
-
+                System.out.println("The headers settled");
                 for (String key : map.keySet()) {
                     System.out.println(key + ": ");
 
@@ -152,6 +154,10 @@ public class MultiPartPut {
                 }
             }
 
+            if(result==null){
+                System.out.println("the output body is null");
+
+            }
             requestResponse.setOutput(result);
             if (outPutFile == null || outPutFile.length() == 0) {
 

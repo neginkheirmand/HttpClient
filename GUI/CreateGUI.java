@@ -74,6 +74,7 @@ public class CreateGUI {
     //for fixing the message body
     private String jsonContainer ="";
     private String pathContainer = "";
+    private boolean wrongRequest = false;
     private int[] indexOfSearched = null;
     private ArrayList<KeyValuePairBody> bodyData = new ArrayList<>();
     private String filterSearched = "Filter";
@@ -871,7 +872,7 @@ public class CreateGUI {
                     exe.execute();
 //                    Executer methodExecuter = new Executer( savedRequests.get(indexOfRequest) );
                 }
-                updateFrame();
+//                updateFrame();
 
 
             }
@@ -1201,6 +1202,7 @@ public class CreateGUI {
             if(isIndexOfRequest(i)){
                 if(colorOfThemeForground.equals(purple)) {
                     protoTypeButton.setBackground(new Color(149, 119, 161));
+                    protoTypeButton.setForeground(colorOfThemeBackground2);
                 }else{
                     protoTypeButton.setBackground(new Color(104, 171, 155));
                 }
@@ -1212,6 +1214,7 @@ public class CreateGUI {
 
         }
     }
+
 
     private boolean isIndexOfRequest(int i){
         if(indexOfSearched==null){
@@ -1305,11 +1308,6 @@ public class CreateGUI {
         }else{
             dataType.setBackground(new java.awt.Color(93, 93, 86));
         }
-//        if(colorOfThemeForground.equals(purple)) {
-//            dataType.setForeground(new java.awt.Color(127, 113, 255));
-//        }else{
-//            dataType.setForeground(new java.awt.Color(59, 192, 255));
-//        }
         dataType.setForeground(Color.WHITE);
         dataType.setRenderer(renderer);
         dataType.addActionListener(new ActionListener() {
@@ -1318,6 +1316,9 @@ public class CreateGUI {
                 if(indexOfRequest<savedRequests.size() && indexOfRequest>-1){
                     //ba method payin faghat type body ro save mikonim
                     savedRequests.get(indexOfRequest).setTypeOfBody(MESSAGEBODY_TYPE.getFormByIndex(dataType.getSelectedIndex()));
+//                    if(savedRequests.get(indexOfRequest).getFormDataInfo().getClass().equals(java.util.ArrayList.class)){
+//                        System.out.println("size of arraylist is "+((ArrayList<String[]>)savedRequests.get(indexOfRequest).getFormDataInfo()).size());
+//                    }
                 }
                 //now we are sure we have the type of the body message set correctly
                 createBodyTab(body, dataType.getSelectedIndex(), timesBodyTypeComboBoxChanged);
@@ -1325,6 +1326,7 @@ public class CreateGUI {
                 mainFrame.revalidate();
                 mainFrame.repaint();
                 mainFrame.pack();
+//                updateFrame();
             }
         });
         if( indexOfRequest>-1 && indexOfRequest<savedRequests.size() ) {
@@ -1760,9 +1762,7 @@ public class CreateGUI {
      * @param body the in which the components are added at
      */
     private void createFormData(JPanel body /*, GridBagConstraints constraints*/, String name, String value, boolean isEnabled){
-
         ((BodyMessage)body).createBodyMessage(this, colorOfThemeBackground1, colorOfThemeBackground2, colorOfThemeForground);
-
     }
 
     /**
@@ -2048,6 +2048,12 @@ public class CreateGUI {
             return;
         }
         if (savedRequests.get(indexOfRequest).getResponse() == null) {
+            if(wrongRequest){
+                JLabel empty = new JLabel("Wrong Request");
+                empty.setForeground(Color.RED);
+                preview.add(empty);
+                return;
+            }
             JLabel empty = new JLabel("waiting for response");
             preview.add(empty);
             return;
@@ -2136,6 +2142,7 @@ public class CreateGUI {
         //first we take in the information to be shown
         String[][] nameValueInfo = savedRequests.get(indexOfRequest).getResponse().getStandardFormHeaders();
 
+
         //better if the Header panel has GridBagLayout as its Layout Manager
 
         //creating the GridBagConstraints
@@ -2177,6 +2184,9 @@ public class CreateGUI {
         for (int i = 0; i < nameValueInfo.length; i++) {
             String nameOfField = getStringOfField(nameValueInfo[i][0], 35);
 
+            if(nameOfField.length()==0 || getStringOfField(nameValueInfo[i][1], 35).length()==0){
+                continue;
+            }
             //constraints JTextArea aval
             int numRows = ( (nameValueInfo[i][0] . length())/35)+1;
             constraints.insets = new Insets(5, 10, 5, 5);
@@ -2202,6 +2212,7 @@ public class CreateGUI {
             constraints.insets = new Insets(5, 5, 5, 10);
             constraints.gridx = 1;
             String valueOfField = getStringOfField(nameValueInfo[i][1], 35);
+
             JTextArea valueTextArea = new JTextArea(valueOfField, numRows, 1);
             valueTextArea.setBorder(BorderFactory.createLineBorder( colorOfThemeBackground2 ));
             if(colorOfThemeBackground2.equals(light2)){
@@ -2263,6 +2274,9 @@ public class CreateGUI {
      */
     private String getStringOfField(String input, int size) {
         String newString = "";
+        if(input==null){
+            return newString;
+        }
         for (int i = 0, j = 0; i < input.length(); i++, j++) {
             newString += input.charAt(i);
             if (j == size) {
@@ -2413,20 +2427,13 @@ public class CreateGUI {
 
          @Override
          protected void done() {
-             System.out.println( "\033[0;36m"+"done");
-             System.out.println("gonna print the info of the response:");
-             Response response =request.getResponse();
-             System.out.println("status : "+response.getStatusCode());
-             System.out.println("time taken : "+response.getTimeTaken());
-
-             for(int i=0; i<response.getStandardFormHeaders().length; i++) {
-                 System.out.println(response.getStandardFormHeaders()[0]+" : "+response.getStandardFormHeaders()[1]);
-             }
-
-             System.out.println("outPutFile path"+ response.getPathOutputFile());
-             System.out.println("has outPut"+ response.isOutputContainer());
-             System.out.println("out put"+ response.getOutput());
+            if(request.getResponse()==null){
+                wrongRequest = true;
+            }
+            Response response = request.getResponse();
+             System.out.println();
              gui.updateFrame();
+             wrongRequest = true;
          }
      }
 

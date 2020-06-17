@@ -78,13 +78,14 @@ public class PutMethod {
             return;
         }
 
+        if(putRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
+            MultiPartPut multiPartPut = new MultiPartPut(putRequest);
+            multiPartPut.multipartPutRequest(outPutFile, followRedirect, showresponseHeaders);
+            return;
+        }
+
         try {
 
-            if(putRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
-                MultiPartPut multiPartPut = new MultiPartPut(putRequest);
-                multiPartPut.multipartPutRequest(outPutFile, followRedirect, showresponseHeaders);
-                return;
-            }
 
             //Create an HttpGet object
             HttpPut httpPut;
@@ -180,11 +181,6 @@ public class PutMethod {
             Long time_taken = end - start;
             requestResponse.setContentSize(content_lengh);
             requestResponse.setTimeTaken(time_taken);
-
-
-
-
-
 //            /*
 
             try {

@@ -26,7 +26,7 @@ public class KeyValuePairBody extends JPanel {
         //adding to the arraylist
         body.getBodyData().add(this);
 
-        JPanel newKeyValuePair = this;
+        KeyValuePairBody newKeyValuePair = this;
         //newKeyValuePair.setPreferredSize(new Dimension());
         newKeyValuePair.setLayout(new FlowLayout());
         newKeyValuePair.setBackground(colorOfThemeBackground2);
@@ -123,7 +123,9 @@ public class KeyValuePairBody extends JPanel {
                 //remove component from the array list
                 body.getBodyData().remove(newKeyValuePair);
 
-                if(body.getBodyData().indexOf(newKeyValuePair)== body.getBodyData().size()-1){
+                System.out.println("index of this"+body.getBodyData().indexOf(newKeyValuePair));
+                System.out.println("last index of the array list"+(body.getBodyData().size()-1));
+                if(body.getBodyData().indexOf(newKeyValuePair)== body.getBodyData().size()-1 || body.getBodyData().size()==0 ){
                     body.createNewKeyValue(gui, colorOfThemeBackground2, colorOfThemeBackground1, colorOfThemeForground, null, null, true);
                 }
                 body.setBodyToRequest();

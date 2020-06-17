@@ -1,0 +1,1 @@
+{"status":"ok","message":"Thank you 5 times!. :)","query":{"queryParam1":"valueParam1"},"requestHeaders":{"host":"localhost:3000","connection":"close","newheader1":"NewValue1","newheader2":"NewValue2","authorization":"token pass","user-agent":"Apache-HttpClient/4.5.12 (Java/11.0.6)","accept-encoding":"gzip,deflate"}}

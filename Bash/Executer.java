@@ -58,7 +58,6 @@ public class Executer {
      */
     public Executer(Request request){
         System.out.println("url : "+request.getUrl());
-
         if(request==null){
             System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Problem with the request, try again");
             return;
@@ -80,7 +79,6 @@ public class Executer {
             System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Problem with the request, try again");
             return;
         }
-
         transformHeadersToStringArrays(request.getResponse());
     }
 
