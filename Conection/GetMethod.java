@@ -112,7 +112,6 @@ public class GetMethod {
             requestResponse.setStatusCode(httpResponse.getStatusLine().getStatusCode());
             Long content_lengh = httpResponse.getEntity().getContentLength();
             Long time_taken = end - start;
-            System.out.println("The size in the method class is : "+content_lengh);
             requestResponse.setContentSize(content_lengh);
             requestResponse.setTimeTaken(time_taken);
 

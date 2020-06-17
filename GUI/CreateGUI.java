@@ -415,6 +415,22 @@ public class CreateGUI {
         /*
          menuItems of the Help menu
          */
+        JMenuItem about = new JMenuItem("about");
+        about.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createHelpPanel(0);
+            }
+        });
+        JMenuItem helpItem = new JMenuItem("Help");
+        helpItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createHelpPanel(1);
+            }
+        });
+        help.add(about);
+        help.add(helpItem);
         //adding the menus created to the menu bar
         menuBarOfApplication.add(application);
         menuBarOfApplication.add(view);
@@ -425,6 +441,101 @@ public class CreateGUI {
 
     }
 
+
+    public void createHelpPanel(int indexOption) {
+
+        JFrame infoFrame = new JFrame("Information");
+        infoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        infoFrame.setLocation(400, 250);
+//        optionFrame.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width/2, Toolkit.getDefaultToolkit().getScreenSize().height/2);
+        infoFrame.setVisible(true);
+        infoFrame.setIconImage(Toolkit.getDefaultToolkit().getImage((new File(".").getAbsolutePath()) + "\\src\\GUI\\resource" + colorOfThemeForground + "\\settings-icon.png"));
+        infoFrame.setPreferredSize(new Dimension(1000, 350));
+        Color colorOfBackGround;
+        if (colorOfThemeForground.equals(purple)) {
+            colorOfBackGround = new java.awt.Color(174, 146, 255);
+        } else {
+            colorOfBackGround = new java.awt.Color(151, 255, 250);
+        }
+        infoFrame.setBackground(colorOfBackGround);
+
+        JTabbedPane optionTabs = new JTabbedPane();
+        optionTabs.setVisible(true);
+
+        JPanel about = new JPanel();
+        about.setPreferredSize(new Dimension(400, 300));
+        about.setBackground(colorOfBackGround);
+
+        Color secondColor;
+        if (colorOfThemeForground.equals(purple)) {
+            secondColor = new java.awt.Color(67, 51, 146);
+        } else {
+            secondColor = new java.awt.Color(48, 116, 146);
+        }
+        about.setLayout (new BoxLayout (about, BoxLayout.Y_AXIS));
+
+        JLabel infoOfDev1 = new JLabel("developer: Negin Kheirmand", JLabel.CENTER);
+        JLabel infoOfDev2 = new JLabel("   Email: neginkheirmand@aut.ac.ir");
+        JLabel infoOfDev3 = new JLabel("   Student ID: 9831023");
+        JLabel infoOfDev4 = new JLabel("Version: 2020.6.10");
+        infoOfDev1.setFont(new Font("Serif", Font.BOLD, 20));
+        infoOfDev2.setFont(new Font("Serif", Font.BOLD, 20));
+        infoOfDev3.setFont(new Font("Serif", Font.BOLD, 20));
+        infoOfDev4.setFont(new Font("Serif", Font.BOLD, 20));
+
+        about.add(infoOfDev1);
+        about.add(infoOfDev2);
+        about.add(infoOfDev3);
+        about.add(infoOfDev4);
+        optionTabs.add("About", about);
+
+
+        JPanel helpPanel = new JPanel();
+        helpPanel.setBackground(colorOfBackGround);
+        helpPanel.setLayout (new BoxLayout (helpPanel, BoxLayout.Y_AXIS));
+        JLabel helpInfo1 = new JLabel("Coffee-mania -this program- is an API(application programming interface) development tool which helps to build, test and modify APIs.");
+        JLabel helpInfo2 = new JLabel(" It has the ability to make various types of HTTP requests(GET, POST, PUT, PATCH, DELET, HEAD, OPTION) with supporting features like");
+        JLabel helpInfo3 = new JLabel("authorization, query parameters, different types of body messages and a lot more.");
+        JLabel helpInfo4 = new JLabel("Turorial:");
+        JLabel helpInfo5 = new JLabel("1) Create a request by clicking in the Plus button in the left-top corner and choosing the \"Create new Request\" option.");
+        JLabel helpInfo6 = new JLabel("2) Chose the type of request in the Combo Box allocated in top of the window in the middle panel");
+        JLabel helpInfo7 = new JLabel("3) Enter the url to which you want to send a Request.");
+        JLabel helpInfo8 = new JLabel("4) If you want the request to be saved click in the save button.");
+        JLabel helpInfo9 = new JLabel("5) Set the features that you want in the different tabs of the middle panel.");
+        JLabel helpInfo10 = new JLabel("6) Click the \"Send\" Button allocated in the upper middle panel when you are done.");
+        JLabel helpInfo11 = new JLabel("7) The response and its info will be shown in the right panel.");
+        JLabel helpInfo12 = new JLabel("8) Enjoy the program:)");
+        helpInfo1.setFont(new Font("Serif", Font.BOLD, 15));
+        helpInfo2.setFont(new Font("Serif", Font.BOLD, 15));
+        helpInfo3.setFont(new Font("Serif", Font.BOLD, 15));
+        helpInfo4.setFont(new Font("Serif", Font.BOLD, 15));
+        helpInfo5.setFont(new Font("Serif", Font.BOLD, 15));
+        helpInfo6.setFont(new Font("Serif", Font.BOLD, 15));
+        helpInfo7.setFont(new Font("Serif", Font.BOLD, 15));
+        helpInfo8.setFont(new Font("Serif", Font.BOLD, 15));
+        helpInfo9.setFont(new Font("Serif", Font.BOLD, 15));
+        helpInfo10.setFont(new Font("Serif", Font.BOLD, 15));
+        helpInfo11.setFont(new Font("Serif", Font.BOLD, 15));
+        helpInfo12.setFont(new Font("Serif", Font.BOLD, 15));
+
+        helpPanel.add(helpInfo1);
+        helpPanel.add(helpInfo2);
+        helpPanel.add(helpInfo3);
+        helpPanel.add(helpInfo4);
+        helpPanel.add(helpInfo5);
+        helpPanel.add(helpInfo6);
+        helpPanel.add(helpInfo7);
+        helpPanel.add(helpInfo8);
+        helpPanel.add(helpInfo9);
+        helpPanel.add(helpInfo10);
+        helpPanel.add(helpInfo11);
+        helpPanel.add(helpInfo12);
+
+        optionTabs.add("Help", new JScrollPane(helpPanel));
+        infoFrame.add(optionTabs, BorderLayout.CENTER);
+        optionTabs.setSelectedIndex(indexOption);
+        infoFrame.pack();
+    }
     /**
      * this method is called so the Menu bar has an Option item on it
      */
@@ -2135,6 +2246,12 @@ public class CreateGUI {
             return;
         }
         if(savedRequests.get(indexOfRequest).getResponse()==null){
+            if(wrongRequest){
+                JLabel empty = new JLabel("Wrong Request");
+                empty.setForeground(Color.RED);
+                header.add(empty);
+                return;
+            }
             JLabel empty = new JLabel("Waiting for response form the server");
             header.add(empty);
             return;
