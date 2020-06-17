@@ -2,6 +2,7 @@ package GUI;
 
 import Bash.Command;
 import Bash.Executer;
+import Bash.Response;
 import GUI.BodyMessage.BodyMessage;
 import GUI.BodyMessage.KeyValuePairBody;
 import GUI.Header.HeaderPanel;
@@ -14,8 +15,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 
 import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
 import static javax.swing.JOptionPane.OK_OPTION;
@@ -70,8 +74,9 @@ public class CreateGUI {
     //for fixing the message body
     private String jsonContainer ="";
     private String pathContainer = "";
+    private int[] indexOfSearched = null;
     private ArrayList<KeyValuePairBody> bodyData = new ArrayList<>();
-
+    private String filterSearched = "Filter";
 
     /**
      * the constructor of the class, here the frame is created and each one of its characteristics will be created by calling other methods
@@ -148,14 +153,22 @@ public class CreateGUI {
         mainFrame.setMinimumSize(new Dimension(1600, 650));
         mainFrame.setMaximumSize(new Dimension(1520, 1080));
         mainFrame.setLocationRelativeTo(null);
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         mainFrame.setVisible(true);
         mainFrame.setBackground(new java.awt.Color(128,128, 128));
         mainFrame.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                saveInfoOfthisRun();
-                System.exit(0);
+
+                if (checkBoxSystemTray) {
+                    saveInfoOfthisRun();
+                    goToSystemTray();
+                } else {
+                    saveInfoOfthisRun();
+                    mainFrame.dispose();
+                    System.exit(0);
+                }
             }
         });
         createMenuBar();
@@ -168,16 +181,17 @@ public class CreateGUI {
     }
 
 
-    public void paintFrame(){
-        createInsomniaDisplayArea();
-        createRequestClasifier();
+    public void paintFrame() {
+        if (sideBar) {
+            createInsomniaDisplayArea();
+            createRequestClasifier();
+        }
         createRequestInfoPanel();
         createHistorialRequest();
         createRequestInfo();
         createRequestHistoryPanel();
 
         createSystemTray();
-
 
     }
 
@@ -232,7 +246,6 @@ public class CreateGUI {
                     try {
                         tray.add(trayIcon);
                         mainFrame.setVisible(false);
-                        System.out.println("added to SystemTray");
                     } catch (AWTException ex) {
                         System.out.println("unable to add to tray");
                     }
@@ -242,7 +255,6 @@ public class CreateGUI {
                     try{
                         tray.add(trayIcon);
                         mainFrame.setVisible(false);
-                        System.out.println("added to SystemTray");
                     }catch(AWTException ex){
                         System.out.println("unable to add to system tray");
                     }
@@ -250,12 +262,10 @@ public class CreateGUI {
                 if(e.getNewState()==JFrame.MAXIMIZED_BOTH){
                     tray.remove(trayIcon);
                     mainFrame.setVisible(true);
-                    System.out.println("Tray icon removed1");
                 }
                 if(e.getNewState()==JFrame.NORMAL){
                     tray.remove(trayIcon);
                     mainFrame.setVisible(true);
-                    System.out.println("Tray icon removed2");
                 }
             }
         });
@@ -320,15 +330,9 @@ public class CreateGUI {
         JMenuBar menuBarOfApplication = new JMenuBar();
         //---------------
         JMenu application = new JMenu("Application");
-        application.setMnemonic(KeyEvent.VK_A);
-        JMenu edit = new JMenu("Edit");
-        edit.setMnemonic(KeyEvent.VK_E);
+        application.setMnemonic(KeyEvent.VK_L);
         JMenu view = new JMenu("View");
         view.setMnemonic(KeyEvent.VK_V);
-        JMenu window = new JMenu("Window");
-        window.setMnemonic(KeyEvent.VK_W);
-        JMenu tools = new JMenu("Tools");
-        tools.setMnemonic(KeyEvent.VK_T);
         JMenu help = new JMenu("Help");
         help.setMnemonic(KeyEvent.VK_H);
         //--------------
@@ -346,53 +350,9 @@ public class CreateGUI {
             }
         });
         application.add(options);
-
-        JMenuItem preferences = new JMenuItem("Preferences");
-        preferences.setMnemonic((KeyEvent.VK_P));
-        preferences.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("choose preferences from the Application of the menubar");
-            }
-        });
-        application.add(preferences);
-
-        JMenuItem changelog = new JMenuItem("Changelog");
-        changelog.setMnemonic(KeyEvent.VK_C);
-        changelog.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("choose change log from the Application of the menubar");
-            }
-        });
-        application.add(changelog);
-
         application.addSeparator();
 
-        JMenuItem hideInsomnia = new JMenuItem("Hide Insomnia");
-        hideInsomnia.setMnemonic(KeyEvent.VK_H);
-        hideInsomnia.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("choose hide insomnia from the Application of the menubar");
-            }
-        });
-        application.add(hideInsomnia);
-
-        JMenuItem hideOthers = new JMenuItem("HideOthers");
-        hideOthers.setMnemonic(KeyEvent.VK_I);
-        hideOthers.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("choose hide others from the Application of the menubar");
-            }
-        });
-        application.add(hideOthers);
-
-        application.addSeparator();
-
-        icons[0]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\log-off-icon.png");
-        JMenuItem quit = new JMenuItem("Quit", icons[0]);
+        JMenuItem quit = new JMenuItem("Exit", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\log-off-icon.png"));
         quit.setMnemonic(KeyEvent.VK_Q);
         quit.setToolTipText("quit the application");
         quit.addActionListener(new ActionListener() {
@@ -412,69 +372,6 @@ public class CreateGUI {
         /*
             menuItems of the Edit menu
          */
-        icons[1]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\undo-icon.png");
-        JMenuItem undo = new JMenuItem("Undo", icons[1]);
-        undo.setMnemonic((KeyEvent.VK_U));
-        undo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("choose undo from the Edit of the menubar");
-            }
-        });
-        edit.add(undo);
-
-        icons[2]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\redo-icon.png");
-        JMenuItem redo = new JMenuItem("redo", icons[2]);
-        redo.setMnemonic(KeyEvent.VK_R);
-        redo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("choose redo from the Edit of the menubar");
-            }
-        });
-        edit.add(redo);
-
-        edit.addSeparator();
-
-        icons[3]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\cut-icon.png");
-        JMenuItem cut = new JMenuItem("Cut", icons[3]);
-        cut.setMnemonic(KeyEvent.VK_C);
-        cut.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("choose cut insomnia from the edit menubar");
-            }
-        });
-        edit.add(cut);
-
-        icons[4]= new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\copy-icon.png");
-        JMenuItem copy = new JMenuItem("Copy",icons[4]);
-        copy.setMnemonic(KeyEvent.VK_O);
-        copy.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("choose copy insomnia from the edit menubar");
-            }
-        });
-        edit.add(copy);
-        JMenuItem paste = new JMenuItem("Paste");
-        paste.setMnemonic(KeyEvent.VK_P);
-        paste.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("choose paste insomnia from the edit menubar");
-            }
-        });
-        edit.add(paste);
-        JMenuItem selectAll = new JMenuItem("Select All");
-        selectAll.setMnemonic(KeyEvent.VK_S);
-        selectAll.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("choose Select All insomnia from the edit menubar");
-            }
-        });
-        edit.add(selectAll);
 
         /*
           menuItems of the View menu
@@ -517,20 +414,9 @@ public class CreateGUI {
         /*
          menuItems of the Help menu
          */
-        JMenuItem keyBoardShortCuts = new JMenuItem("KeyBoard Short Cuts");
-        keyBoardShortCuts.setMnemonic(KeyEvent.VK_K);
-        help.add(keyBoardShortCuts);
-
-        JMenuItem about = new JMenuItem("About");
-        about.setMnemonic(KeyEvent.VK_O);
-        help.add(about);
-
         //adding the menus created to the menu bar
         menuBarOfApplication.add(application);
-        menuBarOfApplication.add(edit);
         menuBarOfApplication.add(view);
-        menuBarOfApplication.add(window);
-        menuBarOfApplication.add(tools);
         menuBarOfApplication.add(help);
 
         //adding the menu bar created to the frame of the application
@@ -691,11 +577,6 @@ public class CreateGUI {
                     colorOfThemeBackground2 = dark2;
                     updateFrame();
 
-                    /*
-                    saveInfoOfthisRun();
-                    mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
-
-                     */
                     return;
                 }else{
                     return;
@@ -734,10 +615,6 @@ public class CreateGUI {
                     colorOfThemeBackground1 = light1;
                     colorOfThemeBackground2 = light2;
                     updateFrame();
-                    /*
-                    saveInfoOfthisRun();
-                    mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
-                    */
                 }else{
                     return;
                 }
@@ -776,11 +653,6 @@ public class CreateGUI {
                     colorOfThemeBackground1 = light1;
                     colorOfThemeBackground2 = light2;
                     updateFrame();
-                    /*
-                    saveInfoOfthisRun();
-                    mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
-
-                     */
                 }else{
                     return;
                 }
@@ -819,11 +691,6 @@ public class CreateGUI {
                     colorOfThemeBackground2 = dark2;
                     updateFrame();
 
-                    /*
-                    saveInfoOfthisRun();
-                    mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
-                    optionFrame.dispatchEvent(new WindowEvent(optionFrame, WindowEvent.WINDOW_CLOSING));
-                     */
                 }else{
                     return;
                 }
@@ -969,14 +836,11 @@ public class CreateGUI {
         sendButton.setBackground(Color.white);
         sendButton.setPreferredSize(new Dimension(100, 48));
         sendButton.setForeground(new java.awt.Color(166, 166, 166));
+        CreateGUI gui =this;
         sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                if(e==sendAction.)
-                System.out.println("\033[0;31m"+"doing the action"+"\033[0m");
-
                 if(indexOfRequest>=0&&indexOfRequest<savedRequests.size()) {
-                    System.out.println("sent");
                     //got execute the request
                     //first we set everything and then we execute it
                     //, , the format of data, the query, the auth, the headers
@@ -1002,7 +866,10 @@ public class CreateGUI {
                     //should give a name to the output file container
                     savedRequests.get(indexOfRequest).setNameOutPutContainer(Command.getNameOfOutputFile());
                     //the next statement can take a while so should be done inside the swing worker
-                    Executer methodExecuter = new Executer( savedRequests.get(indexOfRequest) );
+                    ExecuterSwingWorker exe = new ExecuterSwingWorker(savedRequests.get(indexOfRequest), gui);
+                    System.out.println("calling the executor");
+                    exe.execute();
+//                    Executer methodExecuter = new Executer( savedRequests.get(indexOfRequest) );
                 }
                 updateFrame();
 
@@ -1022,7 +889,6 @@ public class CreateGUI {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("saved");
                 if(indexOfRequest>=0&&indexOfRequest<savedRequests.size()) {
                     savedRequests.get(indexOfRequest).setSaved(true);
                     savedRequests.get(indexOfRequest).setUrl(addressField.getText());
@@ -1069,14 +935,6 @@ public class CreateGUI {
                     //format of body
                     savedRequests.get(indexOfRequest).setTypeOfData((  (JComboBox) insomniaPanelHandler.getFifthPanel().getTabComponentAt(0) ).getSelectedIndex());
 
-                    System.out.println("gona print the query params of this request");
-                    if(indexOfRequest!=-1 && indexOfRequest< savedRequests.size()){
-                        ArrayList<String[]> queryP = savedRequests.get(indexOfRequest).getQueryInfo();
-                        for(int i=0; i<queryP.size(); i++){
-                            //important
-                            System.out.println(i+") k="+ queryP.get(i)[0]+"v="+ queryP.get(i)[1]);
-                        }
-                    }
                 }
                 updateFrame();
             }
@@ -1141,7 +999,6 @@ public class CreateGUI {
         }else {
             //its OK
             if (savedRequests.get(indexOfRequest).getResponse() != null) {
-                System.out.println("size: "+savedRequests.get(indexOfRequest).getResponse().getContentSize());
                 contentSizeLabel = new ResponseSizeInfo(savedRequests.get(indexOfRequest).getResponse().getContentSize(), colorOfThemeBackground1);
             } else {
                 contentSizeLabel = new ResponseSizeInfo(0L, colorOfThemeBackground1);
@@ -1195,11 +1052,7 @@ public class CreateGUI {
                 createNewRequest();
             }
         });
-        JMenuItem newFolderItem = new JMenuItem("New Folder", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\newFolder-icon.png"));
-        newFolderItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
-        //in newFolderItem bayad ye action listener dashte bashe
         leftPanelPopUpMenu.add(newRequestItem);
-        leftPanelPopUpMenu.add(newFolderItem);
         //with right click in this component you will see the JPopUpMenu poping up
         historialOfRequest.setComponentPopupMenu(leftPanelPopUpMenu);
 
@@ -1240,11 +1093,37 @@ public class CreateGUI {
         upperPart.setBackground(colorOfThemeBackground2);
         upperPart.setLayout(new FlowLayout(FlowLayout.CENTER));
         //the textField part for search
-        JTextField searchField = new JTextField("Filter");
+        JTextField searchField = new JTextField(filterSearched);
         searchField.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 searchField.setText("");
+            }
+        });
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateLabel(e);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateLabel(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateLabel(e);
+            }
+
+            private void updateLabel(DocumentEvent e) {
+                filterSearched=searchField.getText();
+//                search(searchField.getText());
+//                //the int[] of indexes was updated now repaint every thing again
+//                updateFrame();
+//                //put everything again on were everything was
+//                indexOfSearched=null;
             }
         });
         searchField.setPreferredSize(new Dimension(100, 30));
@@ -1266,6 +1145,26 @@ public class CreateGUI {
             }
         });
         upperPart.add(plusButton);
+
+
+        //creating the "search Button"
+        JButton searchButton = new JButton(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\magnifier-icon.png"));
+        searchButton.setPreferredSize(new Dimension(25, 25));
+        searchButton.setBackground(colorOfThemeBackground2);
+        searchButton.setComponentPopupMenu(leftPanelPopUpMenu);
+        searchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                search(searchField.getText());
+                //the int[] of indexes was updated now repaint every thing again
+                updateFrame();
+                //put everything again on were everything was
+                indexOfSearched=null;
+            }
+        });
+        upperPart.add(searchButton);
+
+
+
         historialOfRequest.add(upperPart, constraints);
 
         constraints.gridx = 0;
@@ -1299,6 +1198,13 @@ public class CreateGUI {
                 }
             });
 
+            if(isIndexOfRequest(i)){
+                if(colorOfThemeForground.equals(purple)) {
+                    protoTypeButton.setBackground(new Color(149, 119, 161));
+                }else{
+                    protoTypeButton.setBackground(new Color(104, 171, 155));
+                }
+            }
 
             historialOfRequest.add(protoTypeButton, constraints);
             constraints.gridy += 1.0;
@@ -1307,6 +1213,36 @@ public class CreateGUI {
         }
     }
 
+    private boolean isIndexOfRequest(int i){
+        if(indexOfSearched==null){
+            return false;
+        }
+        for(int j=0; j<indexOfSearched.length; j++){
+            if(indexOfSearched[j]==i){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private void search(String nameOfRequest){
+        if(savedRequests==null || nameOfRequest.length()==0){
+            return;
+        }
+
+        ArrayList<Integer> indexes = new ArrayList<>();
+        for(int i=0; i<savedRequests.size(); i++){
+            if(savedRequests.get(i).getNameOfRequest().contains(nameOfRequest)){
+                indexes.add(i);
+            }
+        }
+        indexOfSearched = new int[indexes.size()];
+        for(int i=0; i<indexes.size(); i++){
+            indexOfSearched[i]=indexes.get(i);
+        }
+        return;
+    }
 
 
     /**
@@ -1392,7 +1328,6 @@ public class CreateGUI {
             }
         });
         if( indexOfRequest>-1 && indexOfRequest<savedRequests.size() ) {
-            System.out.println(savedRequests.get(indexOfRequest).getTypeOfData());
             if (savedRequests.get(indexOfRequest).getTypeOfData().equals(MESSAGEBODY_TYPE.FORM_URL)) {
                 dataType.setSelectedIndex(0);
             }else if(savedRequests.get(indexOfRequest).getTypeOfData().equals(MESSAGEBODY_TYPE.JSON)){
@@ -1599,7 +1534,6 @@ public class CreateGUI {
                         savedRequests.get(indexOfRequest).setFormDataInfo("");
                     }else if(obj instanceof String){
                         start = (String) obj;
-                        System.out.println(obj);
                     }else{
                         savedRequests.get(indexOfRequest).setFormDataInfo("");
                     }
@@ -1739,7 +1673,6 @@ public class CreateGUI {
             resetFile.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("file reseted");
                     resetFile.setEnabled(false);
                     resetFile.setForeground(new java.awt.Color(94, 94, 94));
                     resetFile.setFont(new Font("Serif", Font.BOLD, 20));
@@ -1771,14 +1704,11 @@ public class CreateGUI {
                     fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
                     int returnVal = fileChooser.showOpenDialog(mainFrame);
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        System.out.println("You chose to open this file: " + fileChooser.getSelectedFile().getName());
                         selectedFile.setText(fileChooser.getSelectedFile().getAbsolutePath());
                         pathContainer = selectedFile.getText();
                         if(indexOfRequest>-1 && indexOfRequest<savedRequests.size()) {
                             savedRequests.get(indexOfRequest).setFormDataInfo(fileChooser.getSelectedFile().getAbsolutePath());
                         }
-                    } else {
-                        System.out.println("didnt want to open the file");
                     }
                     if (selectedFile.getText().equals("No file selected") || selectedFile.getText().length()==0) {
                         resetFile.setEnabled(false);
@@ -1831,155 +1761,7 @@ public class CreateGUI {
      */
     private void createFormData(JPanel body /*, GridBagConstraints constraints*/, String name, String value, boolean isEnabled){
 
-/*
-        JPanel newKeyValuePair = new JPanel();
-//        newKeyValuePair.setPreferredSize(new Dimension());
-        newKeyValuePair.setLayout(new FlowLayout());
-        newKeyValuePair.setBackground(colorOfThemeBackground2);
-        //first component the 3 lines
-        JLabel _3_lines = new JLabel(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\3-purple-lines-icon.png"));
-        newKeyValuePair.add(_3_lines);
-        //then the JTextField for the Header
-        JTextField nameTextField = new JTextField("New Name");
-        if(name!=null){
-            nameTextField.setText(name);
-        }
-        nameTextField.setPreferredSize(new Dimension(150, 35));
-        nameTextField.setFont(new Font("Serif", Font.PLAIN, 15));
-        nameTextField.setForeground(colorOfThemeBackground1);
-        nameTextField.setBackground(colorOfThemeBackground2);
-        nameTextField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, colorOfThemeBackground1));
-//        boolean alreadyCreated = false;
-        nameTextField.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (nameTextField.getText().equals("New Name")) {
-                    nameTextField.setText(" ");
-                    System.out.println("clicked on the header");
-//                //and add a new Pair of Header and values
-                    GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
-                    newGridConstraints.gridy = constraints.gridy + 1;
-                    createFormData(body, newGridConstraints, null, null, true);
-                    mainFrame.revalidate();
-                    mainFrame.repaint();
-                }
-            }
-        });
-        nameTextField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                update();
-            }
-
-            public void update(){
-//                if(!nameTextField.getText().equals("New Name")){
-                    if(indexOfRequest<savedRequests.size()&&indexOfRequest>-1) {
-
-                    }
-//                }
-            }
-        });
-        newKeyValuePair.add(nameTextField);
-        //then the JTextField for the value
-        JTextField valueTextField = new JTextField("New value");
-        valueTextField.setPreferredSize(new Dimension(150, 35));
-        valueTextField.setFont(new Font("Serif", Font.PLAIN, 15));
-        valueTextField.setForeground(colorOfThemeBackground1);
-        valueTextField.setBackground(colorOfThemeBackground2);
-        valueTextField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, colorOfThemeBackground1));
-        valueTextField.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if(valueTextField.getText().equals("New value")) {
-                    valueTextField.setText(" ");
-                    System.out.println("clicked on the value");
-                    //and add a new Pair of Header and values
-                    GridBagConstraints newGridConstraints = (GridBagConstraints) (constraints.clone());
-                    newGridConstraints.gridy = constraints.gridy + 1;
-                    createFormData(body, newGridConstraints, null, null, true);
-                    mainFrame.revalidate();
-                    mainFrame.repaint();
-                }
-            }
-        });
-        valueTextField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if(!nameTextField.getText().equals("New value")){
-                    if(indexOfRequest<savedRequests.size()&&indexOfRequest>-1) {
-                        if(savedRequests.get(indexOfRequest).getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
-                            ((ArrayList<String[]>)savedRequests.get(indexOfRequest).getFormDataInfo()).get(constraints.gridy)[1]=valueTextField.getText();
-                        }
-                    }
-                }
-            }
-        });
-        newKeyValuePair.add(valueTextField);
-        //now the JCheckBox
-        JCheckBox checkBox = new JCheckBox(" ", true);
-        checkBox.setBackground(colorOfThemeBackground2);
-        checkBox.setOpaque(false);
-        checkBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(checkBox.isSelected()){
-                    ((ArrayList<String[]>)savedRequests.get(indexOfRequest).getFormDataInfo()).get(constraints.gridy)[2]="true";
-                }else{
-                    ((ArrayList<String[]>)savedRequests.get(indexOfRequest).getFormDataInfo()).get(constraints.gridy)[2]="false";
-                }
-            }
-        });
-        newKeyValuePair.add(checkBox);
-        //now the trash icon Button
-        JButton trash = new JButton(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\delete-icon1.png"));
-        trash.setBackground(colorOfThemeBackground2);
-        trash.setOpaque(false);
-        trash.setPreferredSize(new Dimension(18, 18));
-        trash.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("user clicked on the trash JButton");
-                body.remove(newKeyValuePair);
-//                if(constraints.gridy<((ArrayList<String[]>) savedRequests.get(indexOfRequest).getFormDataInfo()).size()) {
-//                    ((ArrayList<String[]>) savedRequests.get(indexOfRequest).getFormDataInfo()).remove(constraints.gridy);
-//                }
-                if (constraints.gridy == 0) {
-                    GridBagConstraints constraints1 = new GridBagConstraints();
-                    constraints1.gridy=0;
-                    constraints1.gridx=0;
-                    constraints1.weightx=0;
-                    constraints1.weighty=0;
-                    constraints1.fill=GridBagConstraints.HORIZONTAL;
-                    constraints1.anchor=GridBagConstraints.FIRST_LINE_START;
-                    createFormData(body, constraints1, null, null, true);
-                }
-                mainFrame.revalidate();
-                mainFrame.repaint();
-            }
-        });
-        newKeyValuePair.add(trash);
-        body.add(newKeyValuePair, constraints);
- */
-
         ((BodyMessage)body).createBodyMessage(this, colorOfThemeBackground1, colorOfThemeBackground2, colorOfThemeForground);
-
 
     }
 
@@ -2040,7 +1822,6 @@ public class CreateGUI {
             if(indexOfRequest>-1 && indexOfRequest <savedRequests.size()){
                 if(savedRequests.get(indexOfRequest).getAuthInfo()[1]!=null && savedRequests.get(indexOfRequest).getAuthInfo()[1].length()!=0){
                     authOfThisRequest =savedRequests.get(indexOfRequest).getAuthInfo()[1];
-                    System.out.println("auth of this request"+authBox);
                 }
             }
             JTextField tokenTextField = new JTextField(authOfThisRequest);
@@ -2080,7 +1861,6 @@ public class CreateGUI {
                         }
                         savedRequests.get(indexOfRequest).setAuth(true);
                         savedRequests.get(indexOfRequest).setAuthInfo(authInfo);
-                        System.out.println(savedRequests.get(indexOfRequest).getAuthInfo()[1]);
                     }else{
                         authBox="";
                     }
@@ -2095,8 +1875,6 @@ public class CreateGUI {
                     isEnabled =true;
                 }else if(savedRequests.get(indexOfRequest).getAuthInfo()[2]!=null && savedRequests.get(indexOfRequest).getAuthInfo()[2].equals("false")){
                     isEnabled=false;
-                }else{
-                    System.out.println("\033[0;31m"+" its else");
                 }
             }
             JCheckBox enabledCheckBox = new JCheckBox("Enabled", isEnabled);
@@ -2150,6 +1928,7 @@ public class CreateGUI {
      */
     private void createRequestHistoryPanel() {
 
+
         //the second panel down the "Insomnia" label containig the command info of requests
         JTabbedPane queryHistoryPanel = new JTabbedPane();
         queryHistoryPanel.setPreferredSize(new Dimension(200, 500));
@@ -2199,7 +1978,6 @@ public class CreateGUI {
                 mainFrame.revalidate();
                 mainFrame.repaint();
                 mainFrame.pack();
-                System.out.println("Visual Preview");
             }
         });
 
@@ -2223,39 +2001,13 @@ public class CreateGUI {
                 mainFrame.revalidate();
                 mainFrame.repaint();
                 mainFrame.pack();
-                System.out.println("Raw Data");
 
             }
         });
 
         group.add(rawData);
         previewModeMenu.add(rawData);
-        //-------ACTIONS
-        JMenuItem actionsSeparator = new JMenuItem("ACTIONS-------------------------------");
-        actionsSeparator.setFont(new Font("Serif", Font.PLAIN, 10));
-        actionsSeparator.setForeground(colorOfThemeBackground1);
-        actionsSeparator.setEnabled(false);
-        previewModeMenu.add(actionsSeparator);
-        //Save Raw Response
-        JMenuItem saveRawResponseMenuItem = new JMenuItem("Save Raw Response", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\save-icon.png"));
-        saveRawResponseMenuItem.setFont(new Font("Serif", Font.PLAIN, 15));
-        saveRawResponseMenuItem.setForeground(new java.awt.Color(255, 161, 20));
-        saveRawResponseMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //here we are gona have to open a new JFrame in which the user is told to select an address to save the file,
-                //but bether not to do a JChooser and just save the file to the same repository of this code
 
-                System.out.println("Save Raw Response\\still in progress");
-            }
-        });
-
-        previewModeMenu.add(saveRawResponseMenuItem);
-//save HTTP Debug
-//JMenuItem saveHTTPDebug= new JMenuItem("Save HTTP Debug", new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\bug-icon.png"));
-//saveHTTPDebug.setFont(new Font("Serif", Font.PLAIN, 15));
-//saveHTTPDebug.setForeground(new java.awt.Color(255, 0, 1));
-//previewModeMenu.add(saveHTTPDebug);
         //ading the pop up menu to the button
         previewButton.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
@@ -2289,17 +2041,68 @@ public class CreateGUI {
      */
     private void CreatePreview(JPanel preview, int typeOfPreview){
         preview.removeAll();
-        if(typeOfPreview==0){
+
+        if(indexOfRequest<0 || indexOfRequest>=savedRequests.size()){
+            JLabel empty = new JLabel("Please select a request");
+            preview.add(empty);
+            return;
+        }
+        if (savedRequests.get(indexOfRequest).getResponse() == null) {
+            JLabel empty = new JLabel("waiting for response");
+            preview.add(empty);
+            return;
+        }
+
+
+        if(typeOfPreview==0) {
             //its visual preview
+
+            //first we have to check if the response is ready or not
+            if (savedRequests.get(indexOfRequest).getResponse() == null) {
+                JLabel empty = new JLabel("waiting for response");
+                preview.add(empty);
+                return;
+            }
+
             //first we have to check its actually an image
-            //i will use of an image just to see the result
-            JLabel visualPreview = new JLabel(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\open-lock-icon1.png"));
-            preview.add(visualPreview);
+            String name = new File(savedRequests.get(indexOfRequest).getResponse().getPathOutputFile()).getName();
+            if (("" + name.charAt(name.length() - 4) + name.charAt(name.length() - 3) + name.charAt(name.length() - 2) + name.charAt(name.length() - 1)).equals(".png")) {
+                if (new File(savedRequests.get(indexOfRequest).getResponse().getPathOutputFile()).exists() && new File(savedRequests.get(indexOfRequest).getResponse().getPathOutputFile()).isFile()) {
+                    //i will use of an image just to see the result
+                    JLabel visualPreview = new JLabel(new ImageIcon(savedRequests.get(indexOfRequest).getResponse().getPathOutputFile()));
+                    preview.add(visualPreview);
+                }else{
+                    JLabel visualPreview = new JLabel("The response of the server is unreadable");
+                    preview.add(visualPreview);
+                }
+            } else {
+                JLabel empty = new JLabel("this program supports visual preview only for .png files");
+                preview.add(empty);
+                return;
+            }
         }else if(typeOfPreview==1){
-            JTextArea rawData = new JTextArea("\n1hhhhhhhhhhhhhhhhhhhhhh\n2hhhhhhhhhhhhhh\n3hhhhhhhhhh\n4hhhhhhhhhhhhhh\n4hhhhhhhhhh" +
-                    "\n4hhhhhhhhhhhhhhhhhhhhhh\n5hhhhhhhhhhhhhh\n6hhhhhhhhhh\n7hhhhhhhhhhhhhh\n8hhhhhhhhhh"+
-                    "\n4hhhhhhhhhhhhhhhhhhhhhh\n5hhhhhhhhhhhhhh\n6hhhhhhhhhh\n7hhhhhhhhhhhhhh\n8hhhhhhhhhh"+
-                    "\n8hhhhhhhhhhhhhhhhhhhhhh\n9hhhhhhhhhhhhhh\n10hhhhhhhhhh\n11hhhhhhhhhhhhhh\n12hhhhhhhhhh");
+            //its raw info
+            String fileAsString = "";
+            try {
+                InputStream is = new FileInputStream(savedRequests.get(indexOfRequest).getResponse().getPathOutputFile());
+                BufferedReader buf = new BufferedReader(new InputStreamReader(is));
+
+                String line = buf.readLine();
+                StringBuilder sb = new StringBuilder();
+
+                while (line != null) {
+                    sb.append(line).append("\n");
+                    line = buf.readLine();
+                }
+
+                fileAsString = sb.toString();
+                fileAsString = getStringOfField(fileAsString, 30);
+            }catch (FileNotFoundException excp){
+                fileAsString = "Empty Response body";
+            } catch (IOException e) {
+                System.out.println("unable to open file");
+            }
+            JTextArea rawData = new JTextArea(fileAsString);
             rawData.setEditable(false);
             rawData.setFont(new Font("Serif", Font.BOLD, 18));
             rawData.setBorder(BorderFactory.createLineBorder(colorOfThemeBackground1, 2, true));
@@ -2320,18 +2123,18 @@ public class CreateGUI {
      * @param header the panel in which the components are added at
      */
     private void createStaticHeaderTab(JPanel header) {
+        if(indexOfRequest<0 || indexOfRequest>=savedRequests.size()){
+            JLabel empty = new JLabel("Select a Request");
+            header.add(empty);
+            return;
+        }
+        if(savedRequests.get(indexOfRequest).getResponse()==null){
+            JLabel empty = new JLabel("Waiting for response form the server");
+            header.add(empty);
+            return;
+        }
         //first we take in the information to be shown
-        String[][] nameValueInfo = {
-                {"name 111111111111111111111111", "value 11111111111111111"},
-                {"name 2222222222222222222222222222222222222222222222222222222222222222222", "value 2222222222222222222222222222222222222222"},
-                {"name 3", "value 3"},
-                {"name 4444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444", "value 444444444444444444444444444444444444444444444444444444444444444444444444444"},
-                {"name 55555555555555555 55555555555555555 55555555555555555 55555555555555555", "value 55555555555555555"},
-                {"name 66666666666666666666666666 66666666666666666666666666 66666666666666666666666666 66666666666666666666666666", "value 66666666666666666666666666"},
-                {"name 77777777777777777777777777777777777777777 77777777777777777777777777777777777777777 77777777777777777777777777777777777777777", "value 77777777777777777777777777777777777777777"},
-                {"name 8888888888888888888888888888888888888", "value 8888888888888888888888888888888888888 8888888888888888888888888888888888888 8888888888888888888888888888888888888 8888888888888888888888888888888888888"},
-                {"name 9999999999999999999999999999999999 ", "value 9999999999999999999999999999999999 9999999999999999999999999999999999"}
-        };
+        String[][] nameValueInfo = savedRequests.get(indexOfRequest).getResponse().getStandardFormHeaders();
 
         //better if the Header panel has GridBagLayout as its Layout Manager
 
@@ -2372,7 +2175,7 @@ public class CreateGUI {
         header.add(value, constraints);
 
         for (int i = 0; i < nameValueInfo.length; i++) {
-            String nameOfField = getStringOfField(nameValueInfo[i][0]);
+            String nameOfField = getStringOfField(nameValueInfo[i][0], 35);
 
             //constraints JTextArea aval
             int numRows = ( (nameValueInfo[i][0] . length())/35)+1;
@@ -2398,7 +2201,7 @@ public class CreateGUI {
             numRows = ( (nameValueInfo[i][1] . length())/35)+1;
             constraints.insets = new Insets(5, 5, 5, 10);
             constraints.gridx = 1;
-            String valueOfField = getStringOfField(nameValueInfo[i][1]);
+            String valueOfField = getStringOfField(nameValueInfo[i][1], 35);
             JTextArea valueTextArea = new JTextArea(valueOfField, numRows, 1);
             valueTextArea.setBorder(BorderFactory.createLineBorder( colorOfThemeBackground2 ));
             if(colorOfThemeBackground2.equals(light2)){
@@ -2432,11 +2235,21 @@ public class CreateGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //we have to ACTUALLY SAVE THE FILE SOMEWHERE
-                System.out.println("we have to ACTUALLY SAVE THE FILE SOMEWHERE");
-                icons[24]=new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\tick-icon.png");
-                copyToClipboard.setIcon(icons[24]);
-                copyToClipboard.setText("  Copied  ");
-                System.out.println("if he does this again this JButton should turn back to copy to clipboard format");
+                if(copyToClipboard.getText().equals("  Copy to Clipboard  ")) {
+                    copyToClipboard.setIcon(new ImageIcon((new File(".").getAbsolutePath()) + "\\src\\GUI\\resource" + colorOfThemeForground + "\\tick-icon.png"));
+                    copyToClipboard.setText("  Copied  ");
+                    Clipboard cb = Toolkit.getDefaultToolkit()
+                            .getSystemClipboard();
+
+                    String clipBoardInfo = "";
+                    for(int i=0; i<nameValueInfo.length; i++){
+                        clipBoardInfo+=nameValueInfo[i][0]+": "+nameValueInfo[i][1]+"\n";
+                    }
+                    cb.setContents(new StringSelection(clipBoardInfo), null);
+                }else{
+                    copyToClipboard.setIcon(new ImageIcon((new File(".").getAbsolutePath())+"\\src\\GUI\\resource"+colorOfThemeForground+"\\copy-icon2.png"));
+                    copyToClipboard.setText("  Copy to Clipboard  ");
+                }
             }
         });
         header.add(copyToClipboard, constraints);
@@ -2448,11 +2261,11 @@ public class CreateGUI {
      * @param input the input string
      * @return the string with "\n" on it
      */
-    private String getStringOfField(String input) {
+    private String getStringOfField(String input, int size) {
         String newString = "";
         for (int i = 0, j = 0; i < input.length(); i++, j++) {
             newString += input.charAt(i);
-            if (j == 35) {
+            if (j == size) {
                 j = 0;
                 newString += "\n";
             }
@@ -2528,7 +2341,6 @@ public class CreateGUI {
         for(int i=0 ; i<savedRequests.size(); i++){
             if(savedRequests.get(i).isSaved()){
                 savedRequests2.add(savedRequests.get(i));
-//                System.out.println( i + ")" + savedRequests2.get(i).getTypeOfData() + "    " + savedRequests2.get(i).getFormDataInfo().getClass());
             }
         }
 
@@ -2561,7 +2373,7 @@ public class CreateGUI {
         return mainFrame;
     }
 
-    public void updateFrame(){
+    public void updateFrame() {
         try {
             mainFrame.remove(insomniaPanelHandler.getFirstPanel());
             mainFrame.remove(insomniaPanelHandler.getSecondPanel());
@@ -2574,10 +2386,49 @@ public class CreateGUI {
             mainFrame.revalidate();
             mainFrame.repaint();
             paintFrame();
-        }catch (NullPointerException exception){
+        } catch (NullPointerException exception) {
             System.out.println("help me");
         }
 
     }
 
-}
+
+     class ExecuterSwingWorker extends SwingWorker<Object, Object>{
+
+        Request request;
+        CreateGUI gui;
+        public ExecuterSwingWorker(Request request, CreateGUI gui){
+            this.request=request;
+            request.setResponse(null);
+            this.gui=gui;
+            gui.updateFrame();
+        }
+
+         @Override
+         protected Object doInBackground() throws Exception {
+             new Executer(request);
+             return null;
+         }
+
+
+         @Override
+         protected void done() {
+             System.out.println( "\033[0;36m"+"done");
+             System.out.println("gonna print the info of the response:");
+             Response response =request.getResponse();
+             System.out.println("status : "+response.getStatusCode());
+             System.out.println("time taken : "+response.getTimeTaken());
+
+             for(int i=0; i<response.getStandardFormHeaders().length; i++) {
+                 System.out.println(response.getStandardFormHeaders()[0]+" : "+response.getStandardFormHeaders()[1]);
+             }
+
+             System.out.println("outPutFile path"+ response.getPathOutputFile());
+             System.out.println("has outPut"+ response.isOutputContainer());
+             System.out.println("out put"+ response.getOutput());
+             gui.updateFrame();
+         }
+     }
+
+
+ }

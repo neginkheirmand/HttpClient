@@ -3,6 +3,10 @@ package Bash;
 import Conection.*;
 import GUI.Request;
 import GUI.TYPE;
+import org.apache.http.Header;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -12,7 +16,6 @@ import GUI.TYPE;
  * @version 1.0
  */
 public class Executer {
-
 
     /**
      * constructor of the class
@@ -43,6 +46,8 @@ public class Executer {
             System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Problem with the request, try again");
             return;
         }
+
+        transformHeadersToStringArrays(request.getResponse());
 
     }
 
@@ -75,11 +80,9 @@ public class Executer {
             System.out.println("\033[0;31m"+"Error:"+"\033[0m"+" Problem with the request, try again");
             return;
         }
-        System.out.println("the follow redirect"+ request.getFollowRedirect());
 
+        transformHeadersToStringArrays(request.getResponse());
     }
-
-
 
     /**
      * this method executes the get requests
@@ -133,18 +136,15 @@ public class Executer {
         newGetMethod.executeGet(request.getNameOutPutContainer(), request.getFollowRedirect(), true);
     }
 
-
     private void executerPost(Request request){
         PostMethod newPostMethod = new PostMethod(request);
         newPostMethod.executePost(request.getNameOutPutContainer(), request.getFollowRedirect(), true);
     }
 
-
     private void executerPut(Request request){
         PutMethod newPostMethod = new PutMethod(request);
         newPostMethod.executePut(request.getNameOutPutContainer(), request.getFollowRedirect(), true);
     }
-
 
     private void executerPatch(Request request){
         PatchMethod newPostMethod = new PatchMethod(request);
@@ -165,5 +165,46 @@ public class Executer {
         HeadMethod newPostMethod = new HeadMethod(request);
         newPostMethod.executeHead(request.getNameOutPutContainer(), request.getFollowRedirect(), true);
     }
+
+    public static void transformHeadersToStringArrays(Response response) {
+        if (response == null) {
+            return;
+        }
+
+        if (response.getResponseHeaders() != null) {
+            Header[] headers = response.getResponseHeaders();
+            int headersSize = headers.length;
+            String[][] standardHeaders = new String[headersSize][2];
+            for (int i = 0; i < headersSize; i++) {
+                String name = "";
+                name = headers[i].getName();
+                String value = "";
+                value = headers[i].getValue();
+                String[] pair = {name, value};
+                standardHeaders[i] = pair;
+            }
+            response.setStandardFormHeaders(standardHeaders);
+        } else if (response.getResponseHeader() != null) {
+            Map<String, List<String>> headers = response.getResponseHeader();
+            int headersSize = headers.size();
+            String[][] standardHeaders = new String[headersSize][2];
+            int i = 0;
+            for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+                String name = "";
+                name = entry.getKey();
+                String value = "";
+                value = entry.getValue().toString();
+                String[] pair = {name, value};
+                standardHeaders[i] = pair;
+                i++;
+            }
+            response.setStandardFormHeaders(standardHeaders);
+        } else {
+            String[][] standardHeaders = new String[1][2];
+            String[] headerSample = {"", ""};
+            standardHeaders[0] = headerSample;
+        }
+    }
+
 
 }

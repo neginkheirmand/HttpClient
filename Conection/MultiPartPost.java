@@ -9,7 +9,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.*;
 
 public class MultiPartPost {
@@ -46,6 +45,11 @@ public class MultiPartPost {
     public static void formData(Request request, String outPutFile, boolean followRedirects, boolean showHeaders) {
         BufferedInputStream bufferedInputStream;
         try {
+            Long start = new Date().getTime();
+
+            if(request.getResponse()==null){
+                request.setResponse(new Response());
+            }
             if (request == null) {
                 System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "invalid request");
                 return;
@@ -76,8 +80,6 @@ public class MultiPartPost {
             String boundary = System.currentTimeMillis() + "";
             if (request.getTypeOfRequest().equals(TYPE.POST)) {
                 connection.setRequestMethod("POST");
-            } else if (request.getTypeOfRequest().equals((TYPE.PUT))) {
-                connection.setRequestMethod("PUT");
             } else {
                 return;
             }
@@ -109,11 +111,23 @@ public class MultiPartPost {
                 outputStream.close();
             }
             int statusCode = connection.getResponseCode();
+            Long end = new Date().getTime();
+
             System.out.println("POST Response Status:: " + statusCode);
+
+            request.getResponse().setStatusCode(statusCode);
+            request.getResponse().setTimeTaken(end-start);
+            Long sizeOfContent = connection.getContentLength()+ 0L;
+            if(sizeOfContent==-1L){
+                sizeOfContent=0L;
+            }
+            request.getResponse().setContentSize(sizeOfContent);
+            System.out.println("the content size is :"+ request.getResponse().getContentSize());
 
             if(statusCode<400) {
                 System.out.println("Response Headers");
                 Map<String, List<String>> map = connection.getHeaderFields();
+                request.getResponse().setResponseHeader(map);
                 String contentType = "";
                 for (Map.Entry<String, List<String>> entry : map.entrySet()) {
                     if(entry!=null && entry.getKey()!=null) {
@@ -211,6 +225,9 @@ public class MultiPartPost {
                             reader.close();
                         }
 
+                        request.getResponse().setOutput(response.toString());
+                        request.getResponse().setOutputContainer(true);
+                        request.getResponse().setPathOutputFile(outputContainer.getAbsolutePath());
                         FileWriter fileWriter = new FileWriter(outputContainer);
                         fileWriter.write(response.toString());
                         fileWriter.close();
@@ -240,8 +257,8 @@ public class MultiPartPost {
 
 
     public static void main(String[] args) {
-        Request postRequest = new Request("name", TYPE.POST, "https://webhook.site/d476bb71-fb13-4ceb-ab31-7923e71d3b18", MESSAGEBODY_TYPE.MULTIPART_FORM);
-//        Request postRequest = new Request("name", TYPE.POST, "http://apapi.haditabatabaei.ir/tests/post/formdata", MESSAGEBODY_TYPE.MULTIPART_FORM);
+//        Request postRequest = new Request("name", TYPE.POST, "https://webhook.site/d476bb71-fb13-4ceb-ab31-7923e71d3b18", MESSAGEBODY_TYPE.MULTIPART_FORM);
+        Request postRequest = new Request("name", TYPE.POST, "http://apapi.haditabatabaei.ir/tests/post/formdata", MESSAGEBODY_TYPE.MULTIPART_FORM);
 //        Request postRequest = new Request("name", TYPE.POST, "http://httpbin.org/post", MESSAGEBODY_TYPE.MULTIPART_FORM);
         ArrayList<String[]> bodyContainer = new ArrayList<>();
         String[] data1 = {"key1", "Value1", "true"};

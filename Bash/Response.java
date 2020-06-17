@@ -10,6 +10,7 @@ public class Response implements Serializable {
     //the headers of the response
     private Header[] responseHeaders = null;
     private Map<String, List<String>> responseHeader = null ;
+    private String[][] standardFormHeaders = null;
     //can be the path of the file in which the output is
     private String pathOutputFile = "";
     private String output = "";
@@ -18,15 +19,16 @@ public class Response implements Serializable {
     private Long contentSize = 0L;
     private Long timeTaken = 0L;
 
-//should we add a JPanel to its fields??
-
-
     public Response(Header[] responseHeaders, String output, boolean outputContainer, String pathOutputFile, int statuscode) {
         this.output = output;
         this.outputContainer = outputContainer;
         this.pathOutputFile=pathOutputFile;
         this.responseHeaders = responseHeaders;
         this.statusCode=statuscode;
+    }
+
+    public Response(){
+
     }
 
     public Map<String, List<String>> getResponseHeader() {
@@ -59,6 +61,14 @@ public class Response implements Serializable {
 
     public boolean isOutputContainer() {
         return outputContainer;
+    }
+
+    public String[][] getStandardFormHeaders() {
+        return standardFormHeaders;
+    }
+
+    public void setStandardFormHeaders(String[][] standardFormHeaders) {
+        this.standardFormHeaders = standardFormHeaders;
     }
 
     public void setResponseHeader(Map<String, List<String>> responseHeader) {

@@ -174,35 +174,35 @@ public class SwingWorkerSample
 
     public static void main(String[] args)
     {
-//        swingWorkerSample();
-        JFrame mainFrame = new JFrame("Swing Worker0");
-        mainFrame.setSize(400, 400);
-        mainFrame.setLayout(new GridLayout(2,1));
-
-        mainFrame.addWindowListener(new WindowAdapter()
-        {
-
-            @Override
-            public void windowClosing(WindowEvent e)
-            {
-                System.exit(0);
-            }
-
-        });
-
-        JButton button = new JButton("button");
-        button.setPreferredSize(new Dimension(100,100));
-        button.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("button");
-            }
-        });
-
-        mainFrame.add(button);
-        mainFrame.setVisible(true);
-        mainFrame.pack();
+        swingWorkerSample();
+//        JFrame mainFrame = new JFrame("Swing Worker0");
+//        mainFrame.setSize(400, 400);
+//        mainFrame.setLayout(new GridLayout(2,1));
+//
+//        mainFrame.addWindowListener(new WindowAdapter()
+//        {
+//
+//            @Override
+//            public void windowClosing(WindowEvent e)
+//            {
+//                System.exit(0);
+//            }
+//
+//        });
+//
+//        JButton button = new JButton("button");
+//        button.setPreferredSize(new Dimension(100,100));
+//        button.addActionListener(new ActionListener() {
+//
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println("button");
+//            }
+//        });
+//
+//        mainFrame.add(button);
+//        mainFrame.setVisible(true);
+//        mainFrame.pack();
 
 
     }

@@ -74,6 +74,7 @@ public class  PostMethod {
 
         try {
             if(postRequest.getTypeOfData().equals(MESSAGEBODY_TYPE.MULTIPART_FORM)) {
+                postRequest.setResponse(requestResponse);
                 MultiPartPost.formData(postRequest, outPutFile, followRedirect, showresponseHeaders);
                 return;
             }
