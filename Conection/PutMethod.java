@@ -71,6 +71,8 @@ public class PutMethod {
             httpClient = HttpClientBuilder.create().disableRedirectHandling().build();
         }
 
+
+
         if (putRequest == null) {
             System.out.println("\033[0;31m" + "Error:" + "\033[0m" + "problems in setting the request");
             return;

@@ -8,10 +8,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class MultiPartPut {
     Request putRequest;
@@ -41,8 +38,9 @@ public class MultiPartPut {
 
 //        String name = getName(filepath);
         try {
-//            File file = new File(filepath);
-//            FileInputStream fileInputStream = new FileInputStream(file);
+
+            Long start = new Date().getTime();
+
 
             String urlStr = putRequest.getUrl() + "?";
             if (putRequest.getQueryInfo() != null && putRequest.getQueryInfo().size() != 0) {
@@ -116,6 +114,7 @@ public class MultiPartPut {
             }
             inputStream = connection.getInputStream();
             result = this.convertStreamToString(inputStream);
+            Long end = new Date().getTime();
 
             System.out.println();
             Response requestResponse = new Response(null, "", true, "", 0);
@@ -127,6 +126,14 @@ public class MultiPartPut {
             int status = connection.getResponseCode();
             System.out.println("PUT Response Status::  " + status);
             requestResponse.setStatusCode(status);
+            requestResponse.setTimeTaken(end - start);
+
+            Long sizeOfContent = connection.getContentLength()+ 0L;
+            if(sizeOfContent==-1L){
+                sizeOfContent=0L;
+            }
+            requestResponse.setContentSize(sizeOfContent);
+
 
 
             //-i option
