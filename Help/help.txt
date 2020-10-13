@@ -1,0 +1,56 @@
+command line:		
+
+		//the -h/-help command
+                System.out.println("\033[0;32m"+"Usage: curl [options...] <url>\n"+"\033[0m");
+                //-a
+                System.out.println("\033[0;32m"+"-a, --auth"+"\033[0m"+"         <data>   auth header of bearer token kind\n" +
+                        "                    ex: curl <url> -a/--auth token123");
+                // -d
+                System.out.println("\033[0;32m"+"-d, --data"+"\033[0m"+"         <data>   HTTP POST data\n" +
+                        "\033[0;32m"+"--data-urlencoded"+"\033[0m  <data> HTTP POST data url encoded\n"+
+                                    "                    ex: curl <url> -M POST -d \"data1=value1&data2=value2\"\n"+
+                                    "                    ex: curl <url> -M POST --data-urlencode \"data1=value1&data2=value2\"\n");
+                //-f
+                System.out.println("\033[0;32m"+"-f, --follow "+"\033[0m        follow redirection");
+                //fire
+                System.out.println("\033[0;32m"+"fire"+"\033[0m                 use to trigger saved request by their index of use. Use \"curl list\" to see the indexes");
+                //-h
+                System.out.println("\033[0;32m"+"-h, --help    "+"\033[0m       This help text\n");
+                //-H
+                System.out.println("\033[0;32m"+"-H, --headers"+"\033[0m        <header/@file> Pass custom header(s) to server\n");
+                System.out.println("                    ex: \"header1=value1;header2=value2\"");
+                //-i
+                System.out.println("\033[0;32m"+"-i, --include   "+"\033[0m     Include protocol response headers in the output\n");
+                //-j
+                System.out.println("\033[0;32m"+"-j, --json          "+"\033[0m used to set the the message body format ");
+                System.out.println("                     ex:curl <url> -M POST -j/--json {\"key1\":\"value1\",\"key2\":\"value2\"} ");
+                //-M
+                System.out.println("\033[0;32m"+"-M, --method   "+"\033[0m     specify method request");
+                //list
+                System.out.println("\033[0;32m"+"list     "+"\033[0m           list the saved requests");
+                //-O
+                System.out.println("\033[0;32m"+"-O, --output"+"\033[0m        <file> Write to file instead of stdout");
+                //-q
+                System.out.println("\033[0;32m" + "-q, --query "+"\033[0m         set the query params of the request\n" +
+                        "                    ex: curl <url> -q/--query \"queryParam1=value1&queryParam2=value2\"           -with no space in between-\"");
+                //remove
+                System.out.println("\033[0;32m" + "remove "+"\033[0m             remove request from the list of saved requests");
+                //-S
+                System.out.println("\033[0;32m"+"-S, --save "+"\033[0m          save the request in the system ");
+                //--upload
+                System.out.println("\033[0;32m"+"--upload "+"\033[0m            <absolute path>   -upload existing file using its absolute path-");
+            
+GUI
+Insomnia is an API(application programming interface) development tool which helps to build, test and modify APIs. 
+ It has the ability to make various types of HTTP requests(GET, POST, PUT, PATCH, DELET, HEAD, OPTION) with supporting features like
+authorization, query parameters, different types of body messages and a lot more.
+
+Turorial:
+1) Create a request by clicking in the Plus button in the left-top corner and choosing the "Create new Request" option. 
+2) Chose the type of request in the Combo Box allocated in top of the window in the middle panel
+3) Enter the url to which you want to send a Request.
+4) If you want the request to be saved click in the save button.
+5) Set the features that you want in the different tabs of the middle panel.
+6) Click the "Send" Button allocated in the upper middle panel when you are done.
+7) The response and its info will be shown in the right panel.
+8) Enjoy the program:)
